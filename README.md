@@ -70,3 +70,11 @@ Astronomical numbers are independently calculated; the festival data references 
 ## Architecture
 
 `data/cities.json` → `scripts/panchang.py` → `scripts/build.py` + `templates/` → `dist/` → GitHub Action → Cloudflare Pages. Front-end is static HTML/CSS/JS and works without server/database/API keys.
+
+## Live production website
+
+- Website: https://tithi-darshan.pages.dev/
+- Google Search Console property: verified on 2026-11-23.
+- Google sitemap: https://tithi-darshan.pages.dev/sitemap.xml (submitted; indexing may take time).
+- Cloudflare Pages deploys from `main` with output `dist`.
+- Please do not remove the Google Search Console HTML verification tag in `templates/base.html`.
