@@ -42,13 +42,13 @@ Run tests with `python -m pytest -q` (pytest is for developers only).
 
 2. Create a Cloudflare **Workers & Pages → Create → Pages → Connect to Git** project pointing at the new repository and branch `main`.
 3. Cloudflare build settings: **Build command: `exit 0`**, **Build output directory: `dist`**, **Root directory: `/`**. The static files are generated upstream by GitHub Actions so Cloudflare needs neither Python nor paid API keys.
-4. After Cloudflare shows your real `https://...pages.dev` URL (or custom domain), set GitHub repository **Settings → Secrets and variables → Actions → Variables → New repository variable**, `Name = SITE_URL`, `Value = https://your-real-site.pages.dev` (no trailing slash).
-5. Go to GitHub **Actions → Daily Hindi Panchang Publish → Run workflow** once. It rebuilds the site with your exact URL in the `<link rel="canonical">` tags and `sitemap.xml`, commits the results to `main` and Cloudflare auto-deploys the push. Ensure Actions has `contents: write` permission. Verify your Cloudflare integration receives the bot push.
+4. The GitHub daily workflow already sets `SITE_URL=https://hindu-tithi-darshan.pages.dev` (the confirmed production URL), ensuring canonical and sitemap links match the live site.
+5. Go to GitHub **Actions → Daily Hindi Panchang Publish → Run workflow** when needed. It rebuilds the site with your exact URL in the `<link rel="canonical">` tags and `sitemap.xml`, commits the results to `main` and Cloudflare auto-deploys the push. Ensure Actions has `contents: write` permission. Verify your Cloudflare integration receives the bot push.
 6. Submit `https://your-real-site.pages.dev/sitemap.xml` to **Google Search Console** (free). Verify property ownership first using DNS or Google's supported methods. Optional analytics can be added later for free if available.
 
 This is a schedule-based system, **not a guaranteed real-time publish SLA**. GitHub Actions schedules can be delayed and public-repo schedules may be disabled after inactivity. The homepage JS redirects visitors to the correctly precomputed calendar date if the homepage deployment is stale (within its 60-day buffer). Watch failed workflow notifications.
 
-**Important:** Choose **Git integration** for this automated version. Cloudflare says you cannot switch an existing Direct Upload project to Git integration later. Website files are ready in this package, but the GitHub repository, Cloudflare site connection, live domain, Search Console property and indexing are **not automatically created** by downloading this ZIP. Those require account actions.
+**Important:** Choose **Git integration** for this automated version. Cloudflare says you cannot switch an existing Direct Upload project to Git integration later. The live Cloudflare Pages site and GitHub repository have now been created. The Google Search Console property and indexing still require separate verification/submission.
 
 ## Editorial quality safeguards
 
@@ -73,9 +73,9 @@ Astronomical numbers are independently calculated; the festival data references 
 
 ## Live production website
 
-- Website: https://tithi-darshan.pages.dev/
-- Google Search Console property: verified on 2026-11-23.
-- Google sitemap: https://tithi-darshan.pages.dev/sitemap.xml (submitted; indexing may take time).
+- Website: https://hindu-tithi-darshan.pages.dev/
+- Google Search Console property: verify the newly launched `hindu-tithi-darshan.pages.dev` URL-prefix property; prior verification of a different domain does not establish this new property.
+- Google sitemap: https://hindu-tithi-darshan.pages.dev/sitemap.xml (published; submit in Search Console for this exact new property; indexing may take time).
 - Cloudflare Pages deploys from `main` with output `dist`.
 - Please do not remove the Google Search Console HTML verification tag in `templates/base.html`.
 
@@ -85,6 +85,6 @@ GitHub Actions rebuilds Panchang data twice daily. On some installations, a push
 
 1. Cloudflare dashboard → Workers & Pages → **tithi-darshan** → Settings → Builds & deployments → Deploy hooks → Add hook for **main**.
 2. Copy the private hook URL. GitHub repo → Settings → Secrets and variables → Actions → **Secrets** → New repository secret: `CLOUDFLARE_DEPLOY_HOOK` = the hook URL. Never publish the hook URL to the repository.
-3. Test via Actions → Daily Hindi Panchang Publish → Run workflow, then verify `https://tithi-darshan.pages.dev/build-info.json` reflects the latest `generated_at_utc` value in GitHub `dist/build-info.json`.
+3. Test via Actions → Daily Hindi Panchang Publish → Run workflow, then verify `https://hindu-tithi-darshan.pages.dev/build-info.json` reflects the latest `generated_at_utc` value in GitHub `dist/build-info.json`.
 
 No paid APIs are required; GitHub Actions and Cloudflare Pages free usage limits apply. The last GitHub source change and bot output have been deployed via Git integration, but continuous bot-triggered redeploys should be verified independently.
