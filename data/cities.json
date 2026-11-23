@@ -1,0 +1,14 @@
+[
+  {"slug":"delhi","name":"दिल्ली","english":"Delhi","lat":28.6139,"lon":77.2090,"alt":216},
+  {"slug":"lucknow","name":"लखनऊ","english":"Lucknow","lat":26.8467,"lon":80.9462,"alt":123},
+  {"slug":"varanasi","name":"वाराणसी","english":"Varanasi","lat":25.3176,"lon":82.9739,"alt":80},
+  {"slug":"mumbai","name":"मुंबई","english":"Mumbai","lat":19.0760,"lon":72.8777,"alt":14},
+  {"slug":"kolkata","name":"कोलकाता","english":"Kolkata","lat":22.5726,"lon":88.3639,"alt":9},
+  {"slug":"jaipur","name":"जयपुर","english":"Jaipur","lat":26.9124,"lon":75.7873,"alt":431},
+  {"slug":"bengaluru","name":"बेंगलुरु","english":"Bengaluru","lat":12.9716,"lon":77.5946,"alt":920},
+  {"slug":"patna","name":"पटना","english":"Patna","lat":25.5941,"lon":85.1376,"alt":53},
+  {"slug":"hardoi","name":"हरदोई","english":"Hardoi","lat":27.3947,"lon":80.1317,"alt":134},
+  {"slug":"prayagraj","name":"प्रयागराज","english":"Prayagraj","lat":25.4358,"lon":81.8463,"alt":98},
+  {"slug":"kanpur","name":"कानपुर","english":"Kanpur","lat":26.4499,"lon":80.3319,"alt":126},
+  {"slug":"bhopal","name":"भोपाल","english":"Bhopal","lat":23.2599,"lon":77.4126,"alt":527}
+]

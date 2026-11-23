@@ -1,0 +1,21 @@
+Tithi Darshan - Open-source licensing notice
+
+SPDX-License-Identifier: AGPL-3.0-only
+
+The original Python and website source code in this project is offered
+under the GNU Affero General Public License version 3.0 (AGPL-3.0-only).
+
+Official full license text:
+https://www.gnu.org/licenses/agpl-3.0.txt
+
+The calculation library pyswisseph / Swiss Ephemeris is a third-party
+component published under an AGPL / commercial dual-licensing model.
+Its copyrights and licensing are controlled by their respective rights
+holders, including Astrodienst AG. Please review the up-to-date license
+for dependencies before commercial, proprietary, or network deployment:
+https://www.astro.com/swisseph/
+
+This file is a licensing notice and reference to the complete GNU AGPL
+license document. Before redistributing or hosting this project, obtain
+and include the complete text from the official URL above and comply
+with the applicable source-disclosure and attribution conditions.
