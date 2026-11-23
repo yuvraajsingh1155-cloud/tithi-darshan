@@ -56,7 +56,7 @@ GUIDES={
   ]
  },
  'panchang-ke-panch-ang':{
-  'name':'पंचांग के पाँच अंग', 'intro':'पंचांग का अर्थ है पाँच अंग: तिथि, वार, नक्षत्र, योग और करण।',
+  'name':'पंचांग के पाँच अंग', 'intro':'हिंदू पंचांग के पाँच अंग तिथि, वार, नक्षत्र, योग और करण हैं। इनके अर्थ, गणना और दैनिक उपयोग को सरल उदाहरणों से समझें।',
   'sections':[
     {'heading':'1. तिथि','paragraphs':['सूर्य-चंद्रमा की आपसी दीर्घांश दूरी के प्रत्येक 12 अंश पर एक तिथि बनती है। कुल 30 तिथियाँ हैं।']},
     {'heading':'2. वार','paragraphs':['वार सोमवार, मंगलवार आदि सात दिनों को कहा जाता है। प्राचीन पंचांग में अनेक धार्मिक क्रियाओं में वार देखा जाता है।']},
@@ -207,7 +207,7 @@ def main():
             route=date_page_path(city['slug'],d)
             is_today=d==today
             desc=f"{p['dateHindi']} {p['city']} पंचांग: {p['paksha']} {p['tithi']} तिथि {p['tithiEnd']} तक; {p['nakshatra']} नक्षत्र, राहुकाल {p['rahu']['start']} से {p['rahu']['end']}।"
-            title=f"{p['dateHindi']} {p['city']} पंचांग: {p['paksha']} {p['tithi']}, राहुकाल और मुहूर्त | तिथि दर्शन"
+            title=f"{p['dateHindi']} {p['city']} पंचांग | तिथि दर्शन"
             schemas=[{'@context':'https://schema.org','@type':'WebPage','name':title,'inLanguage':'hi-IN','about':['हिंदू पंचांग','तिथि','मुहूर्त','राहुकाल'],'spatialCoverage':{'@type':'Place','name':city['english']+', India'}},
                      {'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'मुखपृष्ठ','item':site_url+'/' if site_url else '/'},{'@type':'ListItem','position':2,'name':city['name'],'item':site_url+f"/shehar/{city['slug']}/" if site_url else f"/shehar/{city['slug']}/"},{'@type':'ListItem','position':3,'name':p['dateHindi'],'item':site_url+route if site_url else route}]}]
             page=main_template.render(**shared(title,desc,route,'date',city['slug'],p['date'],schemas),
@@ -218,7 +218,7 @@ def main():
             generated+=1
             if is_today:
                 city_route=f"/shehar/{city['slug']}/"
-                city_title=f"आज {p['city']} में कौन सी तिथि है? {p['tithi']}, राहुकाल और शुभ मुहूर्त | तिथि दर्शन"
+                city_title=f"आज {p['city']} की तिथि और पंचांग | तिथि दर्शन"
                 city_desc=f"आज {p['city']} का पंचांग: {p['paksha']} {p['tithi']} ({p['tithiEnd']} तक), नक्षत्र {p['nakshatra']}, सूर्योदय {p['sunrise']} और राहुकाल {p['rahu']['start']} से {p['rahu']['end']}।"
                 city_home=main_template.render(**shared(city_title,city_desc,city_route,'city',city['slug'],p['date'],schemas[:1]),
                     p=p,cities=CITIES,is_today=True,festival=FESTIVALS.get(d.isoformat()),
@@ -227,7 +227,7 @@ def main():
                 write(city_route,city_home)
                 if city['slug']=='delhi':
                     # This homepage has distinct canonical and title, unlike the indexed date URL.
-                    home=main_template.render(**shared('आज कौन सी तिथि है? आज का पंचांग, शुभ मुहूर्त और राहुकाल | तिथि दर्शन',desc,'/','home',city['slug'],p['date'],schemas[:1]),
+                    home=main_template.render(**shared('आज की तिथि, पंचांग और शुभ मुहूर्त | तिथि दर्शन',desc,'/','home',city['slug'],p['date'],schemas[:1]),
                         p=p,cities=CITIES,is_today=True,festival=FESTIVALS.get(d.isoformat()),
                         previous_date=(d-timedelta(days=1)).isoformat() if d>start else None,next_date=(d+timedelta(days=1)).isoformat() if d<end else None,
                         min_date=start.isoformat(),max_date=end.isoformat())
@@ -236,7 +236,13 @@ def main():
     info=env.get_template('info.html')
     for slug,g in GUIDES.items():
         route=f'/jankari/{slug}/'
-        title=f"{g['name']} — सरल जानकारी, नियम और उदाहरण | तिथि दर्शन"
+        short_titles={
+            'nakshatra-kya-hai':'नक्षत्र क्या है? आज का नक्षत्र',
+            'amavasya-purnima':'अमावस्या और पूर्णिमा का अंतर',
+            'ekadashi-kab-hai':'एकादशी कब है? व्रत और पारण',
+            'tithi-kab-badalti-hai':'हिंदू तिथि कब बदलती है?',
+        }
+        title=f"{short_titles.get(slug,g['name'])} | तिथि दर्शन"
         desc=g['intro']
         schemas=[{'@context':'https://schema.org','@type':'Article','inLanguage':'hi-IN','headline':g['name'],'description':desc,'datePublished':'2026-11-23'}]
         write(route,info.render(**shared(title,desc,route,'guide',schemas=schemas),heading=g['name'],intro=g['intro'],sections=g['sections'],guide_links=guide_links))
