@@ -39,4 +39,31 @@
       location.replace(`/panchang/${page.city || 'delhi'}/${today}/`);
     }
   }
+
+  // All article cards are pre-rendered HTML for crawlers. This enhances
+  // the local search experience without sending personal queries to a server.
+  const articleSearch = document.querySelector('[data-article-search]');
+  if (articleSearch) {
+    const allCards = [...document.querySelectorAll('[data-article-list] .article-card')];
+    const count = document.querySelector('[data-article-count]');
+    const empty = document.querySelector('[data-empty-results]');
+    const params = new URLSearchParams(location.search);
+    articleSearch.value = params.get('q') || '';
+    const filterArticles = () => {
+      const query = articleSearch.value.toLocaleLowerCase('hi-IN').trim();
+      const terms = query.split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const card of allCards) {
+        const haystack = (card.dataset.search || '').toLocaleLowerCase('hi-IN');
+        const visible = terms.every(term => haystack.includes(term));
+        card.hidden = !visible;
+        if (visible) shown++;
+      }
+      if (count) count.textContent = shown + ' लेख मिले';
+      if (empty) empty.hidden = shown !== 0;
+    };
+    articleSearch.addEventListener('input', filterArticles);
+    filterArticles();
+  }
+
 })();

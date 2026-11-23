@@ -33,6 +33,11 @@ jobs:
         env:
           SITE_URL: https://hindu-tithi-darshan.pages.dev
         run: python scripts/build.py
+      - name: Verify published pages and links
+        run: |
+          python -m pip install --disable-pip-version-check -q pytest beautifulsoup4
+          python -m pytest -q
+
       - name: Commit updated Panchang pages
         run: |
           git config user.name "github-actions[bot]"

@@ -88,3 +88,15 @@ GitHub Actions rebuilds Panchang data twice daily. On some installations, a push
 3. Test via Actions → Daily Hindi Panchang Publish → Run workflow, then verify `https://hindu-tithi-darshan.pages.dev/build-info.json` reflects the latest `generated_at_utc` value in GitHub `dist/build-info.json`.
 
 No paid APIs are required; GitHub Actions and Cloudflare Pages free usage limits apply. The last GitHub source change and bot output have been deployed via Git integration, but continuous bot-triggered redeploys should be verified independently.
+
+## New articles and Hindu-themed navigation (November 2026)
+The website now includes original, locally hosted deity-inspired SVG illustrations and a Hindi editorial publishing system.
+
+**Adding a new article later:** open `data/articles.json` in GitHub, choose Edit, copy one existing `articles` object and change its unique lower-case hyphenated `slug`, human-reviewed `title`, `summary`, appropriate existing `category`, `keywords` (synonyms and reader phrases, not keyword stuffing), `published` and `updated` dates, and well-written `sections`. Set `status: "draft"` while working; only change to `"published"` after review. Commit the change. GitHub Actions rebuilds and updates `/lekh/<slug>/`, `/lekh/`, its `/vishay/<category>/` topic hub, homepage newest articles, related links, and `sitemap.xml` automatically. **No manual page linking is necessary.** It may take time for Cloudflare to deploy and Google to index a new article.
+
+The `/lekh/` page supports Hindi keyword search **on the website** by matching title, summary, synonyms and category. Google search visibility is a separate process and ranking is **not guaranteed** by keywords or publishing.
+
+Site routes: `/devi-devta/` (illustrated deity gallery), `/kundli-milan/` (traditional 36-guna explanation), `/vishay/manglik-dosh/`, `/lekh/` (article search), and `/lekh/<slug>/`. A **personal kundli matching calculator is not yet implemented**; the site does not collect birth details or claim to compute compatibility without verified data and a privacy plan. No paid APIs.
+
+Only original symbolism is illustrated. No claim is made that all families or sampradayas represent deities identically. Articles should distinguish cultural beliefs from scientific evidence and avoid fear-based or deterministic marriage claims.
+
