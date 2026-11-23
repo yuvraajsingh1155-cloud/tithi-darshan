@@ -233,6 +233,9 @@ def main():
         start=today-timedelta(days=7)
         end=today+timedelta(days=60)
     site_url=os.getenv('SITE_URL','').strip().rstrip('/')
+    articles=published_articles()
+    deities=DEITIES
+    topic_counts={t['slug']:sum(a['category']==t['slug'] for a in articles) for t in TOPICS}
     if site_url and not (site_url.startswith('https://') or site_url.startswith('http://localhost')):
         raise ValueError('SITE_URL must be a full HTTPS URL, e.g. https://your-site.pages.dev')
     # Keep the previously generated archive: crawled date URLs must not disappear.
@@ -270,7 +273,7 @@ def main():
                     home=main_template.render(**shared('आज की तिथि, पंचांग और शुभ मुहूर्त | तिथि दर्शन',desc,'/','home',city['slug'],p['date'],schemas[:1]),
                         p=p,cities=CITIES,is_today=True,festival=FESTIVALS.get(d.isoformat()),
                         previous_date=(d-timedelta(days=1)).isoformat() if d>start else None,next_date=(d+timedelta(days=1)).isoformat() if d<end else None,
-                        min_date=start.isoformat(),max_date=end.isoformat())
+                        min_date=start.isoformat(),max_date=end.isoformat(),recent_articles=articles[:4],deities=deities,topics=TOPICS)
                     write('/',home)
     guide_links=[{'slug':slug,'name':g['name']} for slug,g in GUIDES.items()]
     info=env.get_template('info.html')
@@ -286,6 +289,50 @@ def main():
         desc=g['intro']
         schemas=[{'@context':'https://schema.org','@type':'Article','inLanguage':'hi-IN','headline':g['name'],'description':desc,'datePublished':'2026-11-23'}]
         write(route,info.render(**shared(title,desc,route,'guide',schemas=schemas),heading=g['name'],intro=g['intro'],sections=g['sections'],guide_links=guide_links))
+    # Editorial catalog: publication is controlled by status, not hidden JS.
+    # Adding data/articles.json entries generates indexable article URLs,
+    # categorized topic hubs, JSON-LD, homepage cards, and the XML sitemap.
+    article_list=env.get_template('articles.html')
+    article_detail=env.get_template('article.html')
+    topic_template=env.get_template('topic.html')
+    write('/lekh/',article_list.render(**shared(
+        'हिंदू धर्म और ज्योतिष के लेख | तिथि दर्शन',
+        'कुंडली मिलान, मांगलिक दोष, देवी-देवता, व्रत और पंचांग पर जानकारीपूर्ण हिंदी लेख खोजें।',
+        '/lekh/','articles'),articles=articles,topics=TOPICS))
+    for item in articles:
+        route=f"/lekh/{item['slug']}/"
+        related=[a for a in articles if a['category']==item['category'] and a['slug']!=item['slug']][:4]
+        schema={
+            '@context':'https://schema.org','@type':'Article',
+            'mainEntityOfPage':site_url+route if site_url else route,
+            'headline':item['title'],'description':item['summary'],
+            'datePublished':item['published'],'dateModified':item['updated'],
+            'inLanguage':'hi-IN','author':{'@type':'Organization','name':'तिथि दर्शन'},
+            'publisher':{'@type':'Organization','name':'तिथि दर्शन'}
+        }
+        write(route,article_detail.render(**shared(item['title']+' | तिथि दर्शन',
+            item['summary'],route,'article',schemas=[schema]),article=item,related=related))
+    for topic in TOPICS:
+        route=f"/vishay/{topic['slug']}/"
+        matches=[a for a in articles if a['category']==topic['slug']]
+        indexable=bool(matches)
+        robots='index,follow,max-image-preview:large' if indexable else 'noindex,follow'
+        write(route,topic_template.render(**shared(
+            topic['name']+' के लेख | तिथि दर्शन',topic['description'],
+            route,'topic',robots_policy=robots),topic=topic,articles=matches),indexable=indexable)
+    koots=[{'name':n,'points':v} for n,v in [
+        ('वर्ण',1),('वश्य',2),('तारा',3),('योनि',4),
+        ('ग्रह मैत्री',5),('गण',6),('भकूट',7),('नाड़ी',8)
+    ]]
+    write('/kundli-milan/',env.get_template('kundli.html').render(**shared(
+        'कुंडली मिलान: 36 गुण और मांगलिक जानकारी | तिथि दर्शन',
+        'अष्टकूट के आठ भाग, 36 गुण का अर्थ और मांगलिक दोष के बारे में जिम्मेदार जानकारी।',
+        '/kundli-milan/','kundli'),koots=koots,
+        articles=[a for a in articles if a['category'] in ('kundli-milan','manglik-dosh')]))
+    write('/devi-devta/',env.get_template('deities.html').render(**shared(
+        'देवी-देवता: गणेश, शिव, विष्णु, लक्ष्मी | तिथि दर्शन',
+        'भारतीय संस्कृति में गणेश, शिव, विष्णु, लक्ष्मी और सरस्वती के प्रतीक, चित्र और परंपराएँ।',
+        '/devi-devta/','deities'),deities=deities)
     write('/shehar/',env.get_template('cities.html').render(**shared('भारत के शहरों का आज का पंचांग | तिथि दर्शन','दिल्ली, लखनऊ, हरदोई, वाराणसी और अन्य शहरों के लिए आज की तिथि एवं मुहूर्त देखें।','/shehar/','cities'),cities=CITIES))
     write('/vidhi/',env.get_template('method.html').render(**shared('पंचांग की गणना पद्धति और स्रोत | तिथि दर्शन','जानें तिथि, नक्षत्र, राहुकाल और अभिजीत मुहूर्त की गणना किस तरह की जाती है।','/vidhi/','method'),guide_links=guide_links))
     not_found=env.get_template('not-found.html').render(**shared('पेज नहीं मिला | तिथि दर्शन','यह पता उपलब्ध नहीं है।','/404/','not-found'))
@@ -294,7 +341,14 @@ def main():
     # Avoid publishing a misleading placeholder sitemap if live site URL unknown.
     if site_url:
         # Include archived pages retained from earlier daily deployments.
-        all_routes=sorted('/'+str(f.parent.relative_to(DIST)).replace(os.sep,'/').strip('/')+'/' if f.parent != DIST else '/' for f in DIST.rglob('index.html'))
+        all_routes=sorted(
+            route for route in (
+                '/'+str(f.parent.relative_to(DIST)).replace(os.sep,'/').strip('/')+'/'
+                if f.parent != DIST else '/'
+                for f in DIST.rglob('index.html')
+            )
+            if route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
+        )
         entries=''.join(f'<url><loc>{xmlutils.escape(site_url+route)}</loc></url>' for route in all_routes)
         (DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+entries+'</urlset>',encoding='utf-8')
     robots='User-agent: *\nAllow: /\n'
