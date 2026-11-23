@@ -206,7 +206,7 @@ def main():
     robots='User-agent: *\nAllow: /\n'
     if site_url:robots+=f'Sitemap: {site_url}/sitemap.xml\n'
     (DIST/'robots.txt').write_text(robots,encoding='utf-8')
-    (DIST/'build-info.json').write_text(json.dumps({'indian_date':today.isoformat(),'range':{'start':start.isoformat(),'end':end.isoformat()},'cities':len(CITIES),'date_pages':generated,'sitemap':bool(site_url)},indent=2),encoding='utf-8')
+    (DIST/'build-info.json').write_text(json.dumps({'indian_date':today.isoformat(),'range':{'start':start.isoformat(),'end':end.isoformat()},'cities':len(CITIES),'date_pages':generated,'sitemap':bool(site_url),'generated_at_utc':datetime.now(ZoneInfo('UTC')).isoformat(timespec='seconds')},indent=2),encoding='utf-8')
     print(f'Generated {generated} dated Panchang pages for {len(CITIES)} cities from {start} to {end}')
     print(f'Home page: {DIST}/index.html')
     print(f'Canonical/Sitemap configured: {bool(site_url)}')
