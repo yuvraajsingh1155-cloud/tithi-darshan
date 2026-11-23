@@ -211,13 +211,13 @@ def make_writer(site_url:str, today:date, start:date,end:date):
         path.parent.mkdir(parents=True,exist_ok=True)
         path.write_text(html,encoding='utf-8')
         if indexable:sitemap.append(route)
-    def shared(title,description,route,page_type,selected_city='',selected_date='',schemas=None):
+    def shared(title,description,route,page_type,selected_city='',selected_date='',schemas=None,robots_policy='index,follow,max-image-preview:large'):
         canonical=site_url+route if site_url else None
         org={"@context":"https://schema.org","@type":"WebSite","name":"तिथि दर्शन","inLanguage":"hi-IN","description":"हिंदू पंचांग, आज की तिथि और शहर के अनुसार मुहूर्त","url":site_url+'/' if site_url else None}
         result=[safe_json({k:v for k,v in org.items() if v is not None})]
         if schemas:
             result.extend(safe_json(o) for o in schemas)
-        return dict(title=title,description=description,canonical=canonical,page_type=page_type,selected_city=selected_city,selected_date=selected_date,build_year=today.year,schemas=result)
+        return dict(title=title,description=description,canonical=canonical,page_type=page_type,selected_city=selected_city,selected_date=selected_date,build_year=today.year,schemas=result,robots_policy=robots_policy)
     return write,shared,sitemap
 
 def main():
@@ -332,7 +332,7 @@ def main():
     write('/devi-devta/',env.get_template('deities.html').render(**shared(
         'देवी-देवता: गणेश, शिव, विष्णु, लक्ष्मी | तिथि दर्शन',
         'भारतीय संस्कृति में गणेश, शिव, विष्णु, लक्ष्मी और सरस्वती के प्रतीक, चित्र और परंपराएँ।',
-        '/devi-devta/','deities'),deities=deities)
+        '/devi-devta/','deities'),deities=deities))
     write('/shehar/',env.get_template('cities.html').render(**shared('भारत के शहरों का आज का पंचांग | तिथि दर्शन','दिल्ली, लखनऊ, हरदोई, वाराणसी और अन्य शहरों के लिए आज की तिथि एवं मुहूर्त देखें।','/shehar/','cities'),cities=CITIES))
     write('/vidhi/',env.get_template('method.html').render(**shared('पंचांग की गणना पद्धति और स्रोत | तिथि दर्शन','जानें तिथि, नक्षत्र, राहुकाल और अभिजीत मुहूर्त की गणना किस तरह की जाती है।','/vidhi/','method'),guide_links=guide_links))
     not_found=env.get_template('not-found.html').render(**shared('पेज नहीं मिला | तिथि दर्शन','यह पता उपलब्ध नहीं है।','/404/','not-found'))
