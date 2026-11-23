@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="heritage-head deity-page-head"><div class="shell"><span class="eyebrow">ॐ भारतीय संस्कृति • देव दर्शन</span><h1>देवी-देवताओं की प्रतीकात्मक झलक</h1><p>भगवान गणेश, शिव, विष्णु, माता लक्ष्मी और माता सरस्वती से जुड़ी उपासना, प्रतीकों और परंपराओं को समझें। चित्र आधुनिक प्रतीकात्मक कलाकृतियाँ हैं।</p></div></section>
+<section class="shell heritage-section"><div class="deity-grid deity-grid-large">{% for deity in deities %}<article class="deity-card"><img loading="lazy" src="/assets/{{ deity.image }}" width="320" height="320" alt="{{ deity.alt }}"><h2>{{ deity.name }}</h2><p>{{ deity.description }}</p><a href="{{ deity.href }}">अधिक जानकारी ↗</a></article>{% endfor %}</div></section>
+<section class="shell heritage-section"><div class="kundli-notice"><div><h2>श्रद्धा, विविधता और जिम्मेदारी</h2><p>भारतीय परंपराओं में पूजा-विधि और देवी-देवताओं के रूप विविध हैं। इस वेबसाइट पर दिए चित्र रचनात्मक प्रतीक हैं, किसी धार्मिक मान्यता का एकमात्र अधिकृत रूप नहीं।</p></div><a class="heritage-button" href="/lekh/">सांस्कृतिक लेख पढ़ें →</a></div></section>
+{% endblock %}
