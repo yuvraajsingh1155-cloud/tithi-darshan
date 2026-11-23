@@ -31,7 +31,7 @@ jobs:
       - run: python -m pip install --disable-pip-version-check -r requirements.txt
       - name: Rebuild public static files in Indian time
         env:
-          SITE_URL: ${{ vars.SITE_URL }}
+          SITE_URL: https://hindu-tithi-darshan.pages.dev
         run: python scripts/build.py
       - name: Commit updated Panchang pages
         run: |
