@@ -78,3 +78,13 @@ Astronomical numbers are independently calculated; the festival data references 
 - Google sitemap: https://tithi-darshan.pages.dev/sitemap.xml (submitted; indexing may take time).
 - Cloudflare Pages deploys from `main` with output `dist`.
 - Please do not remove the Google Search Console HTML verification tag in `templates/base.html`.
+
+## Reliable Cloudflare daily publication (optional deploy hook)
+
+GitHub Actions rebuilds Panchang data twice daily. On some installations, a push created with the built-in GitHub Actions token does not immediately start a Cloudflare Pages deployment. This workflow supports an optional deploy hook to request a Pages rebuild after generated files are committed. Configure it only if automated production refreshing does not happen reliably:
+
+1. Cloudflare dashboard → Workers & Pages → **tithi-darshan** → Settings → Builds & deployments → Deploy hooks → Add hook for **main**.
+2. Copy the private hook URL. GitHub repo → Settings → Secrets and variables → Actions → **Secrets** → New repository secret: `CLOUDFLARE_DEPLOY_HOOK` = the hook URL. Never publish the hook URL to the repository.
+3. Test via Actions → Daily Hindi Panchang Publish → Run workflow, then verify `https://tithi-darshan.pages.dev/build-info.json` reflects the latest `generated_at_utc` value in GitHub `dist/build-info.json`.
+
+No paid APIs are required; GitHub Actions and Cloudflare Pages free usage limits apply. The last GitHub source change and bot output have been deployed via Git integration, but continuous bot-triggered redeploys should be verified independently.
