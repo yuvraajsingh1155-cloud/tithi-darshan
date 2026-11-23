@@ -128,7 +128,7 @@ def main():
             p=panchang_for(d,city)
             route=date_page_path(city['slug'],d)
             is_today=d==today
-            desc=f"{d.day} {p['dateHindi']} {p['city']} पंचांग: {p['paksha']} {p['tithi']} तिथि {p['tithiEnd']} तक; {p['nakshatra']} नक्षत्र, राहुकाल {p['rahu']['start']} से {p['rahu']['end']}।"
+            desc=f"{p['dateHindi']} {p['city']} पंचांग: {p['paksha']} {p['tithi']} तिथि {p['tithiEnd']} तक; {p['nakshatra']} नक्षत्र, राहुकाल {p['rahu']['start']} से {p['rahu']['end']}।"
             title=f"{p['dateHindi']} {p['city']} पंचांग: {p['paksha']} {p['tithi']}, राहुकाल और मुहूर्त | तिथि दर्शन"
             schemas=[{'@context':'https://schema.org','@type':'WebPage','name':title,'inLanguage':'hi-IN','about':['हिंदू पंचांग','तिथि','मुहूर्त','राहुकाल'],'spatialCoverage':{'@type':'Place','name':city['english']+', India'}},
                      {'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'मुखपृष्ठ','item':site_url+'/' if site_url else '/'},{'@type':'ListItem','position':2,'name':city['name'],'item':site_url+f"/shehar/{city['slug']}/" if site_url else f"/shehar/{city['slug']}/"},{'@type':'ListItem','position':3,'name':p['dateHindi'],'item':site_url+route if site_url else route}]}]
