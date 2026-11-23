@@ -44,3 +44,14 @@ jobs:
           else
             echo "No content changed."
           fi
+
+      - name: Trigger Cloudflare Pages deploy hook when configured
+        env:
+          CLOUDFLARE_DEPLOY_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -n "$CLOUDFLARE_DEPLOY_HOOK" ]; then
+            curl --fail --silent --show-error --retry 3 -X POST "$CLOUDFLARE_DEPLOY_HOOK"
+            echo "Cloudflare rebuild requested."
+          else
+            echo "No Cloudflare deploy hook configured; using Git integration."
+          fi
