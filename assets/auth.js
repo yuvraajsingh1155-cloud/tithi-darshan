@@ -48,7 +48,7 @@
       const item=document.createElement('div');item.className='saved-report-item';
       const txt=document.createElement('span');
       const score=report.report_data?.total;
-      txt.textContent=report.report_title+' — '+(Number.isFinite(score)?score+' / 18':'स्कोर उपलब्ध नहीं')+' (आंशिक मिलान)';
+      txt.textContent=report.report_title+' — '+(Number.isFinite(score)?score+' / '+(report.report_data?.maximum||18):'स्कोर उपलब्ध नहीं')+' ('+(report.report_data?.complete_36?'8-कूट मिलान':'आंशिक मिलान')+')';
       const del=document.createElement('button');del.type='button';del.textContent='हटाएँ';del.className='auth-link';
       del.addEventListener('click',async()=>{
         if(!confirm('क्या इस निजी रिपोर्ट को हटाना चाहते हैं?'))return;
