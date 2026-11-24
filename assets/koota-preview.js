@@ -60,17 +60,23 @@
     if(!possibleSigns(na).includes(sa)||!possibleSigns(nb).includes(sb)){
       detail.hidden=false;detail.textContent='चुनी हुई चंद्र राशि और नक्षत्र में मेल नहीं है। कृपया सही जानकारी चुनें।';return;
     }
-    const tara=taraScore(na,nb),nadi=nadiIndex(na)===nadiIndex(nb)?0:8,bhakoot=bhakootScore(sa,sb);
-    const total=tara+nadi+bhakoot;
+    const full=window.TithiAshtakoota?.score(na,sa,nb,sb);
+    if(!full){detail.hidden=false;detail.textContent='पूर्ण गणना मॉड्यूल लोड नहीं हुआ। पेज रीफ्रेश करें।';return;}
+    const {scores,total,maximum}=full;
     lastReport={nakshatra_a:na,nakshatra_b:nb,moon_sign_a:sa,moon_sign_b:sb,
-      scores:{tara,nadi,bhakoot},total,maximum:18,
-      methodology:'nadi-tara-bhakoot-v1',complete_36:false};
+      scores,total,maximum,methodology:full.methodology,complete_36:true};
     detail.replaceChildren();
-    const h=document.createElement('h3');h.textContent='3 कूटों के परिणाम: '+total+' / 18 अंक';detail.append(h);
-    const note=document.createElement('p');note.textContent='ध्यान दें: यह पूरा 36 गुण मिलान नहीं है। शेष 5 कूट (कुल 18 अंक) अभी नहीं निकाले जाते।';detail.append(note);
+    const h=document.createElement('h3');h.textContent='अष्टकूट मिलान: '+total+' / 36 अंक';detail.append(h);
+    const note=document.createElement('p');note.textContent='सभी 8 कूटों का पारंपरिक, नियम-आधारित अनुमान। यह वर-वधू क्रम में स्कोर करता है; नियम और अपवाद स्थानीय परंपराओं में बदल सकते हैं।';detail.append(note);
     const table=document.createElement('table');table.className='koota-result-table';
     const tbody=document.createElement('tbody');
-    tbody.append(makeRow('तारा',tara,3,'tara'),makeRow('नाड़ी',nadi,8,'nadi'),makeRow('भकूट',bhakoot,7,'bhakoot'));
+    for(const [key,label,max] of [['varna','वर्ण',1],['vasya','वश्य',2],['tara','तारा',3],['yoni','योनि',4],['graha_maitri','ग्रह मैत्री',5],['gana','गण',6],['bhakoot','भकूट',7],['nadi','नाड़ी',8]]){
+      const tr=document.createElement('tr');
+      for(const txt of [label,String(scores[key])+' / '+max]){
+        const td=document.createElement('td');td.textContent=txt;tr.append(td);
+      }
+      tbody.append(tr);
+    }
     table.append(tbody);detail.append(table);
     const privacy=document.createElement('p');
     privacy.className='astro-small';privacy.textContent='जन्मतिथि या जन्मस्थान नहीं लिया गया। चुने गए नक्षत्र और चंद्र राशि ब्राउज़र में गिने गए हैं। सेव करने पर ही यह परिणाम आपके निजी अकाउंट में जाएगा।';
@@ -86,7 +92,7 @@
     saveButton.disabled=true;
     const title='मिलान: '+nak[lastReport.nakshatra_a]+' · '+nak[lastReport.nakshatra_b];
     const {error}=await client.from('saved_kundli_reports').insert({
-      user_id:user.id,report_title:title,report_data:lastReport,rule_version:'nadi-tara-bhakoot-v1'
+      user_id:user.id,report_title:title,report_data:lastReport,rule_version:lastReport.methodology
     });
     saveButton.disabled=false;
     if(error){alert('रिपोर्ट सेव नहीं हुई: '+error.message);return;}
