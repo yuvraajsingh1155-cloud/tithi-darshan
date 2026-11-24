@@ -27,7 +27,7 @@ for(let a=0;a<27;a++)for(let b=0;b<27;b++){
   assert.ok(v.total>=0 && v.total<=36);
   assert.equal(v.total,Object.values(v.scores).reduce((x,y)=>x+y,0));
 }
-assert.throws(()=>full.score(-1,0,0,0),RangeError);
+assert.throws(()=>full.score(-1,0,0,0),{name:'RangeError'});
 class El {
   constructor(tag='div'){this.tag=tag;this.value='';this.textContent='';this.children=[];this.hidden=false;this.disabled=false;this.events={};this.dataset={};this.className='';}
   replaceChildren(...items){this.children=items;if(this.tag==='select')this.value='';}
