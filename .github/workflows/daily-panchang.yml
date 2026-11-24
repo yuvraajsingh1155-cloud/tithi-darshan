@@ -58,7 +58,20 @@ jobs:
           git add dist
           if ! git diff --cached --quiet; then
             git commit -m "chore: refresh Hindi Panchang for India"
-            git push
+            # An editor can push while a scheduled build is running.
+            # Rebase the generated output onto the newest main before publishing.
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                echo "Generated pages pushed to main."
+                break
+              fi
+              if [ "$attempt" -eq 3 ]; then
+                echo "Could not publish after 3 attempts." >&2
+                exit 1
+              fi
+            done
           else
             echo "No content changed."
           fi
