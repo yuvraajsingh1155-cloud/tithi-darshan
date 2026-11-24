@@ -69,7 +69,7 @@ Astronomical numbers are independently calculated; the festival data references 
 
 ## Architecture
 
-`data/cities.json` → `scripts/panchang.py` → `scripts/build.py` + `templates/` → `dist/` → GitHub Action → Cloudflare Pages. Front-end is static HTML/CSS/JS and works without server/database/API keys.
+`data/cities.json` → `scripts/panchang.py` → `scripts/build.py` + `templates/` → `dist/` → GitHub Action → Cloudflare Pages. Public Panchang pages are static HTML/CSS/JS and require no paid astronomy API. Login, private reports and authenticated Kundli matching use a free-tier Supabase project (quota limits apply).
 
 ## Live production website
 
@@ -96,7 +96,19 @@ The website now includes original, locally hosted deity-inspired SVG illustratio
 
 The `/lekh/` page supports Hindi keyword search **on the website** by matching title, summary, synonyms and category. Google search visibility is a separate process and ranking is **not guaranteed** by keywords or publishing.
 
-Site routes: `/devi-devta/` (illustrated deity gallery), `/kundli-milan/` (traditional 36-guna explanation), `/vishay/manglik-dosh/`, `/lekh/` (article search), and `/lekh/<slug>/`. A **personal kundli matching calculator is not yet implemented**; the site does not collect birth details or claim to compute compatibility without verified data and a privacy plan. No paid APIs.
+Site routes: `/devi-devta/` (illustrated deity gallery), `/kundli-milan/` (traditional 36-guna explanation), `/vishay/manglik-dosh/`, `/lekh/` (article search), and `/lekh/<slug>/`. The `/kundli-milan/` page now offers a signed-in **36-point, eight-koota traditional matching calculator** for two people with already-known Nakshatra and Moon sign. Score requests run in the authenticated `kundli-match` Supabase Edge Function, and optional saves stay isolated using RLS. Birth date/time/place-to-chart generation, planetary analysis and Manglik calculation are not yet implemented. The calculator is cultural guidance, not a scientific predictor of marital success.
 
 Only original symbolism is illustrated. No claim is made that all families or sampradayas represent deities identically. Articles should distinguish cultural beliefs from scientific evidence and avoid fear-based or deterministic marriage claims.
 
+
+
+## Account, Google Login and user privacy (24 Nov 2026)
+
+- Live sign-in: https://hindu-tithi-darshan.pages.dev/mera-account/
+- Google OAuth enabled in Supabase and the start-of-consent redirect to Google tested successfully. Public availability still depends on the Google Cloud OAuth Audience (Testing vs In production) and each user's ability to complete Google consent.
+- Supabase project reference: `ipqejplvpmznhhtcmozz`; the frontend includes **only the public publishable key**, never an OAuth secret.
+- A signed-in visitor may edit their preferred rashi and name, save 36-guna reports, export their own profile and reports as JSON, delete individual reports, or request permanent account deletion by entering their email and confirming. Permanent account deletion runs only in a protected Supabase Edge Function: `delete-account`. The `profiles` and `saved_kundli_reports` rows reference `auth.users` with ON DELETE CASCADE.
+- Both public user tables have RLS. The `saved_kundli_reports` table has an index covering `(user_id, created_at DESC)` for personal history queries. Database security advisor reported no findings on 24 Nov 2026.
+- Every deployment CI job checks JavaScript and matching-engine tests, confirms Google provider state, and probes that **unauthenticated matching and account-deletion requests return HTTP 401**. This is not a substitute for an owner-operated Google end-to-end test or a real-user deletion test.
+- Google Search Console is connected in OpenSEO, with the correct URL-prefix property selected and owner permission. As of 24 Nov the last 28-day GSC report showed zero rows, consistent with a recently launched site (no ranking guarantee). Google Analytics GA4 is **not connected** yet and requires a user-owned GA4 web stream measurement ID before deployment.
+- Avoid unreviewed automatic religious claims and unnecessary collection of private birth details. Keep the site's source/license notices intact.
