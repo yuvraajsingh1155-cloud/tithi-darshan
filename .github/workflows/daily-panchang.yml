@@ -44,6 +44,8 @@ jobs:
           node tests/test_koota_preview.cjs
       - name: Check Supabase Google OAuth provider state (nonblocking)
         run: python scripts/check_google_oauth.py
+      - name: Verify private Kundli API rejects anonymous access
+        run: python scripts/check_kundli_gate.py
       - name: Verify published pages and links
         run: |
           python -m pip install --disable-pip-version-check -q pytest beautifulsoup4
