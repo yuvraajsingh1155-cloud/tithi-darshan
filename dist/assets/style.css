@@ -118,3 +118,9 @@ body{background:linear-gradient(180deg,#fffdf7,#fff9f0 420px,#fffdf8 950px);colo
 .astro-saved-report{border-top:1px solid #e4cbaa;margin:25px 0 10px;padding-top:16px}
 .astro-saved-report h3{font-size:20px;margin:0 0 12px}
 .astro-saved-report .outline-button{display:inline-block;margin:16px 0}
+
+/* Primary Google OAuth sign-in CTA */
+.google-signin-button{display:flex;width:100%;justify-content:center;align-items:center;gap:12px;padding:13px 18px;margin:14px 0 12px;border:1px solid #d4bca1;border-radius:13px;background:#fff;color:#302e2b;font:inherit;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 3px 10px #48392a10;transition:background .16s,border-color .16s}
+.google-signin-button:hover{background:#fff8ed;border-color:#b98e5c}.google-signin-button:focus-visible{outline:3px solid #be8d4b;outline-offset:2px}
+.google-signin-button:disabled{opacity:.6;cursor:wait}
+.google-g{font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#4285f4}

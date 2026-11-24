@@ -17,6 +17,23 @@
   client = window.supabase.createClient(url, publishableKey, {
     auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
   });
+  const googleButton = $('google-signin');
+  if (googleButton) {
+    googleButton.addEventListener('click', async () => {
+      googleButton.disabled = true;
+      msg(authMessage, 'Google Login खोला जा रहा है…');
+      try {
+        const { error } = await client.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo: location.origin + '/mera-account/' }
+        });
+        if (error) throw error;
+      } catch (error) {
+        msg(authMessage, 'Google Login शुरू नहीं हो सका: ' + (error.message || 'कृपया फिर प्रयास करें।'));
+        googleButton.disabled = false;
+      }
+    });
+  }
   const loadReports = async (user, seq) => {
     const box=$('reports-list');
     if(!box)return;
