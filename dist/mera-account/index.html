@@ -29,8 +29,26 @@
     <a class="nav-cta" href="/mera-account/">मेरा अकाउंट <span aria-hidden="true">↗</span></a>
   </div></header>
   <main id="main-content">
-<section class="heritage-head"><div class="shell"><span class="eyebrow">ॐ तिथि दर्शन • निजी सेवाएँ</span><h1>मेरा अकाउंट</h1><p>एक ही स्थान से अपनी कुंडली, मिलान रिपोर्ट और व्यक्तिगत दैनिक राशिफल देखें। सुरक्षित लॉगिन की सुविधा तैयार की जा रही है।</p></div></section>
-<section class="shell heritage-section"><div class="astro-layout"><div class="astro-panel"><span class="kicker">अकाउंट और गोपनीयता</span><h2>सुरक्षित साइन-इन जल्द जोड़ा जाएगा</h2><p>अभी Google/ईमेल लॉगिन चालू नहीं है। सुरक्षित Authentication और Database के बिना जन्मतिथि, जन्मसमय, जन्मस्थान या पासवर्ड नहीं लिया जा रहा है।</p><div class="astro-state" role="status">🔒 लॉगिन अभी उपलब्ध नहीं — निजी जानकारी दर्ज न करें।</div><a class="heritage-button" href="/kundli-milan/">कुंडली मिलान के बारे में जानें ↗</a></div><div class="astro-panel"><h2>लॉगिन के बाद मिलने वाली सुविधाएँ</h2><ul><li>व्यक्तिगत प्रोफाइल और सुरक्षित सत्र</li><li>दो लोगों के 36 गुणों की गणना और मिलान रिपोर्ट</li><li>जन्म विवरण से व्यक्तिगत राशि और दैनिक ज्योतिषीय सामग्री</li><li>पुरानी रिपोर्ट देखना और डेटा हटाने का विकल्प</li></ul><p class="astro-small">हम किसी भी लॉगिन या गणना को सक्रिय बताएँगे तभी जब वास्तविक सुरक्षित Backend तैयार और परीक्षण किया जा चुका हो।</p></div></div></section>
+<section class="heritage-head"><div class="shell"><span class="eyebrow">ॐ तिथि दर्शन • सुरक्षित अकाउंट</span><h1>मेरा अकाउंट</h1><p>ईमेल से लॉगिन करें, अपना प्रोफाइल बनाएँ और आगे आने वाली निजी कुंडली सेवाओं के लिए तैयार रहें।</p></div></section>
+<section class="shell heritage-section"><div class="astro-layout">
+<div class="astro-panel" id="auth-panel"><span class="kicker">सुरक्षित Supabase Authentication</span><h2 id="auth-title">ईमेल से लॉगिन</h2>
+<p>नया अकाउंट बनाएँ या अपने ईमेल और पासवर्ड से लॉगिन करें।</p>
+<div class="auth-switch"><button type="button" class="auth-switch-button active" data-auth-mode="signin">लॉगिन</button><button type="button" class="auth-switch-button" data-auth-mode="signup">नया अकाउंट</button></div>
+<form id="auth-form" class="auth-fields">
+<label for="auth-email">ईमेल</label><input required id="auth-email" type="email" autocomplete="email" maxlength="254" placeholder="name@example.com">
+<label for="auth-password">पासवर्ड (कम से कम 8 अक्षर)</label><input required id="auth-password" type="password" autocomplete="current-password" minlength="8" maxlength="128" placeholder="अपना पासवर्ड">
+<button class="heritage-button" type="submit" id="auth-submit">लॉगिन करें</button></form>
+<div id="auth-message" class="astro-state" role="status" aria-live="polite">ईमेल की पुष्टि आवश्यक हो सकती है। कृपया अपना इनबॉक्स भी चेक करें।</div>
+</div>
+<div class="astro-panel" id="profile-panel" hidden><span class="kicker">आपका निजी डैशबोर्ड</span><h2>नमस्ते! <span id="account-name"></span></h2><p id="account-email"></p>
+<form id="profile-form" class="auth-fields"><label for="profile-name">आपका नाम (वैकल्पिक)</label><input id="profile-name" maxlength="80" autocomplete="name" placeholder="आपका नाम"><label for="profile-rashi">पसंदीदा राशि (वैकल्पिक)</label><select id="profile-rashi"><option value="">राशि चुनें</option><option value="mesh">मेष</option><option value="vrishabh">वृषभ</option><option value="mithun">मिथुन</option><option value="kark">कर्क</option><option value="singh">सिंह</option><option value="kanya">कन्या</option><option value="tula">तुला</option><option value="vrishchik">वृश्चिक</option><option value="dhanu">धनु</option><option value="makar">मकर</option><option value="kumbh">कुंभ</option><option value="meen">मीन</option></select><button class="heritage-button" type="submit" id="profile-submit">प्रोफाइल सेव करें</button></form>
+<div id="profile-message" class="astro-state" role="status" aria-live="polite">आपके विवरण सिर्फ आपके अकाउंट में सुरक्षित रहेंगे।</div>
+<button type="button" id="auth-signout" class="outline-button">लॉगआउट</button>
+</div>
+<div class="astro-panel"><h2>आगे मिलने वाली सुविधाएँ</h2><ul><li>जन्म विवरण के आधार पर पारंपरिक 36 गुण मिलान</li><li>मिलान रिपोर्ट केवल अपने अकाउंट में सेव करना</li><li>निजी दैनिक राशिफल और कुंडली चार्ट</li><li>अपना डेटा हटाने का विकल्प</li></ul><p class="astro-small">वर्तमान में ईमेल अकाउंट और प्रोफाइल की सुविधा उपलब्ध कराने का चरण है। निजी जन्म विवरण अभी नहीं लिए जा रहे और कुंडली गणना अभी शुरू नहीं हुई है। वेबसाइट पर कभी अपना पासवर्ड सार्वजनिक रूप से शेयर न करें।</p><a class="outline-button" href="/kundli-milan/">36 गुण समझें ↗</a></div>
+</div></section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.87.3/dist/umd/supabase.min.js" defer></script>
+<script src="/assets/auth.js" defer></script>
 </main>
   <footer class="footer"><div class="shell">
     <div class="footer-inner"><div><div class="brand footer-brand"><span class="brand-icon">☀</span><span><b>तिथि दर्शन</b><small>हर दिन, सही संदर्भ के साथ</small></span></div><p>हिंदू पंचांग समझने का सरल मंच। गणनाएँ स्थान व परंपरा के अनुसार बदल सकती हैं।</p></div>
