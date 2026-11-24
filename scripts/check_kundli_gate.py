@@ -23,6 +23,23 @@ def main():
   if code!=401:
     raise RuntimeError(f'Expected HTTP 401 for unauthenticated Kundli calculation; got {code}')
   print('PASS: unauthenticated Kundli requests are rejected with HTTP 401')
+  delete_api='https://ipqejplvpmznhhtcmozz.supabase.co/functions/v1/delete-account'
+  no_auth=Request(delete_api,method='POST',data=json.dumps({
+    'confirmation':'DELETE MY ACCOUNT','email':'synthetic-nonexistent@example.invalid'
+  }).encode(),headers={
+    'Content-Type':'application/json',
+    'apikey':KEY,
+    'Origin':'https://hindu-tithi-darshan.pages.dev',
+  })
+  try:
+    with urlopen(no_auth,timeout=15) as resp:
+      status=resp.status
+  except HTTPError as exc:
+    status=exc.code
+  if status!=401:
+    raise RuntimeError(f'Expected HTTP 401 for unauthenticated account deletion; got {status}')
+  print('PASS: anonymous account deletion requests are rejected with HTTP 401')
+
 
 if __name__=='__main__':
   main()
