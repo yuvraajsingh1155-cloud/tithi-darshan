@@ -29,7 +29,7 @@
     <a class="nav-cta" href="/mera-account/">मेरा अकाउंट <span aria-hidden="true">↗</span></a>
   </div></header>
   <main id="main-content">
-<section class="heritage-head"><div class="shell"><span class="eyebrow">ॐ तिथि दर्शन • सुरक्षित अकाउंट</span><h1>मेरा अकाउंट</h1><p>ईमेल से लॉगिन करें, अपना प्रोफाइल बनाएँ और आगे आने वाली निजी कुंडली सेवाओं के लिए तैयार रहें।</p></div></section>
+<section class="heritage-head"><div class="shell"><span class="eyebrow">ॐ तिथि दर्शन • सुरक्षित अकाउंट</span><h1>मेरा अकाउंट</h1><p>Google से लॉगिन करें, अपनी पसंदीदा राशि सेव करें और कुंडली मिलान रिपोर्ट निजी अकाउंट में रखें।</p></div></section>
 <section class="shell heritage-section"><div class="astro-layout">
 <div class="astro-panel" id="auth-panel"><span class="kicker">सुरक्षित Supabase Authentication</span><h2 id="auth-title">ईमेल से लॉगिन</h2>
 <p>अपने Google अकाउंट से सुरक्षित लॉगिन करें। ईमेल/पासवर्ड विकल्प भी उपलब्ध है।</p>
@@ -50,12 +50,17 @@
 <form id="profile-form" class="auth-fields"><label for="profile-name">आपका नाम (वैकल्पिक)</label><input id="profile-name" maxlength="80" autocomplete="name" placeholder="आपका नाम"><label for="profile-rashi">पसंदीदा राशि (वैकल्पिक)</label><select id="profile-rashi"><option value="">राशि चुनें</option><option value="mesh">मेष</option><option value="vrishabh">वृषभ</option><option value="mithun">मिथुन</option><option value="kark">कर्क</option><option value="singh">सिंह</option><option value="kanya">कन्या</option><option value="tula">तुला</option><option value="vrishchik">वृश्चिक</option><option value="dhanu">धनु</option><option value="makar">मकर</option><option value="kumbh">कुंभ</option><option value="meen">मीन</option></select><button class="heritage-button" type="submit" id="profile-submit">प्रोफाइल सेव करें</button></form>
 <div id="profile-message" class="astro-state" role="status" aria-live="polite">आपके विवरण सिर्फ आपके अकाउंट में सुरक्षित रहेंगे।</div>
 <section class="astro-saved-report"><h3>मेरी सेव की गई मिलान रिपोर्ट</h3><div id="reports-list" role="region" aria-live="polite">अभी कोई रिपोर्ट नहीं है।</div><a href="/kundli-milan/" class="outline-button">नई मिलान रिपोर्ट बनाएँ ↗</a></section>
+<div class="account-data-tools"><h3>मेरा निजी डेटा</h3>
+<p class="astro-small">आप अपना प्रोफाइल और सेव की गई मिलान रिपोर्ट JSON फाइल में डाउनलोड कर सकते हैं। अकाउंट स्थायी रूप से हटाने पर उसका निजी डेटा भी हट जाएगा।</p>
+<button type="button" id="account-export" class="outline-button">मेरा डेटा डाउनलोड करें</button>
+<button type="button" id="account-delete" class="outline-button account-delete-button">अकाउंट स्थायी रूप से हटाएँ</button>
+<p id="account-data-status" class="astro-small" role="status" aria-live="polite"></p></div>
 <button type="button" id="auth-signout" class="outline-button">लॉगआउट</button>
 </div>
-<div class="astro-panel"><h2>आगे मिलने वाली सुविधाएँ</h2><ul><li>जन्म विवरण के आधार पर पारंपरिक 36 गुण मिलान</li><li>मिलान रिपोर्ट केवल अपने अकाउंट में सेव करना</li><li>निजी दैनिक राशिफल और कुंडली चार्ट</li><li>अपना डेटा हटाने का विकल्प</li></ul><p class="astro-small">वर्तमान में ईमेल अकाउंट और प्रोफाइल की सुविधा उपलब्ध कराने का चरण है। निजी जन्म विवरण अभी नहीं लिए जा रहे और कुंडली गणना अभी शुरू नहीं हुई है। वेबसाइट पर कभी अपना पासवर्ड सार्वजनिक रूप से शेयर न करें।</p><a class="outline-button" href="/kundli-milan/">36 गुण समझें ↗</a></div>
+<div class="astro-panel"><h2>अकाउंट से क्या कर सकते हैं?</h2><ul><li>सुरक्षित Google Login और निजी प्रोफाइल</li><li>चंद्र राशि और नक्षत्र से 36 गुणों का पारंपरिक मिलान</li><li>मिलान रिपोर्ट निजी रूप से सेव और डाउनलोड</li><li>निजी डेटा डाउनलोड या अकाउंट स्थायी रूप से हटाएँ</li></ul><p class="astro-small">जन्मतिथि, समय और जन्मस्थान से पूरी कुंडली या मांगलिक विश्लेषण अभी उपलब्ध नहीं है। अपने पासवर्ड या निजी जन्म विवरण को सार्वजनिक रूप से साझा न करें।</p><a class="outline-button" href="/kundli-milan/">36 गुण मिलाएँ ↗</a></div>
 </div></section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.87.3/dist/umd/supabase.min.js" defer></script>
-<script src="/assets/auth.js?v=google-2" defer></script>
+<script src="/assets/auth.js?v=google-3" defer></script>
 </main>
   <footer class="footer"><div class="shell">
     <div class="footer-inner"><div><div class="brand footer-brand"><span class="brand-icon">☀</span><span><b>तिथि दर्शन</b><small>हर दिन, सही संदर्भ के साथ</small></span></div><p>हिंदू पंचांग समझने का सरल मंच। गणनाएँ स्थान व परंपरा के अनुसार बदल सकती हैं।</p></div>
