@@ -48,7 +48,9 @@
       throw new RangeError('Invalid nakshatra or moon sign');
     const taraPass=(a,b)=>![3,5,7].includes((((b-a+27)%27)%9)+1);
     const tara=(taraPass(na,nb)?1.5:0)+(taraPass(nb,na)?1.5:0);
-    const nadiType=i=>i%9===0||[5,6,11,12,17,18,23,24].includes(i)?0:([1,4,7,10,13,16,19,22,25].includes(i)?1:2);
+    const adiNadi=new Set([0,5,6,11,12,17,18,23,24]);
+    const madhyaNadi=new Set([1,4,7,10,13,16,19,22,25]);
+    const nadiType=i=>adiNadi.has(i)?0:(madhyaNadi.has(i)?1:2);
     const nadi=nadiType(na)===nadiType(nb)?0:8;
     const distance=((sb-sa+12)%12)+1;
     const bhakoot=[2,5,6,8,9,12].includes(distance)?0:7;
