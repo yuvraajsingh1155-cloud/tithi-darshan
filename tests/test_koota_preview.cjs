@@ -29,25 +29,44 @@ for(let a=0;a<27;a++)for(let b=0;b<27;b++){
 }
 assert.throws(()=>full.score(-1,0,0,0),{name:'RangeError'});
 class El {
-  constructor(tag='div'){this.tag=tag;this.value='';this.textContent='';this.children=[];this.hidden=false;this.disabled=false;this.events={};this.dataset={};this.className='';}
+  constructor(tag='div'){
+    this.tag=tag;this.value='';this.textContent='';this.children=[];
+    this.hidden=false;this.disabled=false;this.events={};this.dataset={};this.className='';
+  }
   replaceChildren(...items){this.children=items;if(this.tag==='select')this.value='';}
   addEventListener(name,fn){this.events[name]=fn;}
   append(...items){this.children.push(...items);}
+  querySelector(){return submit;}
 }
+const submit=new El('button');
 const ids=['koota-preview','nak-a','sign-a','nak-b','sign-b','koota-result','save-koota'];
 const elems=Object.fromEntries(ids.map(id=>[id,new El(id.startsWith('nak-')||id.startsWith('sign-')?'select':'div')]));
 const document={getElementById:id=>elems[id]||null,createElement:tag=>new El(tag)};
 ctx.document=document;
 ctx.location={assign(){}};
-ctx.confirm=()=>false;
-ctx.alert=()=>{};
+ctx.confirm=()=>false;ctx.alert=()=>{};
+let user=null,invokes=0;
+ctx.window.supabase={createClient:()=>({
+  auth:{getUser:async()=>({data:{user},error:null})},
+  functions:{invoke:async(name,{body})=>{
+    invokes++;
+    assert.equal(name,'kundli-match');
+    return {data:full.score(body.nakshatra_a,body.moon_sign_a,body.nakshatra_b,body.moon_sign_b),error:null};
+  }}
+})};
 vm.runInContext(fs.readFileSync('assets/koota-preview.js','utf8'),ctx,{filename:'assets/koota-preview.js'});
-elems['nak-a'].value='0';elems['nak-a'].events.change();elems['sign-a'].value='0';
-elems['nak-b'].value='1';elems['nak-b'].events.change();elems['sign-b'].value='0';
-elems['koota-preview'].events.submit({preventDefault(){}});
-const result=elems['koota-result'];
-assert.equal(result.hidden,false);
-assert.ok(result.children[0].textContent.includes('31 / 36'));
-assert.equal(result.children.find(c=>c.tag==='table')?.children[0]?.children?.length,8);
-assert.equal(elems['save-koota'].hidden,false);
-console.log('PASS 8-koota engine, 729 pairs, full 36-point UI, invalid inputs');
+(async()=>{
+  elems['nak-a'].value='0';elems['nak-a'].events.change();elems['sign-a'].value='0';
+  elems['nak-b'].value='1';elems['nak-b'].events.change();elems['sign-b'].value='0';
+  await elems['koota-preview'].events.submit({preventDefault(){}});
+  assert.equal(invokes,0,'anonymous user must never invoke calculation');
+  assert.equal(elems['save-koota'].hidden,true);
+  assert.ok(elems['koota-result'].children[0].textContent.includes('लॉगिन'));
+  user={id:'user-test'};
+  await elems['koota-preview'].events.submit({preventDefault(){}});
+  assert.equal(invokes,1);
+  assert.equal(elems['save-koota'].hidden,false);
+  assert.ok(elems['koota-result'].children[0].textContent.includes('31 / 36'));
+  assert.equal(elems['koota-result'].children.find(x=>x.tag==='table')?.children[0]?.children?.length,8);
+  console.log('PASS 8-koota engine, 729 pairs, anonymous gating, authenticated 36-point UI');
+})().catch(err=>{console.error(err);process.exitCode=1;});
