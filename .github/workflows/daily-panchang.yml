@@ -39,6 +39,7 @@ jobs:
           node --check assets/auth.js
           node --check assets/koota-preview.js
           node --check assets/rashifal.js
+          node tests/test_koota_preview.cjs
       - name: Verify published pages and links
         run: |
           python -m pip install --disable-pip-version-check -q pytest beautifulsoup4
