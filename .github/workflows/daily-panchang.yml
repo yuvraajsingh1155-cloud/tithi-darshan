@@ -42,6 +42,8 @@ jobs:
           node --check assets/koota-preview.js
           node --check assets/rashifal.js
           node tests/test_koota_preview.cjs
+      - name: Check Supabase Google OAuth provider state (nonblocking)
+        run: python scripts/check_google_oauth.py
       - name: Verify published pages and links
         run: |
           python -m pip install --disable-pip-version-check -q pytest beautifulsoup4
