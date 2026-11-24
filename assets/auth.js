@@ -18,7 +18,25 @@
     auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
   });
   const googleButton = $('google-signin');
+  const googleStatus = $('google-provider-status');
   if (googleButton) {
+    googleButton.disabled = true;
+    // Auth settings are public and queried with the publishable key only.
+    // A disabled Google provider must not redirect visitors into a dead login.
+    void fetch(url + '/auth/v1/settings', {
+      headers: { apikey: publishableKey, accept: 'application/json' }
+    }).then(async response=>{
+      if(!response.ok) throw new Error('Settings unavailable');
+      const settings=await response.json();
+      const enabled=settings.external?.google === true;
+      googleButton.disabled=!enabled;
+      if(googleStatus)googleStatus.textContent=enabled
+        ? 'Google Login उपलब्ध है। ऊपर क्लिक करके सुरक्षित साइन इन करें।'
+        : 'Google Login अभी Supabase में चालू नहीं किया गया है। वेबसाइट संचालक के सक्रिय करते ही यह बटन काम करने लगेगा।';
+    }).catch(()=>{
+      googleButton.disabled=false;
+      if(googleStatus)googleStatus.textContent='Google Login की स्थिति सत्यापित नहीं हुई। कोशिश करने पर त्रुटि मिले तो बाद में पुनः प्रयास करें।';
+    });
     googleButton.addEventListener('click', async () => {
       googleButton.disabled = true;
       msg(authMessage, 'Google Login खोला जा रहा है…');
