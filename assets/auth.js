@@ -17,6 +17,31 @@
   client = window.supabase.createClient(url, publishableKey, {
     auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
   });
+  const loadReports = async (user, seq) => {
+    const box=$('reports-list');
+    if(!box)return;
+    const {data,error}=await client.from('saved_kundli_reports')
+      .select('id,report_title,report_data,rule_version,created_at')
+      .eq('user_id',user.id).order('created_at',{ascending:false}).limit(30);
+    if(seq!==userLoadVersion||currentUser?.id!==user.id)return;
+    box.replaceChildren();
+    if(error){box.textContent='रिपोर्ट अभी लोड नहीं हुई: '+error.message;return;}
+    if(!data?.length){box.textContent='अभी कोई रिपोर्ट नहीं है।';return;}
+    for(const report of data){
+      const item=document.createElement('div');item.className='saved-report-item';
+      const txt=document.createElement('span');
+      const score=report.report_data?.total;
+      txt.textContent=report.report_title+' — '+(Number.isFinite(score)?score+' / 18':'स्कोर उपलब्ध नहीं')+' (आंशिक मिलान)';
+      const del=document.createElement('button');del.type='button';del.textContent='हटाएँ';del.className='auth-link';
+      del.addEventListener('click',async()=>{
+        if(!confirm('क्या इस निजी रिपोर्ट को हटाना चाहते हैं?'))return;
+        del.disabled=true;
+        const {error:deleteError}=await client.from('saved_kundli_reports').delete().eq('id',report.id).eq('user_id',user.id);
+        if(deleteError){del.disabled=false;alert(deleteError.message);}else item.remove();
+      });
+      item.append(txt,del);box.append(item);
+    }
+  };
   const showUser = async user => {
     const seq = ++userLoadVersion;
     currentUser = user;
@@ -39,6 +64,7 @@
     $('profile-name').value = data?.display_name || '';
     $('profile-rashi').value = data?.preferred_rashi || '';
     $('account-name').textContent = data?.display_name || '';
+    await loadReports(user,seq);
   };
   const setMode = next => {
     mode = next;
@@ -91,13 +117,38 @@
     if(error)msg(profileMessage,'प्रोफाइल सेव नहीं हुई: '+error.message);
     else {$('account-name').textContent=name;msg(profileMessage,'प्रोफाइल सुरक्षित रूप से सेव हो गई।');}
   });
+  $('forgot-password').addEventListener('click',async()=>{
+    const email=$('auth-email').value.trim();
+    if(!email||!$('auth-email').checkValidity()){msg(authMessage,'पासवर्ड रीसेट लिंक के लिए ऊपर अपना सही ईमेल भरें।');return;}
+    const button=$('forgot-password');button.disabled=true;
+    const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/mera-account/'});
+    button.disabled=false;
+    if(error)msg(authMessage,'रीसेट ईमेल नहीं भेजा जा सका: '+error.message);
+    else msg(authMessage,'यदि यह ईमेल रजिस्टर है, तो पासवर्ड रीसेट लिंक भेज दिया गया है।');
+  });
+  $('reset-password-form').addEventListener('submit',async ev=>{
+    ev.preventDefault();
+    const pass=$('reset-new-password').value;
+    if(pass.length<8){msg(authMessage,'कम से कम 8 अक्षरों का नया पासवर्ड चुनें।');return;}
+    const {error}=await client.auth.updateUser({password:pass});
+    if(error)msg(authMessage,'पासवर्ड नहीं बदला: '+error.message);
+    else {msg(authMessage,'पासवर्ड बदल गया। अब अपने अकाउंट में लॉगिन कर सकते हैं।');$('reset-password-form').hidden=true;$('reset-new-password').value='';}
+  });
   $('auth-signout').addEventListener('click',async () => {
     const {error}=await client.auth.signOut();
     if(error)msg(profileMessage,'लॉगआउट में समस्या: '+error.message);
     else {await showUser(null);msg(authMessage,'आप लॉगआउट हो चुके हैं।');}
   });
-  client.auth.onAuthStateChange((_event, session) => {
+  client.auth.onAuthStateChange((event, session) => {
     // Avoid asynchronous Supabase API calls in this callback; it runs under a lock.
+    if(event==='PASSWORD_RECOVERY'){
+      $('reset-password-form').hidden=false;
+      authPanel.hidden=false;
+      profilePanel.hidden=true;
+      msg(authMessage,'अपना नया पासवर्ड भरकर सेव करें।');
+      return;
+    }
+    if(!$('reset-password-form').hidden)return;
     setTimeout(() => {void showUser(session?.user||null);},0);
   });
   void client.auth.getSession().then(async ({data,error})=>{
