@@ -85,3 +85,15 @@ body{background:linear-gradient(180deg,#fffdf7,#fff9f0 420px,#fffdf8 950px);colo
 
 /* Astrology phase-one pages: static and privacy-safe until backend activation */
 .astro-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px}.astro-panel{background:#fffaf1;border:1px solid #e8d5b7;border-radius:20px;padding:27px}.astro-panel h2{font-size:24px;color:#763c2a;margin:9px 0 14px}.astro-panel p{line-height:1.75;color:#765e4c}.astro-panel ul{padding-left:23px;line-height:2;color:#6c5240}.astro-state{padding:17px 20px;border:1px solid #e4cca5;background:#fff3dc;border-radius:14px;margin:22px 0;color:#744a2a;font-size:14px;line-height:1.65}.astro-small{font-size:13px}.astro-rashi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.astro-rashi{background:#fffaf3;text-align:center;border:1px solid #e8d6c0;padding:23px 12px;border-radius:17px}.astro-rashi-symbol{display:block;color:#ab642e;font-size:30px}.astro-rashi h3{margin:5px 0;font-size:21px;color:#784126}.astro-rashi small{color:#8b7564}@media(max-width:760px){.astro-layout{grid-template-columns:1fr}.astro-rashi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Secure account forms */
+.auth-fields{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.auth-fields label{font-size:14px;font-weight:700;color:#6b4533}
+.auth-fields input,.auth-fields select{width:100%;min-height:48px;border:1px solid #dcc5a7;border-radius:12px;background:white;padding:11px 14px;color:#503824;font:inherit}
+.auth-fields input:focus,.auth-fields select:focus{outline:2px solid #b37a44;outline-offset:2px}
+.auth-fields button{margin-top:12px;cursor:pointer;text-align:center}
+.auth-fields button:disabled{opacity:.6;cursor:wait}
+.auth-switch{display:flex;gap:7px;padding:5px;background:#f6ead7;border-radius:12px;margin:15px 0}
+.auth-switch-button{font:inherit;cursor:pointer;border:0;border-radius:9px;flex:1;padding:10px;color:#805c43;background:transparent}
+.auth-switch-button.active{background:#fff;color:#753e26;font-weight:700;box-shadow:0 2px 12px #5b2b1814}
+#auth-signout{margin-top:10px;cursor:pointer}
