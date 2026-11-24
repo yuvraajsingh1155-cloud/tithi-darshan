@@ -3,8 +3,10 @@
 <section class="heritage-head"><div class="shell"><span class="eyebrow">ॐ तिथि दर्शन • सुरक्षित अकाउंट</span><h1>मेरा अकाउंट</h1><p>ईमेल से लॉगिन करें, अपना प्रोफाइल बनाएँ और आगे आने वाली निजी कुंडली सेवाओं के लिए तैयार रहें।</p></div></section>
 <section class="shell heritage-section"><div class="astro-layout">
 <div class="astro-panel" id="auth-panel"><span class="kicker">सुरक्षित Supabase Authentication</span><h2 id="auth-title">ईमेल से लॉगिन</h2>
-<p>नया अकाउंट बनाएँ या अपने ईमेल और पासवर्ड से लॉगिन करें।</p>
-<div class="astro-state" role="note"><strong>ईमेल अकाउंट अभी परीक्षण चरण में है:</strong> Supabase के डिफ़ॉल्ट ईमेल प्रदाता से Confirmation / Password Reset ईमेल फिलहाल केवल प्रोजेक्ट की टीम के ईमेल पर जा सकते हैं। आम उपयोगकर्ताओं के Signup के लिए अलग SMTP या Google OAuth सेटअप आवश्यक है।</div>
+<p>अपने Google अकाउंट से सुरक्षित लॉगिन करें। ईमेल/पासवर्ड विकल्प भी उपलब्ध है।</p>
+<button type="button" id="google-signin" class="google-signin-button"><span class="google-g" aria-hidden="true">G</span><span>Google से लॉगिन करें</span></button>
+<p class="astro-small">लॉगिन के बाद आपका निजी डैशबोर्ड खुलेगा।</p>
+<div class="astro-state" role="note"><strong>ईमेल/पासवर्ड का Signup अभी परीक्षण चरण में है:</strong> Supabase के डिफ़ॉल्ट ईमेल प्रदाता से Confirmation / Password Reset ईमेल फिलहाल केवल प्रोजेक्ट की टीम के ईमेल पर जा सकते हैं। आम उपयोगकर्ताओं के Signup के लिए अलग SMTP या Google OAuth सेटअप आवश्यक है।</div>
 <div class="auth-switch"><button type="button" class="auth-switch-button active" data-auth-mode="signin">लॉगिन</button><button type="button" class="auth-switch-button" data-auth-mode="signup">नया अकाउंट</button></div>
 <form id="auth-form" class="auth-fields">
 <label for="auth-email">ईमेल</label><input required id="auth-email" type="email" autocomplete="email" maxlength="254" placeholder="name@example.com">
