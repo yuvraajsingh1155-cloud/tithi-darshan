@@ -169,6 +169,68 @@
     if(error)msg(authMessage,'पासवर्ड नहीं बदला: '+error.message);
     else {msg(authMessage,'पासवर्ड बदल गया। अब अपने अकाउंट में लॉगिन कर सकते हैं।');$('reset-password-form').hidden=true;$('reset-new-password').value='';}
   });
+  const dataStatus=$('account-data-status');
+  $('account-export').addEventListener('click',async()=>{
+    if(!currentUser)return;
+    const button=$('account-export');button.disabled=true;
+    msg(dataStatus,'प्रोफाइल और रिपोर्ट डाउनलोड के लिए तैयार की जा रही हैं…');
+    try{
+      const userId=currentUser.id;
+      const {data:profile,error:profileError}=await client.from('profiles')
+        .select('display_name,preferred_rashi,created_at,updated_at')
+        .eq('user_id',userId).maybeSingle();
+      if(profileError)throw profileError;
+      const reports=[];
+      for(let offset=0;offset<10000;offset+=500){
+        const {data,error}=await client.from('saved_kundli_reports')
+          .select('report_title,report_data,rule_version,created_at')
+          .eq('user_id',userId).order('created_at',{ascending:false})
+          .range(offset,offset+499);
+        if(error)throw error;
+        if(!data?.length)break;
+        reports.push(...data);
+        if(data.length<500)break;
+      }
+      const payload={
+        service:'Tithi Darshan',
+        exported_at:new Date().toISOString(),
+        account:{email:currentUser.email,profile},
+        saved_kundli_reports:reports
+      };
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
+      const target=URL.createObjectURL(blob);
+      try{
+        const link=document.createElement('a');
+        link.href=target;link.download='tithi-darshan-my-data.json';
+        link.style.display='none';document.body.append(link);link.click();link.remove();
+      }finally{setTimeout(()=>URL.revokeObjectURL(target),2000);}
+      msg(dataStatus,'निजी डेटा डाउनलोड के लिए तैयार है। फाइल अपने डिवाइस में सुरक्षित रखें।');
+    }catch(error){
+      msg(dataStatus,'डेटा डाउनलोड नहीं हुआ: '+(error.message||'कृपया फिर प्रयास करें।'));
+    }finally{button.disabled=false;}
+  });
+  $('account-delete').addEventListener('click',async()=>{
+    if(!currentUser?.email)return;
+    const requested=prompt('अकाउंट स्थायी रूप से हटाने के लिए अपना पूरा ईमेल लिखें। यह कदम वापस नहीं होगा।');
+    if(requested===null)return;
+    if(requested.trim().toLowerCase()!==currentUser.email.trim().toLowerCase()){
+      msg(dataStatus,'ईमेल मेल नहीं खाता। अकाउंट सुरक्षित है।');return;
+    }
+    if(!confirm('क्या आप सचमुच अपना तिथि दर्शन अकाउंट, प्रोफाइल और सारी सेव रिपोर्ट स्थायी रूप से हटाना चाहते हैं?'))return;
+    const button=$('account-delete');button.disabled=true;
+    msg(dataStatus,'अकाउंट हटाने के अनुरोध की पुष्टि की जा रही है…');
+    try{
+      const {data,error}=await client.functions.invoke('delete-account',{
+        body:{confirmation:'DELETE MY ACCOUNT',email:currentUser.email}
+      });
+      if(error||data?.deleted!==true)throw error||new Error(data?.error||'Deletion failed');
+      try{await client.auth.signOut({scope:'local'});}catch{}
+      location.assign('/mera-account/?account_deleted=1');
+    }catch(error){
+      msg(dataStatus,'अकाउंट नहीं हटाया जा सका। कृपया फिर प्रयास करें या संपर्क पेज से बताएं।');
+      button.disabled=false;
+    }
+  });
   $('auth-signout').addEventListener('click',async () => {
     const {error}=await client.auth.signOut();
     if(error)msg(profileMessage,'लॉगआउट में समस्या: '+error.message);
@@ -193,4 +255,6 @@
     if (result.error) {msg(authMessage,'सत्र की पुष्टि नहीं हुई: '+result.error.message);return;}
     await showUser(result.data.user||null);
   }).catch(e=>msg(authMessage,'लॉगिन सेवा उपलब्ध नहीं: '+e.message));
+  if(new URLSearchParams(location.search).get('account_deleted')==='1')
+    msg(authMessage,'आपका तिथि दर्शन अकाउंट और उससे जुड़ी निजी रिपोर्ट स्थायी रूप से हटा दी गई हैं।');
 })();
