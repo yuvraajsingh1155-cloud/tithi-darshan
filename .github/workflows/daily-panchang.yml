@@ -7,6 +7,7 @@ on:
       - 'templates/**'
       - 'data/**'
       - 'assets/**'
+      - 'tests/**'
       - 'requirements.txt'
   workflow_dispatch:
   schedule:
@@ -37,6 +38,7 @@ jobs:
         run: |
           node --check assets/site.js
           node --check assets/auth.js
+          node --check assets/ashtakoota-full.js
           node --check assets/koota-preview.js
           node --check assets/rashifal.js
           node tests/test_koota_preview.cjs
