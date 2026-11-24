@@ -124,3 +124,12 @@ body{background:linear-gradient(180deg,#fffdf7,#fff9f0 420px,#fffdf8 950px);colo
 .google-signin-button:hover{background:#fff8ed;border-color:#b98e5c}.google-signin-button:focus-visible{outline:3px solid #be8d4b;outline-offset:2px}
 .google-signin-button:disabled{opacity:.6;cursor:wait}
 .google-g{font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#4285f4}
+
+/* Authenticated user's data privacy controls */
+.account-data-tools{margin:1.5rem 0;padding:1.1rem;border:1px solid #e3d8cb;border-radius:14px;background:#fffaf4}
+.account-data-tools h3{margin:0 0 .35rem}
+.account-data-tools .outline-button{margin:.4rem .6rem .4rem 0;min-height:44px}
+.account-delete-button{border-color:#a7453f!important;color:#8c2723!important}
+.account-delete-button:hover{background:#fff0ef!important}
+.account-delete-button:disabled{opacity:.55;cursor:wait}
+@media(max-width:560px){.account-data-tools .outline-button{display:block;width:100%;margin:.6rem 0}}
