@@ -329,6 +329,22 @@ def main():
         'अष्टकूट के आठ भाग, 36 गुण का अर्थ और मांगलिक दोष के बारे में जिम्मेदार जानकारी।',
         '/kundli-milan/','kundli'),koots=koots,
         articles=[a for a in articles if a['category'] in ('kundli-milan','manglik-dosh')]))
+    # Phase-one astrology entry points: do not solicit private birth data
+    # before the verified auth/backend and matching engine are deployed.
+    write('/mera-account/',env.get_template('account.html').render(**shared(
+        'मेरा अकाउंट और सुरक्षित लॉगिन | तिथि दर्शन',
+        'कुंडली मिलान और व्यक्तिगत राशिफल के लिए सुरक्षित अकाउंट से जुड़ी जानकारी।',
+        '/mera-account/','account',robots_policy='noindex,follow')),indexable=False)
+    rashis=[
+        ('मेष','Aries','♈'),('वृषभ','Taurus','♉'),('मिथुन','Gemini','♊'),
+        ('कर्क','Cancer','♋'),('सिंह','Leo','♌'),('कन्या','Virgo','♍'),
+        ('तुला','Libra','♎'),('वृश्चिक','Scorpio','♏'),('धनु','Sagittarius','♐'),
+        ('मकर','Capricorn','♑'),('कुंभ','Aquarius','♒'),('मीन','Pisces','♓')
+    ]
+    write('/rashifal/',env.get_template('rashifal.html').render(**shared(
+        'आज का राशिफल: 12 राशियाँ और जन्म राशि की जानकारी | तिथि दर्शन',
+        'बारह राशियों के नाम, चंद्र राशि और व्यक्तिगत दैनिक राशिफल की पारंपरिक पद्धति समझें।',
+        '/rashifal/','rashifal'),rashis=[{'name':n,'english':e,'symbol':sym} for n,e,sym in rashis]))
     write('/devi-devta/',env.get_template('deities.html').render(**shared(
         'देवी-देवता: गणेश, शिव, विष्णु, लक्ष्मी | तिथि दर्शन',
         'भारतीय संस्कृति में गणेश, शिव, विष्णु, लक्ष्मी और सरस्वती के प्रतीक, चित्र और परंपराएँ।',
