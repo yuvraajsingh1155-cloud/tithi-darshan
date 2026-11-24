@@ -100,8 +100,11 @@
     // Avoid asynchronous Supabase API calls in this callback; it runs under a lock.
     setTimeout(() => {void showUser(session?.user||null);},0);
   });
-  void client.auth.getUser().then(({data,error})=>{
+  void client.auth.getSession().then(async ({data,error})=>{
     if(error) {msg(authMessage,'कनेक्शन में समस्या: '+error.message);return;}
-    void showUser(data.user||null);
+    if (!data.session) {await showUser(null);return;}
+    const result=await client.auth.getUser();
+    if (result.error) {msg(authMessage,'सत्र की पुष्टि नहीं हुई: '+result.error.message);return;}
+    await showUser(result.data.user||null);
   }).catch(e=>msg(authMessage,'लॉगिन सेवा उपलब्ध नहीं: '+e.message));
 })();
