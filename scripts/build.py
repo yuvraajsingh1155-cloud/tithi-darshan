@@ -363,7 +363,7 @@ def main():
                 if f.parent != DIST else '/'
                 for f in DIST.rglob('index.html')
             )
-            if route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
+            if route != '/mera-account/' and route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
         )
         entries=''.join(f'<url><loc>{xmlutils.escape(site_url+route)}</loc></url>' for route in all_routes)
         (DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+entries+'</urlset>',encoding='utf-8')
