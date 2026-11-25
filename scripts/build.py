@@ -30,6 +30,7 @@ DIST=ROOT/'dist'
 env=Environment(loader=FileSystemLoader(str(ROOT/'templates')), autoescape=select_autoescape(['html']))
 CITIES=json.loads((ROOT/'data/cities.json').read_text(encoding='utf-8'))
 FESTIVALS=json.loads((ROOT/'data/festivals.json').read_text(encoding='utf-8'))
+DEITY_DETAILS=json.loads((ROOT/'data/deity_details.json').read_text(encoding='utf-8'))
 EDITORIAL=json.loads((ROOT/'data/articles.json').read_text(encoding='utf-8'))
 TOPICS=EDITORIAL['topics']
 TOPIC_MAP={t['slug']:t for t in TOPICS}
@@ -249,7 +250,12 @@ def main():
         end=today+timedelta(days=60)
     site_url=os.getenv('SITE_URL','').strip().rstrip('/')
     articles=published_articles()
-    deities=DEITIES
+    # Keep original illustrated artwork, but give every listed deity a
+    # dedicated information page rather than a broad category fallback.
+    deities=[{**item,'slug':slug,'href':f'/dev-darshan/{slug}/'}
+        for item,slug in zip(DEITIES,('ganesh','shiva','vishnu','lakshmi','saraswati'))]
+    if set(DEITY_DETAILS)!={item['slug'] for item in deities}:
+        raise ValueError('Missing content for illustrated deity profile')
     topic_counts={t['slug']:sum(a['category']==t['slug'] for a in articles) for t in TOPICS}
     if site_url and not (site_url.startswith('https://') or site_url.startswith('http://localhost')):
         raise ValueError('SITE_URL must be a full HTTPS URL, e.g. https://your-site.pages.dev')
@@ -456,6 +462,17 @@ def main():
         'देवी-देवता: गणेश, शिव, विष्णु, लक्ष्मी | तिथि दर्शन',
         'भारतीय संस्कृति में गणेश, शिव, विष्णु, लक्ष्मी और सरस्वती के प्रतीक, चित्र और परंपराएँ।',
         '/devi-devta/','deities'),deities=deities))
+    deity_template=env.get_template('deity-detail.html')
+    for deity in deities:
+        details=DEITY_DETAILS[deity['slug']]
+        route=f"/dev-darshan/{deity['slug']}/"
+        title=f"{deity['name']}: प्रतीक, पूजा एवं सांस्कृतिक परिचय | तिथि दर्शन"
+        desc=details['summary']
+        schemas=[{'@context':'https://schema.org','@type':'WebPage',
+            'name':title,'description':desc,'inLanguage':'hi-IN',
+            'about':{'@type':'Thing','name':deity['name']}}]
+        write(route,deity_template.render(**shared(title,desc,route,'deity-detail',
+            schemas=schemas),deity=deity,info=details))
     write('/shehar/',env.get_template('cities.html').render(**shared('भारत के शहरों का आज का पंचांग | तिथि दर्शन','दिल्ली, लखनऊ, हरदोई, वाराणसी और अन्य शहरों के लिए आज की तिथि एवं मुहूर्त देखें।','/shehar/','cities'),cities=CITIES))
     write('/vidhi/',env.get_template('method.html').render(**shared('पंचांग की गणना पद्धति और स्रोत | तिथि दर्शन','जानें तिथि, नक्षत्र, राहुकाल और अभिजीत मुहूर्त की गणना किस तरह की जाती है।','/vidhi/','method'),guide_links=guide_links))
     # Universal public search: generated only from published editorial/static
@@ -488,7 +505,7 @@ def main():
             search_add(topic['name'],topic['description'],
                 f"/vishay/{topic['slug']}/",'विषय',topic['slug'].replace('-',' '))
     for deity in deities:
-        search_add(deity['name'],deity['description'],'/devi-devta/','देवी-देवता',
+        search_add(deity['name'],deity['description'],deity['href'],'देवी-देवता',
             deity['name']+' '+deity['image'].replace('deity-','').replace('.svg',''))
     for r,slug in zip(rashis,zodiac_slugs):
         search_add(r[0]+' राशि',r[1]+' — राशि नाम और दैनिक सांस्कृतिक विचार',
