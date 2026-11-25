@@ -6,6 +6,8 @@ Only tests implemented controls. Does not claim full WCAG or end-to-end Google c
 """
 from __future__ import annotations
 import json
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import os
 import urllib.request
 from pathlib import Path
@@ -13,7 +15,8 @@ from playwright.sync_api import sync_playwright
 
 BASE=os.getenv("TEST_BASE_URL","http://127.0.0.1:8765")
 VIEWPORTS=[320,375,390,768,1024,1280,1440,1920]
-PAGES=["/","/calendar/","/settings/","/mera-account/","/rashifal/","/kundli-milan/","/lekh/"]
+TODAY=datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
+PAGES=["/","/calendar/","/settings/","/mera-account/","/rashifal/","/kundli-milan/","/lekh/","/ekadashi/",f"/panchang/lucknow/{TODAY}/"]
 results=[]
 def check_page(page,path,width):
     errors=[]
@@ -41,6 +44,13 @@ with sync_playwright() as p:
         assert page.locator("html").get_attribute("data-theme")=="dark"
         page.select_option("#pref-city","hardoi")
         page.locator("#pref-high-contrast").check()
+        page.select_option("#pref-time","12h")
+        page.reload(wait_until="domcontentloaded")
+        assert page.locator("#pref-time").input_value()=="12h"
+        page.goto(BASE+f"/panchang/lucknow/{TODAY}/",wait_until="domcontentloaded")
+        assert page.locator("#choghadiya .choghadiya-slot").count()==8
+        assert page.locator("[data-clock]").count()>=10
+        page.goto(BASE+"/settings/",wait_until="domcontentloaded")
         page.reload(wait_until="domcontentloaded")
         assert page.locator("#pref-city").input_value()=="hardoi"
         assert page.locator("html").get_attribute("data-theme")=="dark"
