@@ -51,4 +51,4 @@ def test_cache_rules_protect_today_and_live_metadata():
     assert '/sw.js\n  Cache-Control: no-cache' in content
     index=json.loads((DIST/'build-info.json').read_text(encoding='utf-8'))
     assert len(index['generated_at_utc'])>=19
-    assert index['indian_date']==homepage.body['data-date']
+    assert index['indian_date']==page('/').body['data-date']
