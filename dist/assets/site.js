@@ -35,6 +35,20 @@
   // Freshness validation and safe redirect are handled by assets/freshness.js.
   // Never redirect blindly into a possibly unpublished dated page.
 
+  // '/' and Ctrl/Cmd+K open the global public search. Do not intercept typing.
+  document.addEventListener('keydown',event=>{
+    const target=event.target;
+    const typing=target?.closest?.('input,select,textarea,[contenteditable="true"]');
+    if(typing||event.altKey||event.shiftKey)return;
+    if(event.key==='/'&&!event.ctrlKey&&!event.metaKey ||
+       event.key.toLowerCase()==='k'&&(event.ctrlKey||event.metaKey)){
+      event.preventDefault();
+      if(location.pathname==='/khoj/'){
+        document.getElementById('global-search-input')?.focus();
+      }else location.assign('/khoj/');
+    }
+  });
+
   // Accessible responsive menu, Escape close and outside click.
   const menuToggle=document.getElementById('menu-toggle');
   const header=document.querySelector('.header');
