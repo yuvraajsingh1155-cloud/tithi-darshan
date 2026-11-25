@@ -48,6 +48,13 @@ jobs:
               for metric in ('largest-contentful-paint','cumulative-layout-shift','interaction-to-next-paint'):
                   a=data['audits'].get(metric,{})
                   print('METRIC',name,metric,a.get('displayValue'),a.get('numericValue'))
+              for ref in data['categories']['accessibility']['auditRefs']:
+                  if not ref.get('weight',0): continue
+                  a=data['audits'].get(ref['id'],{})
+                  if a.get('score') is not None and a['score']<1:
+                      nodes=a.get('details',{}).get('items',[])
+                      print('A11Y ISSUE',name,ref['id'],a.get('title'),a.get('score'),
+                        [n.get('node',{}).get('snippet','')[:100] for n in nodes[:3]])
           PY
       - uses: actions/upload-artifact@v4
         if: always()
