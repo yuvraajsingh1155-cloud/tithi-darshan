@@ -138,7 +138,7 @@
       const raw=user.user_metadata?.avatar_url||user.user_metadata?.picture;
       try{
         const u=new URL(String(raw||''));
-        if(u.protocol==='https:' && /(^|\\.)googleusercontent\\.com$/.test(u.hostname)){
+        if(u.protocol==='https:' && /(^|\.)googleusercontent\.com$/.test(u.hostname)){
           const image=document.createElement('img');
           image.src=u.href;image.alt='Google प्रोफाइल फोटो';
           image.loading='lazy';image.referrerPolicy='no-referrer';
