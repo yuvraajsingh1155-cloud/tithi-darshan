@@ -23,6 +23,7 @@ from datetime import date, timedelta, datetime
 from zoneinfo import ZoneInfo
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from panchang import panchang_for
+from choghadiya import daytime_choghadiya
 
 ROOT=Path(__file__).resolve().parent.parent
 DIST=ROOT/'dist'
@@ -270,6 +271,7 @@ def main():
     for d in dates_between(start,end):
         for city in CITIES:
             p=panchang_for(d,city)
+            p['day_choghadiya']=daytime_choghadiya(d,p['sunrise'],p['sunset'])
             panchang_cache[(city['slug'],d.isoformat())]=p
             route=date_page_path(city['slug'],d)
             is_today=d==today
