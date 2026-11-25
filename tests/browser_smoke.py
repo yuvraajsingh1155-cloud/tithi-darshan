@@ -16,7 +16,7 @@ from playwright.sync_api import sync_playwright
 BASE=os.getenv("TEST_BASE_URL","http://127.0.0.1:8765")
 VIEWPORTS=[320,375,390,768,1024,1280,1440,1920]
 TODAY=datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
-PAGES=["/","/calendar/","/settings/","/mera-account/","/rashifal/","/kundli-milan/","/lekh/","/ekadashi/",f"/panchang/lucknow/{TODAY}/"]
+PAGES=["/","/calendar/","/settings/","/mera-account/","/rashifal/","/kundli-milan/","/lekh/","/ekadashi/","/khoj/",f"/panchang/lucknow/{TODAY}/"]
 results=[]
 def check_page(page,path,width):
     errors=[]
@@ -48,7 +48,9 @@ with sync_playwright() as p:
         page.reload(wait_until="domcontentloaded")
         assert page.locator("#pref-time").input_value()=="12h"
         page.goto(BASE+f"/panchang/lucknow/{TODAY}/",wait_until="domcontentloaded")
-        assert page.locator("#choghadiya .choghadiya-slot").count()==8
+        assert page.locator("#choghadiya .choghadiya-slot").count()==16
+        assert page.locator("#choghadiya [data-slot-start][data-slot-end]").count()==16
+        assert page.locator("#tithi-civil-segments").count()==1
         assert page.locator("[data-clock]").count()>=10
         page.goto(BASE+"/settings/",wait_until="domcontentloaded")
         page.reload(wait_until="domcontentloaded")
@@ -68,6 +70,24 @@ with sync_playwright() as p:
             assert page.locator("#primary-nav").is_visible()
             page.keyboard.press("Escape")
             assert toggle.get_attribute("aria-expanded")=="false"
+        # Search published information via the genuinely generated local index.
+        page.goto(BASE+"/khoj/",wait_until="domcontentloaded")
+        page.locator("#global-search-input").fill("एकादशी")
+        page.locator("#universal-search-form button[type=submit]").click()
+        page.locator(".search-result-card").first.wait_for(timeout=12000)
+        assert page.locator("#search-count").text_content().strip()
+        # Verify live current Tithi displays only verified data (not a placeholder).
+        page.goto(BASE+"/",wait_until="domcontentloaded")
+        page.locator("#current-tithi-card").wait_for(state="visible",timeout=12000)
+        assert "पक्ष" in (page.locator("#current-tithi-name").text_content() or "")
+        # Reproducible visual QA screenshots for each breakpoint and mode.
+        screenshots=Path("artifacts/tithi-2-visual-qa")
+        screenshots.mkdir(parents=True,exist_ok=True)
+        page.screenshot(path=str(screenshots/f"home-{width}.png"),full_page=True,animations="disabled")
+        page.goto(BASE+"/settings/",wait_until="domcontentloaded")
+        page.select_option("#pref-theme","dark")
+        page.screenshot(path=str(screenshots/f"settings-dark-{width}.png"),full_page=True,animations="disabled")
+        page.select_option("#pref-theme","system")
         # Exercise native sharing and print actions on a real published article.
         page.goto(BASE+"/lekh/",wait_until="domcontentloaded")
         article_link=page.locator(".article-card").first.get_attribute("href")
