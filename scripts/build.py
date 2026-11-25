@@ -271,7 +271,7 @@ def main():
     for d in dates_between(start,end):
         for city in CITIES:
             p=panchang_for(d,city)
-            p['day_choghadiya']=daytime_choghadiya(d,p['sunrise'],p['sunset'])
+            p['day_choghadiya']=daytime_choghadiya(d,p['sunriseIso'],p['sunsetIso'])
             panchang_cache[(city['slug'],d.isoformat())]=p
             route=date_page_path(city['slug'],d)
             is_today=d==today
