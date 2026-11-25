@@ -51,29 +51,35 @@ jobs:
           python -m pip install --disable-pip-version-check -q pytest beautifulsoup4
           python -m pytest -q
 
-      - name: Commit updated Panchang pages
+      - name: Commit updated Panchang pages (race-safe)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dist
-          if ! git diff --cached --quiet; then
+          published=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+              echo "Repository changed during build: regenerate on the latest main."
+              git reset --hard origin/main
+              SITE_URL=https://hindu-tithi-darshan.pages.dev python scripts/build.py
+            fi
+            git add dist
+            if git diff --cached --quiet; then
+              echo "No content changed."
+              published=true
+              break
+            fi
             git commit -m "chore: refresh Hindi Panchang for India"
-            # An editor can push while a scheduled build is running.
-            # Rebase the generated output onto the newest main before publishing.
-            for attempt in 1 2 3; do
-              git fetch origin main
-              git rebase origin/main
-              if git push origin HEAD:main; then
-                echo "Generated pages pushed to main."
-                break
-              fi
-              if [ "$attempt" -eq 3 ]; then
-                echo "Could not publish after 3 attempts." >&2
-                exit 1
-              fi
-            done
-          else
-            echo "No content changed."
+            if git push origin HEAD:main; then
+              echo "Published generated pages."
+              published=true
+              break
+            fi
+            echo "Concurrent push rejected, refreshing source and rebuilding."
+          done
+          if [ "$published" != true ]; then
+            echo "Failed to publish after three safe attempts." >&2
+            exit 1
           fi
 
       - name: Trigger Cloudflare Pages deploy hook when configured
