@@ -37,6 +37,13 @@ jobs:
       - name: Validate public JavaScript syntax
         run: |
           node --check assets/site.js
+          node --check assets/freshness.js
+          node --check assets/global-search.js
+          node --check assets/preferences.js
+          node --check assets/calendar.js
+          node --check assets/ekadashi.js
+          node --check assets/bookmarks.js
+          node --check assets/settings.js
           node --check assets/auth.js
           node --check assets/ashtakoota-full.js
           node --check assets/koota-preview.js
