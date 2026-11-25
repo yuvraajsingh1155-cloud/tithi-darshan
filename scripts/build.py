@@ -11,6 +11,7 @@ Required for sitemap.xml and canonical metadata, not for basic operation.
 """
 from __future__ import annotations
 import argparse
+import calendar as calendarlib
 import json
 import os
 import re
@@ -242,12 +243,16 @@ def main():
     # Keep the previously generated archive: crawled date URLs must not disappear.
     DIST.mkdir(parents=True,exist_ok=True)
     shutil.copytree(ROOT/'assets',DIST/'assets',dirs_exist_ok=True)
+    shutil.copyfile(ROOT/'assets'/'sw.js',DIST/'sw.js')
+    shutil.copyfile(ROOT/'assets'/'manifest.webmanifest',DIST/'manifest.webmanifest')
     write,shared,sitemap=make_writer(site_url,today,start,end)
     main_template=env.get_template('panchang.html')
     generated=0
+    panchang_cache={}
     for d in dates_between(start,end):
         for city in CITIES:
             p=panchang_for(d,city)
+            panchang_cache[(city['slug'],d.isoformat())]=p
             route=date_page_path(city['slug'],d)
             is_today=d==today
             desc=f"{p['dateHindi']} {p['city']} पंचांग: {p['paksha']} {p['tithi']} तिथि {p['tithiEnd']} तक; {p['nakshatra']} नक्षत्र, राहुकाल {p['rahu']['start']} से {p['rahu']['end']}।"
@@ -276,6 +281,58 @@ def main():
                         previous_date=(d-timedelta(days=1)).isoformat() if d>start else None,next_date=(d+timedelta(days=1)).isoformat() if d<end else None,
                         min_date=start.isoformat(),max_date=end.isoformat(),recent_articles=articles[:4],deities=deities,topics=TOPICS)
                     write('/',home)
+    # Real per-city monthly calendars reuse the sunrise-based daily computation.
+    # Only calendar cells in the published daily window link to a date page.
+    months=[date(today.year,today.month,1)]
+    if today.month==12:
+        months.append(date(today.year+1,1,1))
+    else:
+        months.append(date(today.year,today.month+1,1))
+    months_hi=['जनवरी','फ़रवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर']
+    month_options=[{'iso':m.strftime('%Y-%m'),'label':months_hi[m.month-1]+' '+str(m.year)} for m in months]
+    weekdays=['सोम','मंगल','बुध','गुरु','शुक्र','शनि','रवि']
+    month_template=env.get_template('calendar.html')
+    for city in CITIES:
+        for month_start in months:
+            label=months_hi[month_start.month-1]
+            iso_month=month_start.strftime('%Y-%m')
+            route=f"/calendar/{city['slug']}/{iso_month}/"
+            cells=[]
+            for week in calendarlib.monthcalendar(month_start.year,month_start.month):
+                for day in week:
+                    if day==0:
+                        cells.append({'empty':True})
+                        continue
+                    d=date(month_start.year,month_start.month,day)
+                    iso=d.isoformat()
+                    # The month may begin before the rolling seven-day archive window.
+                    # Show calculated date data but DO NOT link an unpublished daily page.
+                    p=panchang_cache.get((city['slug'],iso))
+                    if p is None:
+                        p=panchang_for(d,city)
+                    fest=FESTIVALS.get(iso)
+                    cells.append({'empty':False,'day':day,'iso':iso,
+                        'tithi':p['tithi'],'paksha':p['paksha'],
+                        'festival':fest['title'] if fest else None,
+                        'is_today':d==today,'available':start<=d<=end})
+            content={'year':month_start.year,'month_name':label,'city':city,
+                     'cities':CITIES,'selected_month':iso_month,'cells':cells,
+                     'weekdays':weekdays,'month_options':month_options}
+            title=f"{label} {month_start.year} {city['name']} का मासिक पंचांग | तिथि दर्शन"
+            desc=f"{city['name']} के लिए {label} {month_start.year} में रोज की तिथि, पक्ष और सत्यापित उत्सव; शहर के सूर्योदय पर आधारित गणना।"
+            page=month_template.render(**shared(title,desc,route,'calendar',city['slug']),**content)
+            write(route,page)
+            if city['slug']=='delhi' and month_start==months[0]:
+                # A convenience URL; noindex prevents duplicate indexed month content.
+                root=month_template.render(**shared(title,desc,route,'calendar',city['slug'],robots_policy='noindex,follow'),**content)
+                write('/calendar/',root,indexable=False)
+    write('/settings/',env.get_template('settings.html').render(**shared(
+        'वेबसाइट सेटिंग्स: थीम, शहर और सुविधा | तिथि दर्शन',
+        'तिथि दर्शन का डार्क मोड, रंग, समय, फॉन्ट और निजी शहर सेट करें।',
+        '/settings/','settings',robots_policy='noindex,follow'),cities=CITIES),indexable=False)
+    write('/offline/',env.get_template('offline.html').render(**shared(
+        'ऑफ़लाइन | तिथि दर्शन','ऑफ़लाइन होने पर नया दैनिक पंचांग नहीं दिखाया जाता।',
+        '/offline/','offline',robots_policy='noindex,follow')),indexable=False)
     guide_links=[{'slug':slug,'name':g['name']} for slug,g in GUIDES.items()]
     info=env.get_template('info.html')
     for slug,g in GUIDES.items():
@@ -354,7 +411,7 @@ def main():
     write('/vidhi/',env.get_template('method.html').render(**shared('पंचांग की गणना पद्धति और स्रोत | तिथि दर्शन','जानें तिथि, नक्षत्र, राहुकाल और अभिजीत मुहूर्त की गणना किस तरह की जाती है।','/vidhi/','method'),guide_links=guide_links))
     not_found=env.get_template('not-found.html').render(**shared('पेज नहीं मिला | तिथि दर्शन','यह पता उपलब्ध नहीं है।','/404/','not-found'))
     (DIST/'404.html').write_text(not_found,encoding='utf-8')
-    (DIST/'_headers').write_text('/assets/*\n  Cache-Control: public, max-age=604800\n\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n',encoding='utf-8')
+    (DIST/'_headers').write_text('/assets/*\\n  Cache-Control: public, max-age=604800\\n\\n/sw.js\\n  Cache-Control: no-cache\\n\\n/manifest.webmanifest\\n  Cache-Control: public, max-age=3600\\n\\n/*\\n  X-Content-Type-Options: nosniff\\n  Referrer-Policy: strict-origin-when-cross-origin\\n  X-Frame-Options: DENY\\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\\n',encoding='utf-8')
     # Avoid publishing a misleading placeholder sitemap if live site URL unknown.
     if site_url:
         # Include archived pages retained from earlier daily deployments.
@@ -364,7 +421,7 @@ def main():
                 if f.parent != DIST else '/'
                 for f in DIST.rglob('index.html')
             )
-            if route != '/mera-account/' and route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
+            if route not in {'/mera-account/','/settings/','/offline/','/calendar/'} and route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
         )
         entries=''.join(f'<url><loc>{xmlutils.escape(site_url+route)}</loc></url>' for route in all_routes)
         (DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+entries+'</urlset>',encoding='utf-8')
