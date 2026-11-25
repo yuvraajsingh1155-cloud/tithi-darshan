@@ -89,6 +89,21 @@
   });
   // App installability is optional; never cache any private response.
   if('serviceWorker' in navigator && location.protocol==='https:'){
+    let controlled=Boolean(navigator.serviceWorker.controller);
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(controlled&&!document.getElementById('pwa-update-notice')){
+        const notice=document.createElement('div');
+        notice.className='pwa-update-notice';notice.id='pwa-update-notice';
+        notice.setAttribute('role','status');
+        const label=document.createElement('span');
+        label.textContent='तिथि दर्शन का नया संस्करण उपलब्ध है।';
+        const reload=document.createElement('button');
+        reload.type='button';reload.textContent='नया पेज खोलें';
+        reload.addEventListener('click',()=>location.reload());
+        notice.append(label,reload);document.body.append(notice);
+      }
+      controlled=true;
+    });
     window.addEventListener('load',()=>{
       navigator.serviceWorker.register('/sw.js').catch(()=>{/* offline is an enhancement */});
     },{once:true});
