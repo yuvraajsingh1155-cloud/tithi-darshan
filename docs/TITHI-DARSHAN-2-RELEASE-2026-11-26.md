@@ -84,3 +84,11 @@ No additional paid subscription, domain, API or ad placement was purchased in th
 - Dev Darshan pages `4d6375ff8aa8df40f1ef91d590417b1199ebc759`.
 - Live freshness monitoring `4e473c93be2f1edfc83202e93e8c3aad250243ba`.
 - PWA PNG icons `d80e1ec921073b72004eafd8615aaddc579a424e`.
+
+
+## 11. Final stabilization verification
+- Homepage layout shift was measured at **0.103** after initially adding the dynamic Current Tithi card (above requested 0.1). Fixed by reserving that card's space on initial render and applying a stable minimum height.
+- **Latest verified Lighthouse run:** GitHub Actions [45695831254](https://github.com/yuvraajsingh1155-cloud/tithi-darshan/actions/runs/45695831254), completed successfully. Homepage: Performance **98**, Accessibility **100**, Best Practices **100**, SEO **100**; laboratory LCP **1.69 s**, CLS **0.056**. Account: Performance **100**, Accessibility **100**, Best Practices **100**, SEO **66**, intentionally noindex. INP not reported, no user-field metric.
+- **Latest browser QA:** GitHub Actions [45695831289](https://github.com/yuvraajsingh1155-cloud/tithi-darshan/actions/runs/45695831289) successful across the eight viewport widths. Additional prior screenshot-capture and 80-check QA [45695222770](https://github.com/yuvraajsingh1155-cloud/tithi-darshan/actions/runs/45695222770) passed, with 16 full-page screenshots (8 desktop/mobile widths × home/light and settings/dark).
+- **Latest date-build:** [GitHub Actions daily generator](https://github.com/yuvraajsingh1155-cloud/tithi-darshan/actions/workflows/daily-panchang.yml) successfully generated 816 dated pages for 12 cities and a current-date `build-info.json`. Cloudflare Git-integrated deployment can lag behind the source build; check its build timestamp independently rather than inferring from GitHub success.
+- The corrected Current Tithi display renders sunrise Tithi on the static page and current prevailing Tithi from actual civil-day Swiss Ephemeris intervals after JavaScript enhancement. Exact sunrise is not conflated with the current Tithi.
