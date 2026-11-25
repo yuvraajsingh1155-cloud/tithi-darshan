@@ -44,8 +44,8 @@ def daytime_choghadiya(day:date,sunrise:str,sunset:str) -> list[dict]:
     rows=[]
     for index in range(8):
         name=CYCLE[(first+index)%7]
-        start=rise+round(index*duration/8)
-        end=rise+round((index+1)*duration/8)
+        start=round(rise+index*duration/8)
+        end=round(rise+(index+1)*duration/8)
         rows.append({'name':name,'category':'अनुकूल' if name in BENEFICIAL else 'सावधानी',
             'favorable':name in BENEFICIAL,'start':_clock(start),'end':_clock(end)})
     return rows
