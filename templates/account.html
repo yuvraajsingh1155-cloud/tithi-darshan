@@ -20,9 +20,11 @@
 <div class="astro-panel" id="profile-panel" hidden><span class="kicker">आपका निजी डैशबोर्ड</span><h2>नमस्ते! <span id="account-name"></span></h2><p id="account-email"></p>
 <form id="profile-form" class="auth-fields"><label for="profile-name">आपका नाम (वैकल्पिक)</label><input id="profile-name" maxlength="80" autocomplete="name" placeholder="आपका नाम"><label for="profile-rashi">पसंदीदा राशि (वैकल्पिक)</label><select id="profile-rashi"><option value="">राशि चुनें</option><option value="mesh">मेष</option><option value="vrishabh">वृषभ</option><option value="mithun">मिथुन</option><option value="kark">कर्क</option><option value="singh">सिंह</option><option value="kanya">कन्या</option><option value="tula">तुला</option><option value="vrishchik">वृश्चिक</option><option value="dhanu">धनु</option><option value="makar">मकर</option><option value="kumbh">कुंभ</option><option value="meen">मीन</option></select><button class="heritage-button" type="submit" id="profile-submit">प्रोफाइल सेव करें</button></form>
 <div id="profile-message" class="astro-state" role="status" aria-live="polite">आपके विवरण सिर्फ आपके अकाउंट में सुरक्षित रहेंगे।</div>
+<div class="dashboard-quicklinks"><a class="dashboard-quicklink" href="/settings/"><span aria-hidden="true">⚙</span><b>मेरी सेटिंग्स</b><small>थीम, शहर और भाषा</small></a><a class="dashboard-quicklink" data-preferred-panchang href="/"><span aria-hidden="true">☀</span><b>मेरा पंचांग</b><small>पसंदीदा शहर</small></a><a class="dashboard-quicklink" href="/calendar/"><span aria-hidden="true">▦</span><b>मेरा कैलेंडर</b><small>मासिक पंचांग</small></a></div>
+<section class="astro-saved-report"><h3>मेरे सेव किए लेख</h3><div id="bookmarks-list" role="region" aria-live="polite">बुकमार्क लोड हो रहे हैं…</div><a href="/lekh/" class="outline-button">और लेख पढ़ें ↗</a></section>
 <section class="astro-saved-report"><h3>मेरी सेव की गई मिलान रिपोर्ट</h3><div id="reports-list" role="region" aria-live="polite">अभी कोई रिपोर्ट नहीं है।</div><a href="/kundli-milan/" class="outline-button">नई मिलान रिपोर्ट बनाएँ ↗</a></section>
 <div class="account-data-tools"><h3>मेरा निजी डेटा</h3>
-<p class="astro-small">आप अपना प्रोफाइल और सेव की गई मिलान रिपोर्ट JSON फाइल में डाउनलोड कर सकते हैं। अकाउंट स्थायी रूप से हटाने पर उसका निजी डेटा भी हट जाएगा।</p>
+<p class="astro-small">आप अपना प्रोफाइल, सेटिंग्स, बुकमार्क और सेव की गई मिलान रिपोर्ट JSON फाइल में डाउनलोड कर सकते हैं। अकाउंट स्थायी रूप से हटाने पर उसका निजी डेटा भी हट जाएगा।</p>
 <button type="button" id="account-export" class="outline-button">मेरा डेटा डाउनलोड करें</button>
 <button type="button" id="account-delete" class="outline-button account-delete-button">अकाउंट स्थायी रूप से हटाएँ</button>
 <p id="account-data-status" class="astro-small" role="status" aria-live="polite"></p></div>
@@ -31,5 +33,5 @@
 <div class="astro-panel"><h2>अकाउंट से क्या कर सकते हैं?</h2><ul><li>सुरक्षित Google Login और निजी प्रोफाइल</li><li>चंद्र राशि और नक्षत्र से 36 गुणों का पारंपरिक मिलान</li><li>मिलान रिपोर्ट निजी रूप से सेव और डाउनलोड</li><li>निजी डेटा डाउनलोड या अकाउंट स्थायी रूप से हटाएँ</li></ul><p class="astro-small">जन्मतिथि, समय और जन्मस्थान से पूरी कुंडली या मांगलिक विश्लेषण अभी उपलब्ध नहीं है। अपने पासवर्ड या निजी जन्म विवरण को सार्वजनिक रूप से साझा न करें।</p><a class="outline-button" href="/kundli-milan/">36 गुण मिलाएँ ↗</a></div>
 </div></section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.87.3/dist/umd/supabase.min.js" defer></script>
-<script src="/assets/auth.js?v=google-3" defer></script>
+<script src="/assets/auth.js?v=dashboard-4" defer></script>
 {% endblock %}
