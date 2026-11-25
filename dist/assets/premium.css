@@ -225,7 +225,7 @@ html:not([data-theme="dark"]) .nextbar .kicker{color:#fff3e6}
    currently prevailing astronomical Tithi. Never show a stale "today" card. */
 .current-tithi-card{
   display:flex;flex-direction:column;gap:5px;
-  padding:15px 18px;margin:16px 0 20px;
+  min-height:115px;padding:15px 18px;margin:16px 0 20px;
   border:1px solid var(--ui-stroke);border-left:4px solid var(--ui-accent);
   border-radius:15px;background:var(--ui-surface);
   color:var(--ui-ink);box-shadow:var(--ui-shadow);
