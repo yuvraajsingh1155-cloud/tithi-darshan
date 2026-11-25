@@ -456,6 +456,51 @@ def main():
         '/devi-devta/','deities'),deities=deities))
     write('/shehar/',env.get_template('cities.html').render(**shared('भारत के शहरों का आज का पंचांग | तिथि दर्शन','दिल्ली, लखनऊ, हरदोई, वाराणसी और अन्य शहरों के लिए आज की तिथि एवं मुहूर्त देखें।','/shehar/','cities'),cities=CITIES))
     write('/vidhi/',env.get_template('method.html').render(**shared('पंचांग की गणना पद्धति और स्रोत | तिथि दर्शन','जानें तिथि, नक्षत्र, राहुकाल और अभिजीत मुहूर्त की गणना किस तरह की जाती है।','/vidhi/','method'),guide_links=guide_links))
+    # Universal public search: generated only from published editorial/static
+    # resources. Never include Supabase accounts, private reports or drafts.
+    search_records=[]
+    def search_add(title,description,route,category,keywords=''):
+        search_records.append({
+            'title':title[:140],
+            'description':description[:280],
+            'url':route,
+            'category':category,
+            'search':str(keywords)[:450]
+        })
+    search_add('आज की तिथि और हिंदू पंचांग','आज की तिथि, नक्षत्र, राहुकाल और शुभ मुहूर्त','/','पंचांग','aaj tithi panchang today आज')
+    search_add('मासिक हिंदू कैलेंडर','शहर के सूर्योदय के अनुसार मासिक तिथि और पक्ष','/calendar/','कैलेंडर','hindu calendar month महीने की तिथि')
+    search_add('एकादशी कैलेंडर','गणना आधारित एकादशी तिथियाँ; व्रत-पारण के अलग नियम','/ekadashi/','व्रत','ekadashi vrat parana')
+    search_add('कुंडली मिलान: अष्टकूट और 36 गुण','सत्यापित चंद्र राशि व नक्षत्र से पारंपरिक 36 गुण मिलान','/kundli-milan/','ज्योतिष','kundli guna milan')
+    search_add('आज का राशिफल और बारह राशियाँ','राशिचक्र, पारंपरिक जानकारी और सकारात्मक विचार','/rashifal/','राशियाँ','rashi rashifal horoscope')
+    search_add('देवी-देवता दर्शन','मौलिक धार्मिक प्रतीकात्मक चित्र एवं सांस्कृतिक परिचय','/devi-devta/','धर्म','dev darshan')
+    for city in CITIES:
+        search_add(city['name']+' का पंचांग',city['name']+' में सूर्योदय तिथि, चंद्रोदय, चौघड़िया और मुहूर्त',
+            f"/shehar/{city['slug']}/",'शहर',city['english']+' '+city['slug']+' tithi panchang')
+    for slug,guide in GUIDES.items():
+        search_add(guide['name'],guide['intro'],f'/jankari/{slug}/','पंचांग ज्ञान',slug.replace('-',' '))
+    for item in articles:
+        search_add(item['title'],item['summary'],f"/lekh/{item['slug']}/",
+            item['category_name'],' '.join(item.get('keywords',[])))
+    for topic in TOPICS:
+        if topic_counts.get(topic['slug'],0):
+            search_add(topic['name'],topic['description'],
+                f"/vishay/{topic['slug']}/",'विषय',topic['slug'].replace('-',' '))
+    for deity in deities:
+        search_add(deity['name'],deity['description'],'/devi-devta/','देवी-देवता',
+            deity['name']+' '+deity['image'].replace('deity-','').replace('.svg',''))
+    for r in rashis:
+        search_add(r[0]+' राशि',r[1]+' — राशि नाम और दैनिक सांस्कृतिक विचार',
+            '/rashifal/?rashi='+r[0].replace(' ','_'), 'राशियाँ',r[1])
+    write('/khoj/',env.get_template('search.html').render(**shared(
+        'वेबसाइट पर खोजें | तिथि दर्शन',
+        'हिंदी और Hinglish में पंचांग, तिथि, एकादशी, शहर, राशियाँ और प्रकाशित धार्मिक लेख खोजें।',
+        '/khoj/','search',robots_policy='noindex,follow'),
+        popular_searches=['आज की तिथि','राहुकाल','एकादशी','हरदोई','कुंडली मिलान','राशिफल']),indexable=False)
+    (DIST/'search-index.json').write_text(json.dumps({
+        'range':{'start':start.isoformat(),'end':end.isoformat()},
+        'generated_at_utc':datetime.now(ZoneInfo('UTC')).isoformat(timespec='seconds'),
+        'items':search_records
+    },ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     not_found=env.get_template('not-found.html').render(**shared('पेज नहीं मिला | तिथि दर्शन','यह पता उपलब्ध नहीं है।','/404/','not-found'))
     (DIST/'404.html').write_text(not_found,encoding='utf-8')
     headers = (
@@ -489,7 +534,7 @@ def main():
                 if f.parent != DIST else '/'
                 for f in DIST.rglob('index.html')
             )
-            if route not in {'/mera-account/','/settings/','/offline/','/calendar/','/ekadashi/'} and route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
+            if route not in {'/mera-account/','/settings/','/offline/','/calendar/','/ekadashi/','/khoj/'} and route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
         )
         entries=''.join(f'<url><loc>{xmlutils.escape(site_url+route)}</loc></url>' for route in all_routes)
         (DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+entries+'</urlset>',encoding='utf-8')
