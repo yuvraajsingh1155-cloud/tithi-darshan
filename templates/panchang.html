@@ -6,7 +6,7 @@
     <h1>{% if is_today %}आज सूर्योदय पर कौन सी तिथि थी?{% else %}{{ p.dateHindi }} को सूर्योदय पर कौन सी तिथि थी?{% endif %}</h1>
     <p class="hero-sub">{{ p.city }} में {{ p.dateHindi }}, {{ p.weekday }} को <strong>{{ p.paksha }} की {{ p.tithi }}</strong> तिथि है। सूर्योदय पर मौजूद तिथि का समापन <strong>{{ p.tithiEnd }}</strong> पर होगा।</p>
     <div class="freshness-banner" id="freshness-banner" role="alert" hidden><strong>पुराना पंचांग दिख रहा है।</strong><span id="freshness-reason">नई तारीख का डेटा जाँचा जा रहा है।</span></div>
-    <div class="current-tithi-card" id="current-tithi-card" role="status" aria-live="polite" hidden>
+    <div class="current-tithi-card" id="current-tithi-card" role="status" aria-live="polite"{% if not is_today %} hidden{% endif %}>
       <span class="kicker">वर्तमान तिथि • अभी</span>
       <strong id="current-tithi-name">खगोलीय समय मिलाया जा रहा है…</strong>
       <span id="current-tithi-detail"></span>
