@@ -77,6 +77,31 @@
       item.append(txt,del);box.append(item);
     }
   };
+  const loadBookmarks = async (user, seq) => {
+    const box=$('bookmarks-list');
+    if(!box)return;
+    const {data,error}=await client.from('user_bookmarks').select('article_slug,created_at')
+      .eq('user_id',user.id).order('created_at',{ascending:false}).limit(100);
+    if(seq!==userLoadVersion||currentUser?.id!==user.id)return;
+    box.replaceChildren();
+    if(error){box.textContent='बुकमार्क नहीं लोड हुए: '+error.message;return;}
+    if(!data?.length){box.textContent='अभी कोई लेख बुकमार्क नहीं है।';return;}
+    for(const entry of data){
+      if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.article_slug))continue;
+      const item=document.createElement('div');item.className='saved-report-item';
+      const link=document.createElement('a');link.href='/lekh/'+entry.article_slug+'/';
+      link.textContent=entry.article_slug.replaceAll('-',' ')+' ↗';link.className='auth-link';
+      const del=document.createElement('button');del.type='button';del.textContent='हटाएँ';del.className='auth-link';
+      del.addEventListener('click',async()=>{
+        del.disabled=true;
+        const {error:removeError}=await client.from('user_bookmarks').delete()
+          .eq('user_id',user.id).eq('article_slug',entry.article_slug);
+        if(removeError){del.disabled=false;del.textContent='फिर प्रयास करें';}
+        else item.remove();
+      });
+      item.append(link,del);box.append(item);
+    }
+  };
   const showUser = async user => {
     const seq = ++userLoadVersion;
     currentUser = user;
@@ -99,7 +124,7 @@
     $('profile-name').value = data?.display_name || '';
     $('profile-rashi').value = data?.preferred_rashi || '';
     $('account-name').textContent = data?.display_name || '';
-    await loadReports(user,seq);
+    await Promise.all([loadReports(user,seq),loadBookmarks(user,seq)]);
   };
   const setMode = next => {
     mode = next;
@@ -191,10 +216,25 @@
         reports.push(...data);
         if(data.length<500)break;
       }
+      const {data:accountPrefs,error:prefsError}=await client.from('user_preferences')
+        .select('theme,font_scale,high_contrast,reduced_motion,preferred_city,time_format,nav_language,updated_at')
+        .eq('user_id',userId).maybeSingle();
+      if(prefsError)throw prefsError;
+      const allBookmarks=[];
+      for(let offset=0;offset<10000;offset+=500){
+        const {data,error}=await client.from('user_bookmarks')
+          .select('article_slug,created_at').eq('user_id',userId)
+          .order('created_at',{ascending:false}).range(offset,offset+499);
+        if(error)throw error;
+        if(!data?.length)break;
+        allBookmarks.push(...data);
+        if(data.length<500)break;
+      }
       const payload={
         service:'Tithi Darshan',
         exported_at:new Date().toISOString(),
-        account:{email:currentUser.email,profile},
+        account:{email:currentUser.email,profile,preferences:accountPrefs},
+        bookmarks:allBookmarks,
         saved_kundli_reports:reports
       };
       const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});

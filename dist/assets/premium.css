@@ -124,3 +124,15 @@ html[data-theme="dark"] .calendar-festival{background:#593729;color:#fff2cb}
 @media(max-width:600px){.month-calendar{gap:3px;padding:7px;border-radius:12px}.calendar-day{min-height:102px;padding:7px 3px;gap:4px;border-radius:8px}.calendar-dayname{font-size:11px;padding:8px 1px}.calendar-date{height:24px;width:24px;font-size:12px}.calendar-tithi{font-size:11px}.calendar-paksha{font-size:10px}.calendar-festival{font-size:9px;padding:2px}.calendar-explainer{font-size:12px}#month-calendar-form{width:100%}#month-calendar-form .setting-field{flex:1;min-width:130px}.calendar-toolbar>button{width:100%}}
 @media(max-width:350px){.month-calendar{gap:2px;padding:4px}.calendar-day{min-height:96px}.calendar-tithi{font-size:10px}}
 @media print{.calendar-day{break-inside:avoid;border:1px solid #999}.calendar-day.today{border:2px solid #333}.month-calendar{gap:3px}}
+
+.dashboard-quicklinks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}
+.dashboard-quicklink{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:110px;padding:12px;border:1px solid var(--ui-stroke);border-radius:14px;background:var(--ui-surface);color:var(--ui-ink)}
+.dashboard-quicklink span{font-size:24px;color:var(--ui-accent)}
+.dashboard-quicklink b{font-size:13px}
+.dashboard-quicklink small{font-size:11px;color:var(--ui-muted)}
+.dashboard-quicklink:hover{border-color:var(--ui-gold);box-shadow:var(--ui-shadow)}
+.article-save-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 22px}
+.article-save-controls .outline-button{min-height:44px}
+.article-save-controls [aria-pressed="true"]{background:#f8dfad;border-color:#d29d44;color:#733b21}
+html[data-theme="dark"] .article-save-controls [aria-pressed="true"]{background:#5d3d29;color:#fff1ca}
+@media(max-width:390px){.dashboard-quicklinks{grid-template-columns:1fr 1fr}.dashboard-quicklink{min-height:85px}}
