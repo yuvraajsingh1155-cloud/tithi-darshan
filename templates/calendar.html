@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="heritage-head calendar-hero"><div class="shell">
+  <span class="eyebrow">ॐ गणना-आधारित • मासिक पंचांग</span>
+  <h1>{{ month_name }} {{ year }} का हिंदू पंचांग</h1>
+  <p>{{ city.name }} के सूर्योदय पर चल रही तिथि और नक्षत्र। यहाँ ग्रेगोरियन महीने की तारीखों के साथ पारंपरिक पंचांग जानकारी दिखाई गई है।</p>
+</div></section>
+<section class="shell heritage-section calendar-wrap">
+  <div class="calendar-toolbar">
+    <form id="month-calendar-form" aria-label="महीना और शहर चुनें">
+      <div class="setting-field"><label for="calendar-city">शहर</label><select id="calendar-city">{% for option in cities %}<option value="{{ option.slug }}" {% if option.slug==city.slug %}selected{% endif %}>{{option.name}}</option>{% endfor %}</select></div>
+      <div class="setting-field"><label for="calendar-month">महीना</label><select id="calendar-month">{% for option in month_options %}<option value="{{option.iso}}" {% if option.iso==selected_month %}selected{% endif %}>{{option.label}}</option>{% endfor %}</select></div>
+      <button type="submit" class="heritage-button">कैलेंडर देखें</button>
+    </form>
+    <button type="button" data-print-page class="outline-button">प्रिंट / PDF में सेव करें</button>
+  </div>
+  <div class="calendar-explainer">
+    <span class="verified">✓ खगोलीय गणना आधारित</span>
+    <span>स्थान: {{ city.name }}, भारत</span>
+    <span>अयनांश: लाहिड़ी</span>
+    <span>समय: IST</span>
+  </div>
+  <div class="month-calendar" role="grid" aria-label="{{month_name}} {{year}} के दिन और तिथियाँ">
+    {% for weekday in weekdays %}<div role="columnheader" class="calendar-dayname">{{weekday}}</div>{% endfor %}
+    {% for cell in cells %}
+      {% if cell.empty %}
+        <div class="calendar-blank" aria-hidden="true"></div>
+      {% else %}
+        {% if cell.available %}<a class="calendar-day {% if cell.is_today %}today{% endif %}" href="/panchang/{{city.slug}}/{{cell.iso}}/" aria-label="{{cell.iso}} को {{cell.tithi}} तिथि देखें">
+        {% else %}<div class="calendar-day calendar-day-disabled" aria-label="{{cell.iso}} का दैनिक पेज वर्तमान संग्रह में नहीं">{% endif %}
+          <b class="calendar-date">{{cell.day}}</b>
+          <span class="calendar-tithi">{{cell.tithi}}</span>
+          <small class="calendar-paksha">{{cell.paksha}}</small>
+          {% if cell.festival %}<span class="calendar-festival" title="संपादकीय रूप से दर्ज त्योहार">{{cell.festival}}</span>{% endif %}
+        {% if cell.available %}</a>{% else %}</div>{% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  <p class="astro-small">कैलेंडर में दर्ज उत्सव केवल सत्यापित संपादकीय सूची से लिए गए हैं। एकादशी व्रत, पारण और स्थानीय पर्व के फैसले के लिए अलग पारंपरिक नियम/स्थानीय पंचांग की जाँच जरूरी है। जहाँ दैनिक लिंक उपलब्ध नहीं है, वहाँ तारीख को लिंक नहीं बनाया गया।</p>
+  <div class="calendar-links">
+    <a href="/calendar/" class="outline-button">इस महीने का कैलेंडर ↗</a>
+    <a href="/vidhi/" class="outline-button">गणना पद्धति पढ़ें ↗</a>
+    <a href="/rashifal/" class="outline-button">12 राशियाँ जानें ↗</a>
+  </div>
+</section>
+<script src="/assets/calendar.js?v=1" defer></script>
+{% endblock %}
