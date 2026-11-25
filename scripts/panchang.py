@@ -87,6 +87,50 @@ def next_boundary(start_jd: float, field: int, divisions: int) -> tuple[datetime
         else:lo=mid
     return dt_from_jd(hi).astimezone(IST), index
 
+def tithi_name_for_index(index:int) -> tuple[str,str]:
+    """Return sunrise/current tithi labels for the 30 angular Moon-Sun sectors."""
+    if not 0<=index<30:
+        raise ValueError('Invalid Tithi sector')
+    paksha='शुक्ल पक्ष' if index<15 else 'कृष्ण पक्ष'
+    name=TITHI_NAMES[index] if index<15 else (
+        'अमावस्या' if index==29 else TITHI_NAMES[index-15])
+    return paksha,name
+
+
+def civil_tithi_segments(d:date) -> list[dict]:
+    """Verified Moon-Sun 12° boundaries for an Indian civil day.
+
+    Consecutive intervals cover 00:00–24:00 Asia/Kolkata. More than one
+    transition is supported, including skipped sunrise tithis; no assumption
+    is made that the next transition occurs exactly once per day.
+    """
+    midnight=datetime.combine(d,time(0,0),tzinfo=IST)
+    next_midnight=midnight+timedelta(days=1)
+    cursor=midnight
+    segments=[]
+    while cursor<next_midnight:
+        transition,index=next_boundary(jd_from_dt(cursor),0,30)
+        if transition<=cursor:
+            raise ValueError('Non-increasing Tithi boundary')
+        until=min(transition,next_midnight)
+        paksha,name=tithi_name_for_index(index)
+        segments.append({
+            'startIso':cursor.isoformat(),
+            'endIso':until.isoformat(),
+            'tithi':name,
+            'paksha':paksha,
+            'sector':index
+        })
+        if until>=next_midnight:
+            break
+        # Avoid a floating-point boundary ambiguity by advancing only
+        # the calculation cursor; the displayed segments remain contiguous.
+        cursor=until+timedelta(milliseconds=250)
+        if len(segments)>6:
+            raise ValueError('Unexpectedly many Tithi boundaries')
+    return segments
+
+
 def event_jd(dt:date, city:dict, rise:bool) -> float:
     # Start before local sunrise on the requested civil day.
     start=datetime.combine(dt,time(0,0),tzinfo=IST).astimezone(UTC)
@@ -146,8 +190,7 @@ def panchang_for(d:date, city:dict)->dict:
     yo_end, yo=next_boundary(rise_jd,2,27)
     ka_end, ka=next_boundary(rise_jd,0,60)
     sun,moon=sidereal_longitudes(rise_jd)
-    paksha='शुक्ल पक्ष' if ti<15 else 'कृष्ण पक्ष'
-    tithi_name= TITHI_NAMES[ti] if ti<15 else ('अमावस्या' if ti==29 else TITHI_NAMES[ti-15])
+    paksha,tithi_name=tithi_name_for_index(ti)
     # Python weekday Monday=0; segment order indexed Sunday first
     sunday_index=(d.weekday()+1)%7
     rahu_segments=[8,2,7,5,6,4,3]
@@ -168,6 +211,7 @@ def panchang_for(d:date, city:dict)->dict:
         'city':city['name'], 'citySlug':city['slug'], 'cityEnglish':city['english'],
         'lat':city['lat'],'lon':city['lon'],
         'tithi':tithi_name,'tithiNumber':ti+1,'paksha':paksha,'tithiContext':TITHI_CONTEXT[tithi_name],'tithiEnd':clock(ti_end,d),'tithiEndIso':ti_end.isoformat(),
+        'tithiSegments':civil_tithi_segments(d),
         'nakshatra':NAKSHATRAS[na],'nakshatraEnd':clock(na_end,d),
         'yoga':YOGAS[yo],'yogaEnd':clock(yo_end,d),
         'karana':karana_for_sector(ka),'karanaEnd':clock(ka_end,d),
