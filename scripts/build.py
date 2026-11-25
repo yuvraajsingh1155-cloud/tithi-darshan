@@ -488,9 +488,9 @@ def main():
     for deity in deities:
         search_add(deity['name'],deity['description'],'/devi-devta/','देवी-देवता',
             deity['name']+' '+deity['image'].replace('deity-','').replace('.svg',''))
-    for r in rashis:
+    for r,slug in zip(rashis,zodiac_slugs):
         search_add(r[0]+' राशि',r[1]+' — राशि नाम और दैनिक सांस्कृतिक विचार',
-            '/rashifal/?rashi='+r[0].replace(' ','_'), 'राशियाँ',r[1])
+            '/rashifal/?rashi='+slug, 'राशियाँ',r[1])
     write('/khoj/',env.get_template('search.html').render(**shared(
         'वेबसाइट पर खोजें | तिथि दर्शन',
         'हिंदी और Hinglish में पंचांग, तिथि, एकादशी, शहर, राशियाँ और प्रकाशित धार्मिक लेख खोजें।',
