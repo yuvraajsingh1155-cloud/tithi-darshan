@@ -266,3 +266,15 @@ html[data-theme="dark"] :is(.global-search-form,.search-result-card,.search-popu
    header counterparts; keep search and navigation keyboard/touch usable. */
 @media(max-width:720px){.header-actions .nav-cta{display:none}}
 @media(max-width:390px){.header-actions #theme-toggle{display:none}.header .nav{gap:6px}.header-actions{gap:4px}}
+
+/* Account comfort: Google avatar uses verified OAuth origin, with initials
+   fallback. Password visibility is a genuine action, not decorative. */
+.user-profile-heading{display:flex;gap:17px;align-items:center;margin:0 0 15px}
+.user-profile-avatar{display:grid;place-items:center;flex-shrink:0;width:70px;height:70px;border-radius:50%;border:2px solid var(--ui-gold);background:var(--ui-surface);color:var(--ui-accent);font-size:30px;font-weight:700;overflow:hidden}
+.user-profile-avatar img{grid-area:1/1;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.user-profile-avatar span{grid-area:1/1}
+.user-profile-heading h2{margin:0 0 3px}
+.user-profile-heading p{margin:0;color:var(--ui-muted);overflow-wrap:anywhere}
+.password-visibility-toggle{align-self:start;border:1px solid var(--ui-stroke);border-radius:9px;padding:6px 12px;margin:0!important;background:var(--ui-surface);color:var(--ui-ink);font-size:13px}
+.password-visibility-toggle:hover{border-color:var(--ui-accent)}
+@media(max-width:390px){.user-profile-avatar{width:54px;height:54px;font-size:24px}.user-profile-heading{gap:10px}.user-profile-heading h2{font-size:20px}}
