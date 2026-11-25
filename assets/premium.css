@@ -292,3 +292,8 @@ html[data-theme="dark"] :is(.global-search-form,.search-result-card,.search-popu
 .deity-detail-text{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}
 html[data-theme="dark"] .deity-detail-art{background:var(--ui-surface)}
 @media(max-width:760px){.deity-detail-grid{grid-template-columns:1fr;gap:18px}.deity-symbol-grid{grid-template-columns:1fr}.deity-detail-text{grid-template-columns:1fr}.deity-detail-art{max-width:340px;margin:auto}}
+
+/* PWA update notice is shown only after an actual SW controller replacement. */
+.pwa-update-notice{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));right:18px;z-index:400;display:flex;align-items:center;gap:13px;max-width:min(420px,calc(100vw - 32px));padding:13px 16px;border-radius:14px;background:var(--ui-surface);border:2px solid var(--ui-gold);color:var(--ui-ink);box-shadow:0 12px 32px #2e1b1833;font-size:14px}
+.pwa-update-notice button{min-height:44px;background:var(--ui-accent);color:var(--ui-bg);border:0;border-radius:10px;padding:8px 14px;font-weight:700}
+@media(max-width:720px){.pwa-update-notice{bottom:calc(87px + env(safe-area-inset-bottom,0px));left:14px;right:14px;flex-wrap:wrap}}
