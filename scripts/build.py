@@ -22,8 +22,8 @@ import xml.sax.saxutils as xmlutils
 from datetime import date, timedelta, datetime
 from zoneinfo import ZoneInfo
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from panchang import panchang_for
-from choghadiya import daytime_choghadiya
+from panchang import panchang_for, event_jd, dt_from_jd, IST
+from choghadiya import daytime_choghadiya, nighttime_choghadiya
 
 ROOT=Path(__file__).resolve().parent.parent
 DIST=ROOT/'dist'
@@ -274,6 +274,8 @@ def main():
         for city in CITIES:
             p=panchang_for(d,city)
             p['day_choghadiya']=daytime_choghadiya(d,p['sunriseIso'],p['sunsetIso'])
+            tomorrow_rise_iso=dt_from_jd(event_jd(d+timedelta(days=1),city,True)).astimezone(IST).isoformat()
+            p['night_choghadiya']=nighttime_choghadiya(d,p['sunsetIso'],tomorrow_rise_iso)
             p['tithiTimelineJson']=safe_json(p['tithiSegments'])
             panchang_cache[(city['slug'],d.isoformat())]=p
             route=date_page_path(city['slug'],d)
