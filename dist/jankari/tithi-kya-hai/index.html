@@ -4,6 +4,19 @@
   <meta name="google-site-verification" content="bKY-7W-xTWobDovDVPclWFqyrD5zfqEeX9VgQpuyAQ0">
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#faf8f2"><meta name="format-detection" content="telephone=no">
+  <meta name="color-scheme" content="light dark">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/favicon.svg">
+  <script>
+    /* Set theme before CSS paints to avoid a light-theme flash. */
+    try {
+      const v=JSON.parse(localStorage.getItem('tithi-darshan:preferences:v1')||'{}');
+      const mode=['dark','light','system'].includes(v.theme)?v.theme:'system';
+      document.documentElement.dataset.theme=mode==='system'
+        ?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):mode;
+      document.documentElement.dataset.themeMode=mode;
+    } catch(e) {}
+  </script>
   <title>तिथि क्या है? | तिथि दर्शन</title>
   <meta name="description" content="तिथि चंद्रमा और सूर्य की कोणीय दूरी पर आधारित चंद्र दिवस है। यह अंग्रेज़ी तारीख से अलग हो सकती है।">
   <meta name="robots" content="index,follow,max-image-preview:large">
@@ -13,25 +26,47 @@
   <meta property="og:title" content="तिथि क्या है? | तिथि दर्शन"><meta property="og:description" content="तिथि चंद्रमा और सूर्य की कोणीय दूरी पर आधारित चंद्र दिवस है। यह अंग्रेज़ी तारीख से अलग हो सकती है।">
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/assets/style.css?v=astro-nov24">
+  <link rel="stylesheet" href="/assets/style.css?v=premium26">
+  <link rel="stylesheet" href="/assets/premium.css?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"तिथि दर्शन","inLanguage":"hi-IN","description":"हिंदू पंचांग, आज की तिथि और शहर के अनुसार मुहूर्त","url":"https://hindu-tithi-darshan.pages.dev/"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","inLanguage":"hi-IN","headline":"तिथि क्या है?","description":"तिथि चंद्रमा और सूर्य की कोणीय दूरी पर आधारित चंद्र दिवस है। यह अंग्रेज़ी तारीख से अलग हो सकती है।","datePublished":"2026-11-23"}</script>
-  <script src="/assets/site.js" defer></script>
+  <script src="/assets/preferences.js?v=1" defer></script>
+  <script src="/assets/site.js?v=2" defer></script>
 </head>
 <body data-page="guide" data-city="" data-date="">
   <a class="skip-link" href="#main-content">मुख्य सामग्री पर जाएँ</a>
   <div class="microbar"><span>ॐ सर्वे भवन्तु सुखिनः</span><span>पंचांग • अध्यात्म • सांस्कृतिक ज्ञान</span><span>समय: IST</span></div>
   <header class="header"><div class="shell nav">
     <a class="brand" href="/" aria-label="तिथि दर्शन होमपेज"><span class="brand-icon">ॐ</span><span><b>तिथि दर्शन</b><small>TITHI DARSHAN</small></span></a>
-    <nav class="navlinks" aria-label="मुख्य नेविगेशन"><a href="/">आज का पंचांग</a><a href="/devi-devta/">देवी-देवता</a><a href="/lekh/">लेख पढ़ें</a><a href="/kundli-milan/">कुंडली मिलान</a><a href="/rashifal/">राशिफल</a><a href="/shehar/">शहर</a></nav>
-    <a class="nav-cta" href="/mera-account/">मेरा अकाउंट <span aria-hidden="true">↗</span></a>
+    <nav class="navlinks" id="primary-nav" aria-label="मुख्य नेविगेशन">
+      <a href="/"><span data-i18n="home">आज का पंचांग</span></a>
+      <a href="/calendar/"><span data-i18n="calendar">मासिक कैलेंडर</span></a>
+      <a href="/devi-devta/"><span data-i18n="deities">देवी-देवता</span></a>
+      <a href="/lekh/"><span data-i18n="articles">लेख</span></a>
+      <a href="/kundli-milan/"><span data-i18n="kundli">कुंडली मिलान</span></a>
+      <a href="/rashifal/"><span data-i18n="rashi">राशिफल</span></a>
+      <a href="/shehar/"><span data-i18n="cities">शहर</span></a>
+    </nav>
+    <div class="header-actions">
+      <button type="button" id="theme-toggle" class="header-icon-button" aria-label="थीम बदलें" title="Theme">☀</button>
+      <a class="header-icon-button settings-shortcut" href="/settings/" aria-label="वेबसाइट सेटिंग्स" title="Settings">⚙</a>
+      <a class="nav-cta" href="/mera-account/"><span data-i18n="account">मेरा अकाउंट</span> <span aria-hidden="true">↗</span></a>
+      <button type="button" id="menu-toggle" class="header-icon-button menu-toggle" aria-controls="primary-nav" aria-expanded="false" aria-label="नेविगेशन मेन्यू खोलें">☰</button>
+    </div>
   </div></header>
+  <nav class="mobile-bottom-nav" aria-label="मोबाइल मुख्य नेविगेशन">
+    <a href="/" data-nav-key="home"><span aria-hidden="true">⌂</span><small data-i18n="home">आज का पंचांग</small></a>
+    <a href="/calendar/" data-nav-key="calendar"><span aria-hidden="true">▦</span><small data-i18n="calendar">मासिक कैलेंडर</small></a>
+    <a href="/rashifal/" data-nav-key="rashi"><span aria-hidden="true">☾</span><small data-i18n="rashi">राशिफल</small></a>
+    <a href="/mera-account/" data-nav-key="account"><span aria-hidden="true">♙</span><small data-i18n="account">मेरा अकाउंट</small></a>
+    <a href="/settings/" data-nav-key="settings"><span aria-hidden="true">⚙</span><small data-i18n="settings">सेटिंग्स</small></a>
+  </nav>
   <main id="main-content"><div class="subhero"><div class="shell"><span class="kicker">हिंदू पंचांग गाइड</span><h1>तिथि क्या है?</h1><p>तिथि चंद्रमा और सूर्य की कोणीय दूरी पर आधारित चंद्र दिवस है। यह अंग्रेज़ी तारीख से अलग हो सकती है।</p></div></div><div class="shell prose-wrap"><article class="prose"><section><h2>हिंदू पंचांग में तिथि का अर्थ</h2><p>सूर्य और चंद्रमा की भू-केंद्रिक दीर्घांश दूरी हर 12 अंश बढ़ने पर नई तिथि आरंभ होती है। एक चंद्र मास में 30 तिथियाँ होती हैं: शुक्ल पक्ष की 15 और कृष्ण पक्ष की 15।</p><p>तिथि की अवधि निश्चित 24 घंटे नहीं होती। चंद्रमा की गति बदलती रहती है, इसलिए किसी तिथि का आरंभ और अंत दिन में कभी भी हो सकता है।</p></section><section><h2>आज कौन सी तिथि है, यह कैसे तय होता है?</h2><p>परंपरागत दैनिक पंचांग में प्रायः स्थानीय सूर्योदय के समय चल रही तिथि को दिन की तिथि कहा जाता है। पूजा-व्रत और पर्व की तिथि निर्धारित करने के नियम अलग हो सकते हैं।</p><p>दिल्ली और वाराणसी जैसे शहरों में सूर्योदय का समय अलग है। इसी कारण एक ही अंग्रेज़ी तारीख को परंपरागत दिन-तिथि का संदर्भ बदल सकता है।</p></section><section><h2>शुक्ल और कृष्ण पक्ष में क्या अंतर है?</h2><p>अमावस्या के बाद पूर्णिमा की ओर बढ़ते चंद्र चरण को शुक्ल पक्ष, और पूर्णिमा के बाद अमावस्या की ओर घटते चरण को कृष्ण पक्ष कहा जाता है।</p><p>हिंदू पर्व-निर्णय में पक्ष, तिथि, नक्षत्र और स्थानीय विशेष समयों का संयुक्त महत्व हो सकता है।</p></section><section><h2>तिथि से जुड़ी सावधानी</h2><p>केवल दैनिक तिथि देखकर विवाह, गृहप्रवेश या विशेष व्रत की निश्चित तारीख तय न करें। इन अवसरों के नियम अधिक विस्तृत होते हैं।</p></section><div class="prose-tip">हर शहर और क्षेत्र में परंपरागत मान्यताएँ बदल सकती हैं। व्यक्तिगत संस्कारों के लिए अपने विश्वसनीय स्थानीय पंचांग से पुष्टि करें।</div><a class="backlink" href="/">← आज का पंचांग देखें</a></article><aside class="aside"><h3>और जानकारी</h3><a href="/jankari/tithi-kya-hai/">तिथि क्या है? <span>↗</span></a><a href="/jankari/shubh-muhurat/">शुभ मुहूर्त का अर्थ <span>↗</span></a><a href="/jankari/rahu-kaal/">राहुकाल क्या है? <span>↗</span></a><a href="/jankari/panchang-ke-panch-ang/">पंचांग के पाँच अंग <span>↗</span></a><a href="/jankari/aaj-kya-kare/">आज क्या करना चाहिए? <span>↗</span></a><a href="/jankari/hamare-bare-mein/">हमारे बारे में <span>↗</span></a><a href="/jankari/sampadakiya-neeti/">संपादकीय नीति और तथ्य-जाँच <span>↗</span></a><a href="/jankari/gopniyata-neeti/">गोपनीयता नीति <span>↗</span></a><a href="/jankari/sampark/">संपर्क और त्रुटि रिपोर्ट <span>↗</span></a><a href="/jankari/nakshatra-kya-hai/">नक्षत्र क्या है और आज का नक्षत्र कैसे जानें? <span>↗</span></a><a href="/jankari/amavasya-purnima/">अमावस्या और पूर्णिमा क्या हैं? तिथि कैसे तय होती है? <span>↗</span></a><a href="/jankari/ekadashi-kab-hai/">एकादशी कब है? व्रत की तिथि और पारण कैसे समझें? <span>↗</span></a><a href="/jankari/tithi-kab-badalti-hai/">हिंदू तिथि कब बदलती है? आधी रात या सूर्योदय पर? <span>↗</span></a><a href="/vidhi/">गणना पद्धति ↗</a></aside></div></main>
   <footer class="footer"><div class="shell">
     <div class="footer-inner"><div><div class="brand footer-brand"><span class="brand-icon">☀</span><span><b>तिथि दर्शन</b><small>हर दिन, सही संदर्भ के साथ</small></span></div><p>हिंदू पंचांग समझने का सरल मंच। गणनाएँ स्थान व परंपरा के अनुसार बदल सकती हैं।</p></div>
-    <div class="footer-nav"><a href="/shehar/">शहर चुनें</a><a href="/devi-devta/">देव दर्शन</a><a href="/lekh/">सभी लेख</a><a href="/kundli-milan/">कुंडली मिलान</a><a href="/rashifal/">आज का राशिफल</a><a href="/mera-account/">मेरा अकाउंट</a><a href="/vishay/manglik-dosh/">मांगलिक दोष</a><a href="/jankari/rahu-kaal/">राहुकाल</a><a href="/jankari/shubh-muhurat/">मुहूर्त</a><a href="/vidhi/">गणना पद्धति</a><a href="/jankari/hamare-bare-mein/">हमारे बारे में</a><a href="/jankari/sampadakiya-neeti/">संपादकीय नीति</a><a href="/jankari/gopniyata-neeti/">गोपनीयता</a><a href="/jankari/sampark/">संपर्क</a></div></div>
+    <div class="footer-nav"><a href="/shehar/">शहर चुनें</a><a href="/devi-devta/">देव दर्शन</a><a href="/lekh/">सभी लेख</a><a href="/kundli-milan/">कुंडली मिलान</a><a href="/rashifal/">आज का राशिफल</a><a href="/calendar/">मासिक कैलेंडर</a><a href="/settings/">सेटिंग्स</a><a href="/mera-account/">मेरा अकाउंट</a><a href="/vishay/manglik-dosh/">मांगलिक दोष</a><a href="/jankari/rahu-kaal/">राहुकाल</a><a href="/jankari/shubh-muhurat/">मुहूर्त</a><a href="/vidhi/">गणना पद्धति</a><a href="/jankari/hamare-bare-mein/">हमारे बारे में</a><a href="/jankari/sampadakiya-neeti/">संपादकीय नीति</a><a href="/jankari/gopniyata-neeti/">गोपनीयता</a><a href="/jankari/sampark/">संपर्क</a></div></div>
     <div class="footline">© 2026 तिथि दर्शन · पूजा/विवाह/गृहप्रवेश जैसे निर्णय के लिए स्थानीय विद्वान और मान्य पंचांग से पुष्टि करें।</div>
   </div></footer>
 </body>

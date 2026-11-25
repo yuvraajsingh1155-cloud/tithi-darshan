@@ -40,6 +40,53 @@
     }
   }
 
+  // Accessible responsive menu, Escape close and outside click.
+  const menuToggle=document.getElementById('menu-toggle');
+  const header=document.querySelector('.header');
+  const primaryNav=document.getElementById('primary-nav');
+  const closeMenu=()=>{
+    header?.classList.remove('menu-open');
+    menuToggle?.setAttribute('aria-expanded','false');
+    menuToggle?.setAttribute('aria-label','नेविगेशन मेन्यू खोलें');
+  };
+  menuToggle?.addEventListener('click',()=>{
+    const opened=header?.classList.toggle('menu-open');
+    menuToggle.setAttribute('aria-expanded',String(Boolean(opened)));
+    menuToggle.setAttribute('aria-label',opened?'नेविगेशन मेन्यू बंद करें':'नेविगेशन मेन्यू खोलें');
+  });
+  primaryNav?.addEventListener('click',ev=>{
+    if(ev.target.closest('a'))closeMenu();
+  });
+  document.addEventListener('keydown',ev=>{
+    if(ev.key==='Escape'){closeMenu();}
+  });
+  document.addEventListener('click',ev=>{
+    if(header&&!header.contains(ev.target))closeMenu();
+  });
+  document.getElementById('theme-toggle')?.addEventListener('click',()=>{
+    const p=window.TithiPrefs;
+    if(!p)return;
+    const now=p.get().theme;
+    p.set({theme:now==='light'?'dark':now==='dark'?'system':'light'});
+  });
+  const here=location.pathname;
+  const active=here.startsWith('/calendar/')?'calendar':
+    here.startsWith('/rashifal/')?'rashi':
+    here.startsWith('/mera-account/')?'account':
+    here.startsWith('/settings/')?'settings':'home';
+  document.querySelectorAll('.mobile-bottom-nav [data-nav-key]').forEach(link=>{
+    if(link.dataset.navKey===active)link.setAttribute('aria-current','page');
+  });
+  // App installability is optional; never cache any private response.
+  if('serviceWorker' in navigator && location.protocol==='https:'){
+    window.addEventListener('load',()=>{
+      navigator.serviceWorker.register('/sw.js').catch(()=>{/* offline is an enhancement */});
+    },{once:true});
+  }
+  document.querySelectorAll('[data-print-page]').forEach(button=>{
+    button.addEventListener('click',()=>window.print());
+  });
+
   // All article cards are pre-rendered HTML for crawlers. This enhances
   // the local search experience without sending personal queries to a server.
   const articleSearch = document.querySelector('[data-article-search]');

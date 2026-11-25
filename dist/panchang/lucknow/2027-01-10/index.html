@@ -4,6 +4,19 @@
   <meta name="google-site-verification" content="bKY-7W-xTWobDovDVPclWFqyrD5zfqEeX9VgQpuyAQ0">
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#faf8f2"><meta name="format-detection" content="telephone=no">
+  <meta name="color-scheme" content="light dark">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/favicon.svg">
+  <script>
+    /* Set theme before CSS paints to avoid a light-theme flash. */
+    try {
+      const v=JSON.parse(localStorage.getItem('tithi-darshan:preferences:v1')||'{}');
+      const mode=['dark','light','system'].includes(v.theme)?v.theme:'system';
+      document.documentElement.dataset.theme=mode==='system'
+        ?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):mode;
+      document.documentElement.dataset.themeMode=mode;
+    } catch(e) {}
+  </script>
   <title>10 जनवरी 2027 लखनऊ पंचांग | तिथि दर्शन</title>
   <meta name="description" content="10 जनवरी 2027 लखनऊ पंचांग: शुक्ल पक्ष द्वितीया तिथि 07:07 (सुबह) तक; श्रवण नक्षत्र, राहुकाल 04:11 (शाम) से 05:30 (शाम)।">
   <meta name="robots" content="index,follow,max-image-preview:large">
@@ -13,21 +26,43 @@
   <meta property="og:title" content="10 जनवरी 2027 लखनऊ पंचांग | तिथि दर्शन"><meta property="og:description" content="10 जनवरी 2027 लखनऊ पंचांग: शुक्ल पक्ष द्वितीया तिथि 07:07 (सुबह) तक; श्रवण नक्षत्र, राहुकाल 04:11 (शाम) से 05:30 (शाम)।">
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/assets/style.css?v=astro-nov24">
+  <link rel="stylesheet" href="/assets/style.css?v=premium26">
+  <link rel="stylesheet" href="/assets/premium.css?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"तिथि दर्शन","inLanguage":"hi-IN","description":"हिंदू पंचांग, आज की तिथि और शहर के अनुसार मुहूर्त","url":"https://hindu-tithi-darshan.pages.dev/"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"10 जनवरी 2027 लखनऊ पंचांग | तिथि दर्शन","inLanguage":"hi-IN","about":["हिंदू पंचांग","तिथि","मुहूर्त","राहुकाल"],"spatialCoverage":{"@type":"Place","name":"Lucknow, India"}}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"मुखपृष्ठ","item":"https://hindu-tithi-darshan.pages.dev/"},{"@type":"ListItem","position":2,"name":"लखनऊ","item":"https://hindu-tithi-darshan.pages.dev/shehar/lucknow/"},{"@type":"ListItem","position":3,"name":"10 जनवरी 2027","item":"https://hindu-tithi-darshan.pages.dev/panchang/lucknow/2027-01-10/"}]}</script>
-  <script src="/assets/site.js" defer></script>
+  <script src="/assets/preferences.js?v=1" defer></script>
+  <script src="/assets/site.js?v=2" defer></script>
 </head>
 <body data-page="date" data-city="lucknow" data-date="2027-01-10">
   <a class="skip-link" href="#main-content">मुख्य सामग्री पर जाएँ</a>
   <div class="microbar"><span>ॐ सर्वे भवन्तु सुखिनः</span><span>पंचांग • अध्यात्म • सांस्कृतिक ज्ञान</span><span>समय: IST</span></div>
   <header class="header"><div class="shell nav">
     <a class="brand" href="/" aria-label="तिथि दर्शन होमपेज"><span class="brand-icon">ॐ</span><span><b>तिथि दर्शन</b><small>TITHI DARSHAN</small></span></a>
-    <nav class="navlinks" aria-label="मुख्य नेविगेशन"><a href="/">आज का पंचांग</a><a href="/devi-devta/">देवी-देवता</a><a href="/lekh/">लेख पढ़ें</a><a href="/kundli-milan/">कुंडली मिलान</a><a href="/rashifal/">राशिफल</a><a href="/shehar/">शहर</a></nav>
-    <a class="nav-cta" href="/mera-account/">मेरा अकाउंट <span aria-hidden="true">↗</span></a>
+    <nav class="navlinks" id="primary-nav" aria-label="मुख्य नेविगेशन">
+      <a href="/"><span data-i18n="home">आज का पंचांग</span></a>
+      <a href="/calendar/"><span data-i18n="calendar">मासिक कैलेंडर</span></a>
+      <a href="/devi-devta/"><span data-i18n="deities">देवी-देवता</span></a>
+      <a href="/lekh/"><span data-i18n="articles">लेख</span></a>
+      <a href="/kundli-milan/"><span data-i18n="kundli">कुंडली मिलान</span></a>
+      <a href="/rashifal/"><span data-i18n="rashi">राशिफल</span></a>
+      <a href="/shehar/"><span data-i18n="cities">शहर</span></a>
+    </nav>
+    <div class="header-actions">
+      <button type="button" id="theme-toggle" class="header-icon-button" aria-label="थीम बदलें" title="Theme">☀</button>
+      <a class="header-icon-button settings-shortcut" href="/settings/" aria-label="वेबसाइट सेटिंग्स" title="Settings">⚙</a>
+      <a class="nav-cta" href="/mera-account/"><span data-i18n="account">मेरा अकाउंट</span> <span aria-hidden="true">↗</span></a>
+      <button type="button" id="menu-toggle" class="header-icon-button menu-toggle" aria-controls="primary-nav" aria-expanded="false" aria-label="नेविगेशन मेन्यू खोलें">☰</button>
+    </div>
   </div></header>
+  <nav class="mobile-bottom-nav" aria-label="मोबाइल मुख्य नेविगेशन">
+    <a href="/" data-nav-key="home"><span aria-hidden="true">⌂</span><small data-i18n="home">आज का पंचांग</small></a>
+    <a href="/calendar/" data-nav-key="calendar"><span aria-hidden="true">▦</span><small data-i18n="calendar">मासिक कैलेंडर</small></a>
+    <a href="/rashifal/" data-nav-key="rashi"><span aria-hidden="true">☾</span><small data-i18n="rashi">राशिफल</small></a>
+    <a href="/mera-account/" data-nav-key="account"><span aria-hidden="true">♙</span><small data-i18n="account">मेरा अकाउंट</small></a>
+    <a href="/settings/" data-nav-key="settings"><span aria-hidden="true">⚙</span><small data-i18n="settings">सेटिंग्स</small></a>
+  </nav>
   <main id="main-content">
 <div class="hero"><div class="shell hero-grid">
   <div class="hero-main">
@@ -82,7 +117,7 @@
 </main>
   <footer class="footer"><div class="shell">
     <div class="footer-inner"><div><div class="brand footer-brand"><span class="brand-icon">☀</span><span><b>तिथि दर्शन</b><small>हर दिन, सही संदर्भ के साथ</small></span></div><p>हिंदू पंचांग समझने का सरल मंच। गणनाएँ स्थान व परंपरा के अनुसार बदल सकती हैं।</p></div>
-    <div class="footer-nav"><a href="/shehar/">शहर चुनें</a><a href="/devi-devta/">देव दर्शन</a><a href="/lekh/">सभी लेख</a><a href="/kundli-milan/">कुंडली मिलान</a><a href="/rashifal/">आज का राशिफल</a><a href="/mera-account/">मेरा अकाउंट</a><a href="/vishay/manglik-dosh/">मांगलिक दोष</a><a href="/jankari/rahu-kaal/">राहुकाल</a><a href="/jankari/shubh-muhurat/">मुहूर्त</a><a href="/vidhi/">गणना पद्धति</a><a href="/jankari/hamare-bare-mein/">हमारे बारे में</a><a href="/jankari/sampadakiya-neeti/">संपादकीय नीति</a><a href="/jankari/gopniyata-neeti/">गोपनीयता</a><a href="/jankari/sampark/">संपर्क</a></div></div>
+    <div class="footer-nav"><a href="/shehar/">शहर चुनें</a><a href="/devi-devta/">देव दर्शन</a><a href="/lekh/">सभी लेख</a><a href="/kundli-milan/">कुंडली मिलान</a><a href="/rashifal/">आज का राशिफल</a><a href="/calendar/">मासिक कैलेंडर</a><a href="/settings/">सेटिंग्स</a><a href="/mera-account/">मेरा अकाउंट</a><a href="/vishay/manglik-dosh/">मांगलिक दोष</a><a href="/jankari/rahu-kaal/">राहुकाल</a><a href="/jankari/shubh-muhurat/">मुहूर्त</a><a href="/vidhi/">गणना पद्धति</a><a href="/jankari/hamare-bare-mein/">हमारे बारे में</a><a href="/jankari/sampadakiya-neeti/">संपादकीय नीति</a><a href="/jankari/gopniyata-neeti/">गोपनीयता</a><a href="/jankari/sampark/">संपर्क</a></div></div>
     <div class="footline">© 2026 तिथि दर्शन · पूजा/विवाह/गृहप्रवेश जैसे निर्णय के लिए स्थानीय विद्वान और मान्य पंचांग से पुष्टि करें।</div>
   </div></footer>
 </body>
