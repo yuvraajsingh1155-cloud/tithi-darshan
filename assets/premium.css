@@ -278,3 +278,17 @@ html[data-theme="dark"] :is(.global-search-form,.search-result-card,.search-popu
 .password-visibility-toggle{align-self:start;border:1px solid var(--ui-stroke);border-radius:9px;padding:6px 12px;margin:0!important;background:var(--ui-surface);color:var(--ui-ink);font-size:13px}
 .password-visibility-toggle:hover{border-color:var(--ui-accent)}
 @media(max-width:390px){.user-profile-avatar{width:54px;height:54px;font-size:24px}.user-profile-heading{gap:10px}.user-profile-heading h2{font-size:20px}}
+
+/* Dedicated illustrated Dev Darshan profiles (existing original SVGs). */
+.deity-detail-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(250px,.7fr);gap:45px;align-items:center}
+.deity-detail-copy h2{font-size:clamp(20px,2vw,27px);color:var(--ui-accent);margin:0 0 17px}
+.deity-detail-copy p{max-width:700px}
+.deity-detail-art{display:grid;justify-items:center;gap:10px;padding:22px;border:1px solid var(--ui-stroke);border-radius:22px;background:var(--ui-surface)}
+.deity-detail-art img{width:min(100%,290px);height:auto}
+.deity-detail-art small{text-align:center;color:var(--ui-muted);font-size:12px}
+.deity-detail-content{max-width:1120px}
+.deity-symbol-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.deity-symbol-grid .astro-panel{min-height:160px}
+.deity-detail-text{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}
+html[data-theme="dark"] .deity-detail-art{background:var(--ui-surface)}
+@media(max-width:760px){.deity-detail-grid{grid-template-columns:1fr;gap:18px}.deity-symbol-grid{grid-template-columns:1fr}.deity-detail-text{grid-template-columns:1fr}.deity-detail-art{max-width:340px;margin:auto}}
