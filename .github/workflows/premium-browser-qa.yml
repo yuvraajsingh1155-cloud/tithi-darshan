@@ -5,6 +5,11 @@ on:
     paths:
       - 'tests/browser_smoke.py'
       - '.github/workflows/premium-browser-qa.yml'
+      - 'templates/panchang.html'
+      - 'templates/search.html'
+      - 'assets/freshness.js'
+      - 'assets/global-search.js'
+      - 'assets/premium.css'
 permissions:
   contents: read
 jobs:
@@ -28,3 +33,11 @@ jobs:
         run: |
           python -m http.server 8765 --bind 127.0.0.1 --directory dist > /tmp/tithi-http.log 2>&1 &
           python tests/browser_smoke.py
+      - name: Preserve public-page screenshots for visual QA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tithi-2-visual-qa
+          path: artifacts/tithi-2-visual-qa/*.png
+          if-no-files-found: ignore
+          retention-days: 30
