@@ -79,20 +79,36 @@
   <p class="muhurat-warning">ⓘ अभिजीत मुहूर्त सभी संस्कारों के लिए स्वतः शुभ नहीं होता। विवाह, गृहप्रवेश आदि के लिए अलग जाँच करें।</p>
 </div></section>
 <section class="shell content-section" id="choghadiya">
-  <div class="section-heading"><div><span class="kicker">चौघड़िया • पारंपरिक दिन-विभाजन</span>
-    <h2>{{p.city}} का दिन का चौघड़िया</h2>
-    <p>{{p.sunrise}} से {{p.sunset}} तक दिन को आठ समान खंडों में बाँटकर पारंपरिक नाम दिखाए गए हैं।</p>
+  <div class="section-heading"><div><span class="kicker">चौघड़िया • परंपरागत समय-विभाजन</span>
+    <h2>{{p.city}} का दिन और रात का चौघड़िया</h2>
+    <p>स्थानीय सूर्योदय–सूर्यास्त और सूर्यास्त–अगले सूर्योदय के बीच अलग-अलग आठ समयखंड।</p>
   </div><a href="/vidhi/" class="outline-button">गणना पद्धति ↗</a></div>
+  <div id="current-choghadiya" class="current-choghadiya" role="status" aria-live="polite">
+    वर्तमान चौघड़िया का समय और स्थान मिलाया जा रहा है…
+  </div>
+  <h3 class="choghadiya-section-title">☀ दिन का चौघड़िया <small>({{p.sunrise}} – {{p.sunset}})</small></h3>
   <div class="choghadiya-grid">
     {% for slot in p.day_choghadiya %}
-    <div class="choghadiya-slot {% if slot.favorable %}choghadiya-good{% else %}choghadiya-caution{% endif %}">
-      <span class="choghadiya-order">{{loop.index|int}} / 8</span>
+    <div class="choghadiya-slot {% if slot.favorable %}choghadiya-good{% else %}choghadiya-caution{% endif %}"
+         data-slot-start="{{slot.startIso}}" data-slot-end="{{slot.endIso}}">
+      <span class="choghadiya-order">{{loop.index}} / 8</span>
       <b>{{slot.name}}</b><span>{{slot.category}}</span>
-      <strong><time data-clock="{{slot.start}}">{{slot.start}}</time> – <time data-clock="{{slot.end}}">{{slot.end}}</time></strong>
+      <strong><time data-clock="{{slot.startIso}}">{{slot.start}}</time> – <time data-clock="{{slot.endIso}}">{{slot.end}}</time></strong>
     </div>
     {% endfor %}
   </div>
-  <p class="astro-small">यह केवल <b>दिन का</b> चौघड़िया है; रात के खंड और वार-वेला, काल-वेला एवं विशेष संस्कार नियम अभी शामिल नहीं हैं। इसे विवाह, गृहप्रवेश या अन्य महत्वपूर्ण कार्य के लिए पूर्ण मुहूर्त न समझें। परंपरागत क्रम: <a href="https://www.drikpanchang.com/tutorials/muhurat/daily/choghadiya-muhurat.html" rel="nofollow noopener" target="_blank">Drik Panchang की व्याख्या ↗</a></p>
+  <h3 class="choghadiya-section-title">☾ रात का चौघड़िया <small>(सूर्यास्त से अगली सुबह)</small></h3>
+  <div class="choghadiya-grid">
+    {% for slot in p.night_choghadiya %}
+    <div class="choghadiya-slot {% if slot.favorable %}choghadiya-good{% else %}choghadiya-caution{% endif %}"
+         data-slot-start="{{slot.startIso}}" data-slot-end="{{slot.endIso}}">
+      <span class="choghadiya-order">{{loop.index}} / 8</span>
+      <b>{{slot.name}}</b><span>{{slot.category}}</span>
+      <strong><time data-clock="{{slot.startIso}}">{{slot.start}}</time> – <time data-clock="{{slot.endIso}}">{{slot.end}}</time>{% if slot.nextDay %}<small> (+1 दिन)</small>{% endif %}</strong>
+    </div>
+    {% endfor %}
+  </div>
+  <p class="astro-small">यह समयखंडों की पारंपरिक श्रेणी है, किसी विशिष्ट संस्कार के लिए संपूर्ण मुहूर्त-निर्णय नहीं। दिन और रात का क्रम अलग है। विवाह या गृहप्रवेश के नियम, वार-वेला, काल-वेला, अन्य दोष और स्थानीय परंपराओं की जाँच अलग से आवश्यक है। संदर्भ: <a href="https://www.drikpanchang.com/tutorials/muhurat/daily/choghadiya-muhurat.html" rel="nofollow noopener" target="_blank">Drik Panchang — चौघड़िया ↗</a></p>
 </section>
 <section class="shell content-section" id="vishesh"><div class="section-heading"><div><span class="kicker">दिन का धार्मिक महत्व</span><h2>{{ p.dateHindi }} को क्या खास है?</h2></div></div>
   <div class="highlight"><div class="highlight-emblem">✺</div><div>{% if festival %}<span class="kicker">सत्यापित उत्सव सूचना</span><h3>{{ festival.title }}</h3><p>{{ festival.description }}</p><p class="quiet">{{ festival.scope }} <a href="{{ festival.source }}" rel="nofollow noopener" target="_blank">स्रोत देखें ↗</a></p>{% else %}<span class="kicker">दैनिक पंचांग</span><h3>{{ p.weekday }} · {{ p.paksha }} की {{ p.tithi }}</h3><p>{{ p.tithiContext }}<br><span class="caution-text">इस तारीख के लिए अभी हमारी संपादकीय सूची में कोई सत्यापित विशेष पर्व दर्ज नहीं है। इसका अर्थ यह नहीं कि स्थानीय व्रत या उत्सव नहीं है। अपनी परंपरा के पंचांग से पुष्टि करें।</span></p>{% endif %}</div></div>
