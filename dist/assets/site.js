@@ -32,14 +32,8 @@
       }
     }
   }
-  // Homepage fallback: if a scheduled deployment is delayed, never present a
-  // yesterday's tithi as "today" to a user. Date pages are pre-generated.
-  if (page.page === 'home' && page.date && page.date !== isoIndia()) {
-    const today = isoIndia();
-    if (/^\d{4}-\d{2}-\d{2}$/.test(today)) {
-      location.replace(`/panchang/${page.city || 'delhi'}/${today}/`);
-    }
-  }
+  // Freshness validation and safe redirect are handled by assets/freshness.js.
+  // Never redirect blindly into a possibly unpublished dated page.
 
   // Accessible responsive menu, Escape close and outside click.
   const menuToggle=document.getElementById('menu-toggle');
