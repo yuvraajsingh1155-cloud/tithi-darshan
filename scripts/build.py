@@ -353,6 +353,30 @@ def main():
     write('/offline/',env.get_template('offline.html').render(**shared(
         'ऑफ़लाइन | तिथि दर्शन','ऑफ़लाइन होने पर नया दैनिक पंचांग नहीं दिखाया जाता।',
         '/offline/','offline',robots_policy='noindex,follow')),indexable=False)
+    # List only observed Ekadashi sunrise tithi within the published window.
+    # This deliberately does NOT claim to be a Smarta/Vaishnava fasting calendar.
+    ekadashi_template=env.get_template('ekadashi.html')
+    for city in CITIES:
+        records=[]
+        for d in dates_between(today,end):
+            iso=d.isoformat()
+            p=panchang_cache[(city['slug'],iso)]
+            if p['tithi']=='एकादशी':
+                records.append({'iso':iso,'date_hi':p['dateHindi'],
+                    'paksha':p['paksha'],'end_time':p['tithiEnd']})
+        desc=f"{city['name']} के अगले {max(0,(end-today).days)} दिनों में सूर्योदय पर एकादशी तिथि का गणना आधारित पंचांग; स्मार्त/वैष्णव व्रत और पारण का निर्णय अलग है।"
+        route=f"/ekadashi/{city['slug']}/"
+        kw={'city':city,'cities':CITIES,'records':records,
+            'start_label':today.strftime('%d-%m-%Y'),
+            'end_label':end.strftime('%d-%m-%Y')}
+        text=ekadashi_template.render(**shared(
+          f"{city['name']} की आगामी एकादशी तिथियाँ | तिथि दर्शन",
+          desc,route,'ekadashi',city['slug']),**kw)
+        write(route,text)
+        if city['slug']=='delhi':
+            write('/ekadashi/',ekadashi_template.render(**shared(
+              'आगामी एकादशी तिथियाँ | तिथि दर्शन',desc,route,'ekadashi',
+              city['slug'],robots_policy='noindex,follow'),**kw),indexable=False)
     guide_links=[{'slug':slug,'name':g['name']} for slug,g in GUIDES.items()]
     info=env.get_template('info.html')
     for slug,g in GUIDES.items():
@@ -441,7 +465,7 @@ def main():
                 if f.parent != DIST else '/'
                 for f in DIST.rglob('index.html')
             )
-            if route not in {'/mera-account/','/settings/','/offline/','/calendar/'} and route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
+            if route not in {'/mera-account/','/settings/','/offline/','/calendar/','/ekadashi/'} and route not in {f"/vishay/{slug}/" for slug,count in topic_counts.items() if count==0}
         )
         entries=''.join(f'<url><loc>{xmlutils.escape(site_url+route)}</loc></url>' for route in all_routes)
         (DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+entries+'</urlset>',encoding='utf-8')
