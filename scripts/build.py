@@ -24,6 +24,7 @@ from zoneinfo import ZoneInfo
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from panchang import panchang_for, event_jd, dt_from_jd, IST
 from choghadiya import daytime_choghadiya, nighttime_choghadiya
+from generate_icons import write_app_icons
 
 ROOT=Path(__file__).resolve().parent.parent
 DIST=ROOT/'dist'
@@ -264,6 +265,7 @@ def main():
     shutil.copytree(ROOT/'assets',DIST/'assets',dirs_exist_ok=True)
     shutil.copyfile(ROOT/'assets'/'sw.js',DIST/'sw.js')
     shutil.copyfile(ROOT/'assets'/'manifest.webmanifest',DIST/'manifest.webmanifest')
+    write_app_icons(DIST)
     generated_at_utc_issued=datetime.now(ZoneInfo('UTC')).isoformat(timespec='seconds')
     write,shared,sitemap=make_writer(site_url,today,start,end)
     main_template=env.get_template('panchang.html')
