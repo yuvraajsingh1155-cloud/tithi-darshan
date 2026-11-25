@@ -80,6 +80,21 @@ with sync_playwright() as p:
         page.goto(BASE+"/",wait_until="domcontentloaded")
         page.locator("#current-tithi-card").wait_for(state="visible",timeout=12000)
         assert "पक्ष" in (page.locator("#current-tithi-name").text_content() or "")
+        page.evaluate("""() => {
+          window.__copied=null;
+          Object.defineProperty(navigator,'clipboard',{configurable:true,
+            value:{writeText:async value=>{window.__copied=value;}}});
+        }""")
+        page.locator("[data-copy-page]").click()
+        page.wait_for_function("window.__copied !== null")
+        assert page.evaluate("window.__copied").startswith(BASE+"/")
+        page.goto(BASE+"/mera-account/",wait_until="domcontentloaded")
+        assert page.locator("#auth-panel").is_visible()
+        assert page.locator("#profile-panel").is_hidden()
+        page.locator("#toggle-auth-password").click()
+        assert page.locator("#auth-password").get_attribute("type")=="text"
+        page.locator("#toggle-auth-password").click()
+        assert page.locator("#auth-password").get_attribute("type")=="password"
         # Reproducible visual QA screenshots for each breakpoint and mode.
         screenshots=Path("artifacts/tithi-2-visual-qa")
         screenshots.mkdir(parents=True,exist_ok=True)
