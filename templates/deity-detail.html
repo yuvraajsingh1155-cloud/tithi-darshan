@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="heritage-head deity-detail-hero"><div class="shell">
+<nav class="breadcrumb" aria-label="पृष्ठ क्रम"><a href="/">मुखपृष्ठ</a> / <a href="/devi-devta/">देव दर्शन</a> / {{deity.name}}</nav>
+<div class="deity-detail-grid"><div class="deity-detail-copy">
+<span class="eyebrow">धर्म, संस्कृति एवं परंपरा</span>
+<h1>{{deity.name}}</h1>
+<h2>{{info.tagline}}</h2>
+<p>{{info.summary}}</p>
+<div class="heritage-cta"><a href="#parampara" class="heritage-button">परंपरा जानें</a><a href="/devi-devta/" class="outline-button">सभी देवी-देवता ↗</a></div>
+</div>
+<div class="deity-detail-art"><img src="/assets/{{deity.image}}" width="320" height="320" decoding="async" alt="{{deity.alt}}"><small>मौलिक, आधुनिक प्रतीकात्मक चित्र; पौराणिक रूप का एकमात्र अधिकृत चित्र नहीं।</small></div>
+</div></div></section>
+<section class="shell heritage-section deity-detail-content" id="parampara">
+  <div class="section-heading"><div><span class="kicker">प्रतीक और अर्थ</span><h2>{{deity.name}} के प्रमुख प्रतीक</h2></div></div>
+  <div class="deity-symbol-grid">{% for symbol in info.symbols %}
+    <article class="astro-panel"><h3>{{symbol.name}}</h3><p>{{symbol.detail}}</p></article>
+  {% endfor %}</div>
+  <div class="deity-detail-text"><section class="astro-panel"><span class="kicker">उपासना की विविधता</span><h2>परंपरागत पूजा और सम्मान</h2><p>{{info.practice}}</p></section>
+  <section class="astro-panel"><span class="kicker">उत्सव और कैलेंडर</span><h2>संबंधित पर्व एवं व्रत</h2><p>{{info.festival}}</p><a href="/calendar/" class="outline-button">मासिक पंचांग देखें ↗</a></section></div>
+  <div class="astro-state"><strong>संपादकीय जानकारी:</strong> यहाँ दिए तथ्य सांस्कृतिक परिचय हैं, व्यक्तिगत भविष्यवाणी या धार्मिक आदेश नहीं। पूजा की तिथि, मंत्रों का पाठ और अनुष्ठान-नियम अपनी मान्य परंपरा और स्रोत से जाँचें। अप्रमाणित मंत्र या कथित शास्त्रीय उद्धरण नहीं जोड़े गए हैं।</div>
+  <div class="calendar-links"><a class="outline-button" href="{{info.related}}">संबंधित जानकारी पढ़ें ↗</a><a href="/lekh/" class="outline-button">अन्य धार्मिक लेख ↗</a><a href="/jankari/sampadakiya-neeti/" class="outline-button">संपादकीय नीति ↗</a></div>
+</section>
+{% endblock %}
