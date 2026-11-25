@@ -1,0 +1,73 @@
+"""Real Chromium responsive/accessibility smoke tests against the generated local site.
+
+Run after build + local HTTP server, with playwright chromium installed:
+    python tests/browser_smoke.py
+Only tests implemented controls. Does not claim full WCAG or end-to-end Google consent.
+"""
+from __future__ import annotations
+import json
+import os
+import urllib.request
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+
+BASE=os.getenv("TEST_BASE_URL","http://127.0.0.1:8765")
+VIEWPORTS=[320,375,390,768,1024,1280,1440,1920]
+PAGES=["/","/calendar/","/settings/","/mera-account/","/rashifal/","/kundli-milan/","/lekh/"]
+results=[]
+def check_page(page,path,width):
+    errors=[]
+    page.on("pageerror",lambda error:errors.append(str(error)))
+    response=page.goto(BASE+path,wait_until="domcontentloaded",timeout=45000)
+    assert response is not None and response.status==200,(path,width,response.status if response else "none")
+    page.wait_for_timeout(100)
+    sizes=page.evaluate("({scroll:document.documentElement.scrollWidth,width:window.innerWidth})")
+    assert sizes["scroll"]<=sizes["width"]+2,("horizontal overflow",path,width,sizes)
+    assert page.locator("main").count()==1
+    assert len(errors)==0,("page Javascript exception",path,width,errors)
+    results.append({"route":path,"width":width,"result":"PASS"})
+
+with sync_playwright() as p:
+    browser=p.chromium.launch(headless=True,args=["--no-sandbox","--disable-dev-shm-usage"])
+    for width in VIEWPORTS:
+        context=browser.new_context(viewport={"width":width,"height":900},device_scale_factor=1)
+        page=context.new_page()
+        for path in PAGES:
+            check_page(page,path,width)
+        page.goto(BASE+"/settings/",wait_until="domcontentloaded")
+        assert page.locator("#website-settings").count()==1
+        page.select_option("#pref-theme","dark")
+        page.wait_for_timeout(100)
+        assert page.locator("html").get_attribute("data-theme")=="dark"
+        page.select_option("#pref-city","hardoi")
+        page.locator("#pref-high-contrast").check()
+        page.reload(wait_until="domcontentloaded")
+        assert page.locator("#pref-city").input_value()=="hardoi"
+        assert page.locator("html").get_attribute("data-theme")=="dark"
+        assert page.locator("html").get_attribute("data-contrast")=="high"
+        assert page.locator("[data-preferred-panchang]").get_attribute("href").startswith("/panchang/hardoi/")
+        page.locator("#reset-prefs").click()
+        page.on("dialog",lambda d:d.accept())
+        if width<=1080:
+            page.goto(BASE+"/")
+            toggle=page.locator("#menu-toggle")
+            assert toggle.is_visible()
+            toggle.click()
+            assert toggle.get_attribute("aria-expanded")=="true"
+            assert page.locator("#primary-nav").is_visible()
+            page.keyboard.press("Escape")
+            assert toggle.get_attribute("aria-expanded")=="false"
+        context.close()
+    browser.close()
+
+for path in ["/manifest.webmanifest","/sw.js","/offline/"]:
+    with urllib.request.urlopen(BASE+path,timeout=15) as r:
+        assert r.status==200,(path,r.status)
+        if path.endswith(".webmanifest"):
+            manifest=json.load(r)
+            assert manifest["start_url"]=="/"
+assert Path("dist/settings/index.html").exists()
+assert Path("dist/calendar/delhi").exists()
+print(json.dumps({"viewport_checks":VIEWPORTS,"pages_tested":PAGES,
+    "total_page_checks":len(results),"result":"PASS","settings_persistence":"PASS",
+    "keyboard_menu":"PASS","PWA_assets":"PASS"},ensure_ascii=False,indent=2))
