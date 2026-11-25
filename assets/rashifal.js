@@ -40,6 +40,11 @@
     $('rashi-message').textContent=signPrompts[key]+' '+practices[weekday];
   };
   select.addEventListener('change',render);
+  const requested=new URLSearchParams(location.search).get('rashi');
+  if(requested&&Object.hasOwn(rashiNames,requested)){
+    select.value=requested;render();
+  }
+
   // A stored rashi is only a preference. It is NOT an astronomical natal Moon sign.
   if(window.supabase?.createClient){
     const client=window.supabase.createClient('https://ipqejplvpmznhhtcmozz.supabase.co','sb_publishable_y1vGfmJdnj9V9vc7KSWvqw_agNwvhW-');
@@ -47,7 +52,7 @@
       if(!data.session)return;
       const {data:{user}}=await client.auth.getUser();if(!user)return;
       const {data:profile}=await client.from('profiles').select('preferred_rashi').eq('user_id',user.id).maybeSingle();
-      if(profile?.preferred_rashi&&rashiNames[profile.preferred_rashi]){select.value=profile.preferred_rashi;render();}
+      if(!requested&&profile?.preferred_rashi&&rashiNames[profile.preferred_rashi]){select.value=profile.preferred_rashi;render();}
     }).catch(()=>{});
   }
 })();
