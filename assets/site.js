@@ -88,6 +88,35 @@
   document.querySelectorAll('[data-print-page]').forEach(button=>{
     button.addEventListener('click',()=>window.print());
   });
+  document.querySelectorAll('[data-share-page]').forEach(button=>{
+    button.addEventListener('click',async()=>{
+      const link=location.href;
+      try{
+        if(navigator.share){
+          await navigator.share({title:document.title,url:link});
+          return;
+        }
+        if(navigator.clipboard?.writeText){
+          await navigator.clipboard.writeText(link);
+          button.textContent='✓ लिंक कॉपी हो गया';
+        }else{
+          const field=document.createElement('textarea');
+          field.value=link;field.style.position='fixed';field.style.opacity='0';
+          document.body.append(field);field.select();
+          const copied=document.execCommand('copy');
+          field.remove();
+          if(!copied)throw Error('Clipboard not available');
+          button.textContent='✓ लिंक कॉपी हो गया';
+        }
+      }catch(error){
+        if(error?.name==='AbortError')return;
+        const field=document.createElement('input');field.value=link;
+        field.setAttribute('aria-label','इस पेज का लिंक');button.after(field);
+        field.select();
+        button.textContent='लिंक चुनकर कॉपी करें';
+      }
+    });
+  });
 
   // All article cards are pre-rendered HTML for crawlers. This enhances
   // the local search experience without sending personal queries to a server.
