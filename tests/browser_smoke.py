@@ -46,8 +46,9 @@ with sync_playwright() as p:
         assert page.locator("html").get_attribute("data-theme")=="dark"
         assert page.locator("html").get_attribute("data-contrast")=="high"
         assert page.locator("[data-preferred-panchang]").get_attribute("href").startswith("/panchang/hardoi/")
+        page.once("dialog",lambda d:d.accept())
         page.locator("#reset-prefs").click()
-        page.on("dialog",lambda d:d.accept())
+        assert page.locator("#pref-theme").input_value()=="system"
         if width<=1080:
             page.goto(BASE+"/")
             toggle=page.locator("#menu-toggle")
