@@ -68,6 +68,21 @@ with sync_playwright() as p:
             assert page.locator("#primary-nav").is_visible()
             page.keyboard.press("Escape")
             assert toggle.get_attribute("aria-expanded")=="false"
+        # Exercise native sharing and print actions on a real published article.
+        page.goto(BASE+"/lekh/",wait_until="domcontentloaded")
+        article_link=page.locator(".article-card").first.get_attribute("href")
+        assert article_link is not None and article_link.startswith("/lekh/")
+        page.goto(BASE+article_link,wait_until="domcontentloaded")
+        page.evaluate("""() => {
+          window.__shared = null;
+          navigator.share = async (info) => {window.__shared=info;};
+          window.print = () => {window.__printed=true;};
+        }""")
+        page.locator("[data-share-page]").click()
+        page.wait_for_function("window.__shared !== null")
+        assert page.evaluate("window.__shared.url").endswith(article_link)
+        page.locator("[data-print-page]").click()
+        assert page.evaluate("window.__printed === true")
         context.close()
     browser.close()
 
