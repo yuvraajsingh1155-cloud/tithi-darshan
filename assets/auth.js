@@ -17,6 +17,20 @@
   client = window.supabase.createClient(url, publishableKey, {
     auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
   });
+  // Password reveal controls are explicit, keyboard-accessible and never log values.
+  for(const [passwordId,buttonId] of [
+    ['auth-password','toggle-auth-password'],
+    ['reset-new-password','toggle-reset-password']
+  ]){
+    const field=$(passwordId),button=$(buttonId);
+    if(!field||!button)continue;
+    button.addEventListener('click',()=>{
+      const showing=field.type==='password';
+      field.type=showing?'text':'password';
+      button.textContent=showing?'पासवर्ड छिपाएँ':'पासवर्ड दिखाएँ';
+      button.setAttribute('aria-pressed',String(showing));
+    });
+  }
   const googleButton = $('google-signin');
   const googleStatus = $('google-provider-status');
   if (googleButton) {
@@ -114,6 +128,27 @@
     profilePanel.hidden = false;
     $('account-email').textContent = user.email || '';
     $('account-name').textContent = '';
+    const initial=$('account-initial');
+    const avatar=$('account-avatar');
+    const identity=String(user.user_metadata?.full_name||user.email||'ॐ').trim();
+    if(initial)initial.textContent=(identity[0]||'ॐ').toLocaleUpperCase('hi-IN');
+    if(avatar){
+      avatar.querySelector('img')?.remove();
+      // Only use Google's returned OAuth avatar, not arbitrary profile URLs.
+      const raw=user.user_metadata?.avatar_url||user.user_metadata?.picture;
+      try{
+        const u=new URL(String(raw||''));
+        if(u.protocol==='https:' && /(^|\\.)googleusercontent\\.com$/.test(u.hostname)){
+          const image=document.createElement('img');
+          image.src=u.href;image.alt='Google प्रोफाइल फोटो';
+          image.loading='lazy';image.referrerPolicy='no-referrer';
+          avatar.prepend(image);
+          image.addEventListener('load',()=>{if(initial)initial.hidden=true;});
+          image.addEventListener('error',()=>{image.remove();if(initial)initial.hidden=false;});
+        }
+      }catch{/* Initial avatar remains available. */}
+      if(initial)initial.hidden=false;
+    }
     const {data,error} = await client.from('profiles')
       .select('display_name,preferred_rashi').eq('user_id',user.id).maybeSingle();
     if (seq !== userLoadVersion || currentUser?.id !== user.id) return;
