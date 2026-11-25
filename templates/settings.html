@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="heritage-head settings-hero"><div class="shell">
+  <span class="eyebrow">ॐ तिथि दर्शन • अनुभव अपनी पसंद का</span>
+  <h1>वेबसाइट सेटिंग्स</h1>
+  <p>रंग, पढ़ने का आकार, भाषा, पसंदीदा शहर और समय का स्वरूप अपने हिसाब से चुनें। बदलाव इस डिवाइस में सुरक्षित रहते हैं।</p>
+</div></section>
+<section class="shell heritage-section settings-layout">
+  <nav class="settings-sidebar" aria-label="सेटिंग्स श्रेणियाँ">
+    <a href="#appearance">◐ रूप-रंग</a>
+    <a href="#accessibility">✧ पढ़ने की सुविधा</a>
+    <a href="#regional">⌖ शहर और भाषा</a>
+    <a href="#sync">☁ अकाउंट सिंक</a>
+    <a href="#privacy">♧ गोपनीयता</a>
+  </nav>
+  <div class="settings-main">
+    <form id="website-settings" class="settings-form" autocomplete="off">
+      <section class="astro-panel settings-section" id="appearance">
+        <span class="kicker">Appearance</span><h2>रूप-रंग</h2>
+        <div class="setting-field"><label for="pref-theme">वेबसाइट की थीम</label>
+        <select id="pref-theme" name="theme"><option value="light">Light — उजली थीम</option><option value="dark">Dark — गहरी थीम</option><option value="system">System — डिवाइस के अनुसार</option></select></div>
+        <p class="astro-small">System का मतलब आपके फोन/कंप्यूटर के Light या Dark मोड के अनुसार अपने आप बदलना है।</p>
+      </section>
+      <section class="astro-panel settings-section" id="accessibility">
+        <span class="kicker">Accessibility</span><h2>आराम से पढ़ें</h2>
+        <div class="setting-field"><label for="pref-font-scale">टेक्स्ट का आकार</label>
+          <select id="pref-font-scale" name="font_scale"><option value="0.90">थोड़ा छोटा — 90%</option><option value="1">सामान्य — 100%</option><option value="1.1">बड़ा — 110%</option><option value="1.2">और बड़ा — 120%</option><option value="1.3">सबसे बड़ा — 130%</option></select>
+        </div>
+        <label class="settings-toggle"><span><b>High Contrast</b><small>लिखावट और बॉर्डर स्पष्ट दिखें</small></span><input name="high_contrast" type="checkbox" id="pref-high-contrast"></label>
+        <label class="settings-toggle"><span><b>Reduced Motion</b><small>स्क्रॉल और बदलाव में अनावश्यक गति बंद करें</small></span><input name="reduced_motion" type="checkbox" id="pref-reduced-motion"></label>
+      </section>
+      <section class="astro-panel settings-section" id="regional">
+        <span class="kicker">Regional</span><h2>शहर, समय और भाषा</h2>
+        <div class="setting-field"><label for="pref-city">मेरा पसंदीदा शहर</label><select id="pref-city" name="preferred_city">{% for city in cities %}<option value="{{city.slug}}">{{city.name}}</option>{% endfor %}</select></div>
+        <a class="outline-button" data-preferred-panchang href="/">मेरे शहर का आज का पंचांग ↗</a>
+        <div class="setting-field"><label for="pref-time">समय कैसे दिखे?</label><select id="pref-time" name="time_format"><option value="24h">24-hour (18:30)</option><option value="12h">12-hour (06:30 PM)</option></select></div>
+        <div class="setting-field"><label for="pref-language">Navigation की भाषा</label><select id="pref-language" name="nav_language"><option value="hi">हिंदी</option><option value="en">English (navigation only)</option></select></div>
+        <p class="astro-small">English चुनने से मुख्य Navigation के शब्द बदलेंगे। पंचांग की पूरी सामग्री अभी हिंदी में उपलब्ध है; अधूरा अनुवाद पूरा अनुवाद बताकर नहीं दिखाया जाएगा।</p>
+        <p class="astro-small">अमान्त/पूर्णिमान्त मास-नामों का वैकल्पिक दृश्य अभी जाँच में है। इसका स्विच तब जोड़ा जाएगा जब दोनों पद्धतियों की सही गणना उपलब्ध होगी।</p>
+      </section>
+      <section class="astro-panel settings-section" id="sync">
+        <span class="kicker">Privacy First</span><h2>पसंद सुरक्षित रखें</h2>
+        <p id="settings-preview" role="status">आपकी सेटिंग्स लागू हैं।</p>
+        <p class="astro-small">ये बदलाव इस Browser में तुरंत सेव होते हैं। Google Login होने पर चाहें तो इन्हें अपने निजी Supabase अकाउंट में भी सेव कर सकते हैं।</p>
+        <button class="heritage-button" type="button" id="sync-prefs">अकाउंट में सेटिंग्स सेव करें</button>
+        <button class="outline-button" type="button" id="reset-prefs">सभी सेटिंग्स रीसेट करें</button>
+        <p class="astro-small" role="status" aria-live="polite" id="sync-status">अकाउंट सिंक वैकल्पिक है।</p>
+      </section>
+      <section class="astro-panel settings-section" id="privacy">
+        <span class="kicker">Security</span><h2>अकाउंट और डेटा</h2>
+        <p>निजी रिपोर्ट, डेटा डाउनलोड और अकाउंट हटाने के विकल्प अपने लॉगिन वाले Dashboard में हैं। कोई निजी जन्म-विवरण इस सेटिंग पेज पर नहीं माँगा जाता।</p>
+        <a href="/mera-account/" class="outline-button">मेरा सुरक्षित अकाउंट ↗</a>
+        <a href="/jankari/gopniyata-neeti/" class="outline-button">गोपनीयता नीति ↗</a>
+      </section>
+    </form>
+  </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.87.3/dist/umd/supabase.min.js" defer></script>
+<script src="/assets/settings.js?v=2" defer></script>
+{% endblock %}
