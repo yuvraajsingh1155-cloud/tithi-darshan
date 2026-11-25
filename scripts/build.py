@@ -220,6 +220,7 @@ def date_page_path(city_slug,d):
 
 def make_writer(site_url:str, today:date, start:date,end:date):
     sitemap=[]
+    generated_at=datetime.now(ZoneInfo('UTC')).isoformat(timespec='seconds')
     def write(route:str, html:str, indexable=True):
         path=DIST / route.lstrip('/') / 'index.html'
         path.parent.mkdir(parents=True,exist_ok=True)
@@ -231,7 +232,7 @@ def make_writer(site_url:str, today:date, start:date,end:date):
         result=[safe_json({k:v for k,v in org.items() if v is not None})]
         if schemas:
             result.extend(safe_json(o) for o in schemas)
-        return dict(title=title,description=description,canonical=canonical,page_type=page_type,selected_city=selected_city,selected_date=selected_date,build_year=today.year,schemas=result,robots_policy=robots_policy)
+        return dict(title=title,description=description,canonical=canonical,page_type=page_type,selected_city=selected_city,selected_date=selected_date,build_year=today.year,schemas=result,robots_policy=robots_policy,built_at_utc=generated_at)
     return write,shared,sitemap
 
 def main():
@@ -257,6 +258,7 @@ def main():
     shutil.copytree(ROOT/'assets',DIST/'assets',dirs_exist_ok=True)
     shutil.copyfile(ROOT/'assets'/'sw.js',DIST/'sw.js')
     shutil.copyfile(ROOT/'assets'/'manifest.webmanifest',DIST/'manifest.webmanifest')
+    generated_at_utc_issued=datetime.now(ZoneInfo('UTC')).isoformat(timespec='seconds')
     write,shared,sitemap=make_writer(site_url,today,start,end)
     main_template=env.get_template('panchang.html')
     zodiac_names=['मेष','वृषभ','मिथुन','कर्क','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुंभ','मीन']
@@ -272,6 +274,7 @@ def main():
         for city in CITIES:
             p=panchang_for(d,city)
             p['day_choghadiya']=daytime_choghadiya(d,p['sunriseIso'],p['sunsetIso'])
+            p['tithiTimelineJson']=safe_json(p['tithiSegments'])
             panchang_cache[(city['slug'],d.isoformat())]=p
             route=date_page_path(city['slug'],d)
             is_today=d==today
@@ -472,7 +475,7 @@ def main():
     robots='User-agent: *\nAllow: /\n'
     if site_url:robots+=f'Sitemap: {site_url}/sitemap.xml\n'
     (DIST/'robots.txt').write_text(robots,encoding='utf-8')
-    (DIST/'build-info.json').write_text(json.dumps({'indian_date':today.isoformat(),'range':{'start':start.isoformat(),'end':end.isoformat()},'cities':len(CITIES),'date_pages':generated,'sitemap':bool(site_url),'generated_at_utc':datetime.now(ZoneInfo('UTC')).isoformat(timespec='seconds')},indent=2),encoding='utf-8')
+    (DIST/'build-info.json').write_text(json.dumps({'indian_date':today.isoformat(),'range':{'start':start.isoformat(),'end':end.isoformat()},'cities':len(CITIES),'date_pages':generated,'sitemap':bool(site_url),'generated_at_utc':generated_at_utc_issued},indent=2),encoding='utf-8')
     print(f'Generated {generated} dated Panchang pages for {len(CITIES)} cities from {start} to {end}')
     print(f'Home page: {DIST}/index.html')
     print(f'Canonical/Sitemap configured: {bool(site_url)}')
