@@ -1,0 +1,57 @@
+name: Tithi Darshan Lighthouse Audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/lighthouse-audit.yml'
+permissions:
+  contents: read
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: python -m pip install --disable-pip-version-check -r requirements.txt playwright
+      - name: Install Chromium for Lighthouse
+        run: python -m playwright install --with-deps chromium
+      - name: Build local release preview
+        env:
+          SITE_URL: https://hindu-tithi-darshan.pages.dev
+        run: python scripts/build.py
+      - name: Audit local homepage and account page
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory dist > /tmp/tithi-preview.log 2>&1 &
+          CHROME_PATH=$(python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')
+          export CHROME_PATH
+          npx --yes lighthouse@latest http://127.0.0.1:8765/ \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --output=json --output-path=/tmp/lighthouse-home.json \
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --quiet
+          npx --yes lighthouse@latest http://127.0.0.1:8765/mera-account/ \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --output=json --output-path=/tmp/lighthouse-account.json \
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --quiet
+          python - <<'PY'
+          import json
+          for name in ('home','account'):
+              with open('/tmp/lighthouse-'+name+'.json') as f:
+                  data=json.load(f)
+              print('LIGHTHOUSE',name,'|', {c:int(v['score']*100) if v.get('score') is not None else None for c,v in data['categories'].items()})
+              for metric in ('largest-contentful-paint','cumulative-layout-shift','interaction-to-next-paint'):
+                  a=data['audits'].get(metric,{})
+                  print('METRIC',name,metric,a.get('displayValue'),a.get('numericValue'))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tithi-lighthouse-results
+          path: /tmp/lighthouse-*.json
+          if-no-files-found: ignore
