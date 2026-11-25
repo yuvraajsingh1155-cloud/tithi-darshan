@@ -173,3 +173,20 @@ html[data-theme="dark"] .choghadiya-good{border-left-color:#79c49b}
 html[data-theme="dark"] .choghadiya-caution{border-left-color:#ffc181}
 @media(max-width:800px){.choghadiya-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:390px){.choghadiya-grid{gap:7px}.choghadiya-slot{padding:11px}.choghadiya-slot b{font-size:18px}.choghadiya-slot strong{font-size:12px}}
+
+/* Lighthouse 2026-11-25 audit: fix identified contrast and target-size failures.
+   Dark theme is unaffected by these light-theme-specific text overrides. */
+html:not([data-theme="dark"]) :is(.brand small,.form-field label,.notice-label,.kicker,
+  .deity-section-header p,.factcard span,.factcard small,.timeline-row small,
+  .muhurat-item small,.muhurat-warning,.advice-no,.footer-inner p,.footline,
+  .home-shortcuts-grid small,.calendar-paksha,.premium-festival-card small){
+  color:#624333;
+}
+html:not([data-theme="dark"]) .notice-label{background:#fff0d7;color:#6d421d}
+html:not([data-theme="dark"]) .advice-no{color:#795039}
+html:not([data-theme="dark"]) .footer-inner p,html:not([data-theme="dark"]) .footline{color:#554238}
+html:not([data-theme="dark"]) .factcard.first span,html:not([data-theme="dark"]) .factcard.first small{color:#584337}
+.deity-grid .deity-card{min-height:220px}
+.deity-grid{gap:20px}
+.deity-grid .deity-card:focus-visible{position:relative;z-index:2}
+@media(max-width:720px){.deity-grid{gap:18px}.deity-grid .deity-card{min-height:185px}}
