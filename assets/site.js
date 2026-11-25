@@ -111,6 +111,24 @@
   document.querySelectorAll('[data-print-page]').forEach(button=>{
     button.addEventListener('click',()=>window.print());
   });
+  document.querySelectorAll('[data-copy-page]').forEach(button=>{
+    button.addEventListener('click',async()=>{
+      const value=location.href;
+      let copied=false;
+      try{
+        if(navigator.clipboard?.writeText){
+          await navigator.clipboard.writeText(value);
+          copied=true;
+        }else{
+          const field=document.createElement('textarea');
+          field.value=value;field.style.position='fixed';field.style.opacity='0';
+          document.body.append(field);field.select();
+          copied=document.execCommand('copy');field.remove();
+        }
+      }catch{/* Provide an honest fallback instead of reporting success. */}
+      button.textContent=copied?'✓ पेज लिंक कॉपी हुआ':'कॉपी नहीं हुआ — Address Bar से लिंक लें';
+    });
+  });
   document.querySelectorAll('[data-share-page]').forEach(button=>{
     button.addEventListener('click',async()=>{
       const link=location.href;
