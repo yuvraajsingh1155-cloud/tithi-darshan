@@ -297,3 +297,10 @@ html[data-theme="dark"] .deity-detail-art{background:var(--ui-surface)}
 .pwa-update-notice{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));right:18px;z-index:400;display:flex;align-items:center;gap:13px;max-width:min(420px,calc(100vw - 32px));padding:13px 16px;border-radius:14px;background:var(--ui-surface);border:2px solid var(--ui-gold);color:var(--ui-ink);box-shadow:0 12px 32px #2e1b1833;font-size:14px}
 .pwa-update-notice button{min-height:44px;background:var(--ui-accent);color:var(--ui-bg);border:0;border-radius:10px;padding:8px 14px;font-weight:700}
 @media(max-width:720px){.pwa-update-notice{bottom:calc(87px + env(safe-area-inset-bottom,0px));left:14px;right:14px;flex-wrap:wrap}}
+
+/* Functional utilities without crowding the primary Tithi hero. */
+.panchang-action-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:16px 0 0}
+.panchang-action-row button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:7px 11px;font-size:12px;border:1px solid var(--ui-stroke);border-radius:11px;background:var(--ui-surface);color:var(--ui-ink);font-weight:700}
+.panchang-action-row button:hover{border-color:var(--ui-accent);background:#f8eee2}
+html[data-theme="dark"] .panchang-action-row button{background:var(--ui-surface);color:var(--ui-ink)}
+@media(max-width:390px){.panchang-action-row{gap:5px}.panchang-action-row button{padding:7px 8px;font-size:11px}}
