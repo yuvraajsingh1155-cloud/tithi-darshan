@@ -98,6 +98,9 @@ with sync_playwright() as p:
         # Reproducible visual QA screenshots for each breakpoint and mode.
         screenshots=Path("artifacts/tithi-2-visual-qa")
         screenshots.mkdir(parents=True,exist_ok=True)
+        page.goto(BASE+"/",wait_until="domcontentloaded")
+        assert page.locator("body").get_attribute("data-page")=="home"
+        page.locator("#current-tithi-card").wait_for(state="visible",timeout=12000)
         page.screenshot(path=str(screenshots/f"home-{width}.png"),full_page=True,animations="disabled")
         page.goto(BASE+"/settings/",wait_until="domcontentloaded")
         page.select_option("#pref-theme","dark")
