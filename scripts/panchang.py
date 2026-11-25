@@ -95,6 +95,21 @@ def event_jd(dt:date, city:dict, rise:bool) -> float:
     if code != 0:raise ValueError('Solar event unavailable for this location/date')
     return result[0]
 
+def moon_event(d:date, city:dict, rise:bool) -> datetime|None:
+    """Swiss Ephemeris Moon rise/set after local midnight, only if on same local date.
+
+    Uses the same observer geolocation, pressure and temperature settings as
+    the existing solar event calculator. Moonrise/moonset may be absent on a
+    particular civil date; return None rather than a next-day misleading time.
+    """
+    start=datetime.combine(d,time(0,0),tzinfo=IST).astimezone(UTC)
+    code,result=swe.rise_trans(jd_from_dt(start),swe.MOON,
+        swe.CALC_RISE if rise else swe.CALC_SET,
+        (city['lon'],city['lat'],city.get('alt',0)),0,15,swe.FLG_MOSEPH)
+    if code!=0:return None
+    loc=dt_from_jd(result[0]).astimezone(IST)
+    return loc if loc.date()==d else None
+
 def karana_for_sector(i:int)->str:
     if i==0:return 'किंस्तुघ्न'
     if i==57:return 'शकुनि'
@@ -124,6 +139,8 @@ def panchang_for(d:date, city:dict)->dict:
     rise=dt_from_jd(rise_jd).astimezone(IST)
     sunset=dt_from_jd(set_jd).astimezone(IST)
     if sunset<rise:raise AssertionError('Sunset before sunrise')
+    moonrise=moon_event(d,city,True)
+    moonset=moon_event(d,city,False)
     ti_end, ti=next_boundary(rise_jd,0,30)
     na_end, na=next_boundary(rise_jd,1,27)
     yo_end, yo=next_boundary(rise_jd,2,27)
@@ -156,6 +173,10 @@ def panchang_for(d:date, city:dict)->dict:
         'karana':karana_for_sector(ka),'karanaEnd':clock(ka_end,d),
         'sunrise':clock(rise,d),'sunset':clock(sunset,d),
         'sunriseIso':rise.isoformat(),'sunsetIso':sunset.isoformat(),
+        'moonrise':clock(moonrise,d) if moonrise else 'इस दिन नहीं',
+        'moonset':clock(moonset,d) if moonset else 'इस दिन नहीं',
+        'moonriseIso':moonrise.isoformat() if moonrise else None,
+        'moonsetIso':moonset.isoformat() if moonset else None,
         'moonRashi':RASHIS[int(moon//30)], 'sunRashi':RASHIS[int(sun//30)],
         'rahu':eighth(rahu_segments[sunday_index]),
         'yamaganda':eighth(yama_segments[sunday_index]),
