@@ -74,7 +74,8 @@
   const active=here.startsWith('/calendar/')?'calendar':
     here.startsWith('/rashifal/')?'rashi':
     here.startsWith('/mera-account/')?'account':
-    here.startsWith('/settings/')?'settings':'home';
+    here.startsWith('/settings/')?'settings':
+    (here==='/'||here.startsWith('/panchang/')||here.startsWith('/shehar/'))?'home':null;
   document.querySelectorAll('.mobile-bottom-nav [data-nav-key]').forEach(link=>{
     if(link.dataset.navKey===active)link.setAttribute('aria-current','page');
   });
