@@ -106,26 +106,25 @@ def civil_tithi_segments(d:date) -> list[dict]:
     """
     midnight=datetime.combine(d,time(0,0),tzinfo=IST)
     next_midnight=midnight+timedelta(days=1)
-    cursor=midnight
+    segment_start=midnight
     segments=[]
-    while cursor<next_midnight:
-        transition,index=next_boundary(jd_from_dt(cursor),0,30)
-        if transition<=cursor:
+    while segment_start<next_midnight:
+        # 250ms is used only for angular sector lookup immediately after a
+        # boundary; the published interval starts at the exact boundary.
+        query=segment_start if not segments else segment_start+timedelta(milliseconds=250)
+        transition,index=next_boundary(jd_from_dt(query),0,30)
+        if transition<=segment_start:
             raise ValueError('Non-increasing Tithi boundary')
         until=min(transition,next_midnight)
         paksha,name=tithi_name_for_index(index)
         segments.append({
-            'startIso':cursor.isoformat(),
+            'startIso':segment_start.isoformat(),
             'endIso':until.isoformat(),
             'tithi':name,
             'paksha':paksha,
             'sector':index
         })
-        if until>=next_midnight:
-            break
-        # Avoid a floating-point boundary ambiguity by advancing only
-        # the calculation cursor; the displayed segments remain contiguous.
-        cursor=until+timedelta(milliseconds=250)
+        segment_start=until
         if len(segments)>6:
             raise ValueError('Unexpectedly many Tithi boundaries')
     return segments
