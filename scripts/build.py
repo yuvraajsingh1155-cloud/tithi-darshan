@@ -247,6 +247,13 @@ def main():
     shutil.copyfile(ROOT/'assets'/'manifest.webmanifest',DIST/'manifest.webmanifest')
     write,shared,sitemap=make_writer(site_url,today,start,end)
     main_template=env.get_template('panchang.html')
+    zodiac_names=['मेष','वृषभ','मिथुन','कर्क','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुंभ','मीन']
+    zodiac_slugs=['mesh','vrishabh','mithun','kark','singh','kanya','tula','vrishchik','dhanu','makar','kumbh','meen']
+    zodiac_links=[{'name':n,'slug':slug,'symbol':chr(0x2648+i)} for i,(n,slug) in enumerate(zip(zodiac_names,zodiac_slugs))]
+    upcoming_festivals=[
+        {'date':iso,'title':v['title']} for iso,v in sorted(FESTIVALS.items())
+        if today <= date.fromisoformat(iso) <= end
+    ][:5]
     generated=0
     panchang_cache={}
     for d in dates_between(start,end):
@@ -279,7 +286,7 @@ def main():
                     home=main_template.render(**shared('आज की तिथि, पंचांग और शुभ मुहूर्त | तिथि दर्शन',desc,'/','home',city['slug'],p['date'],schemas[:1]),
                         p=p,cities=CITIES,is_today=True,festival=FESTIVALS.get(d.isoformat()),
                         previous_date=(d-timedelta(days=1)).isoformat() if d>start else None,next_date=(d+timedelta(days=1)).isoformat() if d<end else None,
-                        min_date=start.isoformat(),max_date=end.isoformat(),recent_articles=articles[:4],deities=deities,topics=TOPICS)
+                        min_date=start.isoformat(),max_date=end.isoformat(),recent_articles=articles[:4],deities=deities,topics=TOPICS,zodiac_links=zodiac_links,upcoming_festivals=upcoming_festivals)
                     write('/',home)
     # Real per-city monthly calendars reuse the sunrise-based daily computation.
     # Only calendar cells in the published daily window link to a date page.
