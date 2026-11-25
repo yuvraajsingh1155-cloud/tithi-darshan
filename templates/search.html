@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="heritage-head"><div class="shell">
+  <span class="eyebrow">खोज • Panchang, त्योहार और ज्ञान</span>
+  <h1>तिथि दर्शन में खोजें</h1>
+  <p>पंचांग, शहर, व्रत, एकादशी, राशियाँ, देवी-देवता और स्रोत-सहित लेख एक ही जगह खोजें।</p>
+</div></section>
+<section class="shell heritage-section search-hub">
+  <form role="search" id="universal-search-form" class="global-search-form" autocomplete="off">
+    <label for="global-search-input">आप क्या जानना चाहते हैं?</label>
+    <div class="global-search-row"><input type="search" id="global-search-input" name="q"
+      placeholder="उदाहरण: आज की तिथि, Hardoi, Ekadashi, कुंडली" minlength="1" maxlength="120"
+      aria-describedby="global-search-hint" autofocus>
+      <button type="submit" class="heritage-button">खोजें</button></div>
+    <small id="global-search-hint">हिंदी, English या Hinglish में खोज सकते हैं। यह खोज आपके Browser में होती है।</small>
+  </form>
+  <div class="search-popular" aria-label="लोकप्रिय खोज">
+    {% for item in popular_searches %}<a href="/khoj/?q={{item|urlencode}}">{{item}}</a>{% endfor %}
+  </div>
+  <div id="search-loading" class="astro-state" role="status">सार्वजनिक लेखों और पंचांग की सूची तैयार हो रही है…</div>
+  <section id="search-results" aria-live="polite" aria-busy="false">
+    <h2 id="search-heading" class="search-heading">सुझाए गए विषय</h2>
+    <p id="search-count" class="astro-small"></p>
+    <div class="search-results-grid" id="search-results-grid"></div>
+    <p id="search-no-results" class="astro-state" hidden>इस शब्द के लिए अभी कोई प्रकाशित परिणाम नहीं मिला। दूसरा शब्द या शहर आज़माएँ। कोई अनुमानित तारीख या नकली लेख नहीं दिखाया जाएगा।</p>
+  </section>
+</section>
+<script src="/assets/global-search.js?v=1" defer></script>
+{% endblock %}
