@@ -3,13 +3,20 @@
 <div class="hero"><div class="shell hero-grid">
   <div class="hero-main">
     <div class="eyebrow"><span class="pulse"></span> दैनिक हिंदू पंचांग · {{ p.dateHindi }}</div>
-    <h1>{% if is_today %}आज कौन सी तिथि है?{% else %}{{ p.dateHindi }} को कौन सी तिथि है?{% endif %}</h1>
-    <p class="hero-sub">{{ p.city }} में {{ p.dateHindi }}, {{ p.weekday }} को <strong>{{ p.paksha }} की {{ p.tithi }}</strong> तिथि है। तिथि का समापन <strong>{{ p.tithiEnd }}</strong> पर होगा।</p>
+    <h1>{% if is_today %}आज सूर्योदय पर कौन सी तिथि थी?{% else %}{{ p.dateHindi }} को सूर्योदय पर कौन सी तिथि थी?{% endif %}</h1>
+    <p class="hero-sub">{{ p.city }} में {{ p.dateHindi }}, {{ p.weekday }} को <strong>{{ p.paksha }} की {{ p.tithi }}</strong> तिथि है। सूर्योदय पर मौजूद तिथि का समापन <strong>{{ p.tithiEnd }}</strong> पर होगा।</p>
+    <div class="freshness-banner" id="freshness-banner" role="alert" hidden><strong>पुराना पंचांग दिख रहा है।</strong><span id="freshness-reason">नई तारीख का डेटा जाँचा जा रहा है।</span></div>
+    <div class="current-tithi-card" id="current-tithi-card" role="status" aria-live="polite" hidden>
+      <span class="kicker">वर्तमान तिथि • अभी</span>
+      <strong id="current-tithi-name">खगोलीय समय मिलाया जा रहा है…</strong>
+      <span id="current-tithi-detail"></span>
+      <small id="current-tithi-next"></small>
+    </div>
     <form id="findPanchang" class="searchbox" aria-label="पंचांग खोजें"><div class="form-field"><label for="citySelect">📍 अपना शहर</label><select id="citySelect" name="city" aria-label="शहर चुनें">{% for city in cities %}<option value="{{ city.slug }}" {% if city.slug == p.citySlug %}selected{% endif %}>{{ city.name }}</option>{% endfor %}</select></div><span class="form-rule"></span><div class="form-field"><label for="dateSelect">▦ तारीख चुनें</label><input type="date" id="dateSelect" name="date" value="{{ p.date }}" min="{{ min_date }}" max="{{ max_date }}"></div><button type="submit" class="go-button">पंचांग देखें <span>→</span></button></form>
     <p class="fine"><span class="verified">✓ गणना आधारित</span> लाहिड़ी अयनांश · शहर के सूर्योदय पर तिथि · समय IST</p>
   </div>
   <div class="featured"><div class="mandala"><div class="mandala-center">ॐ</div></div>
-    <div class="featured-top"><span>✦ आज की प्रमुख तिथि</span><span class="date-chip">{{ p.weekday }}</span></div>
+    <div class="featured-top"><span>✦ सूर्योदय पर विद्यमान तिथि</span><span class="date-chip">{{ p.weekday }}</span></div>
     <div class="featured-name">{{ p.tithi }}</div><div class="featured-paksha">{{ p.paksha }} <span>·</span> {{ p.dateHindi }}</div>
     <div class="featured-line"></div><div class="featured-label">तिथि समाप्ति</div><div class="featured-time">{{ p.tithiEnd }}</div>
     {% if is_today %}<div class="remaining" data-tithi-end="{{ p.tithiEndIso }}">समय की गणना हो रही है…</div>{% endif %}
@@ -102,4 +109,6 @@
 <section class="shell heritage-section home-topics"><div class="section-heading"><div><span class="kicker">आस्था और जानकारी</span><h2>लोकप्रिय विषय</h2><p>विषय चुनकर उससे जुड़े प्रकाशित लेख पढ़ें।</p></div><a href="/lekh/" class="topic-more">सभी लेख ↗</a></div><div class="topic-grid topic-grid-home">{% for topic in topics %}<a class="topic-card" href="/vishay/{{ topic.slug }}/"><span class="topic-symbol">{{ topic.symbol }}</span><h3>{{ topic.name }}</h3><p>{{ topic.description }}</p><span class="subtle-arrow">विषय पढ़ें →</span></a>{% endfor %}</div></section>
 <section class="shell heritage-section home-articles"><div class="section-heading"><div><span class="kicker">नवीनतम प्रकाशित लेख</span><h2>पढ़िए और समझिए</h2><p>नया लेख प्रकाशित होते ही यहाँ जुड़ जाएगा।</p></div><a class="topic-more" href="/lekh/">सभी लेख ↗</a></div><div class="article-grid">{% for article in recent_articles %}<a class="article-card" href="/lekh/{{ article.slug }}/"><span class="article-category">{{ article.category_name }}</span><h3>{{ article.title }}</h3><p>{{ article.summary }}</p><span class="article-meta">पूरा लेख पढ़ें →</span></a>{% endfor %}</div><div class="home-cta"><a class="heritage-button" href="/kundli-milan/">✧ कुंडली मिलान समझें</a><a class="outline-button" href="/vishay/manglik-dosh/">☄ मांगलिक दोष क्या है?</a></div></section>
 {% endif %}
+<script id="tithi-civil-segments" type="application/json">{{p.tithiTimelineJson|safe}}</script>
+<script src="/assets/freshness.js?v=2" defer></script>
 {% endblock %}
