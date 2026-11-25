@@ -1,5 +1,5 @@
 /* Conservative public-only offline enhancement. Never cache Supabase/Auth or private pages. */
-const CACHE='tithi-public-v1';
+const CACHE='tithi-public-v2';
 const SHELL=['/offline/','/assets/style.css','/assets/premium.css','/assets/site.js','/assets/preferences.js','/assets/favicon.svg'];
 const PRIVATE=['/mera-account/','/settings/','/kundli-milan/','/api/','/admin/'];
 self.addEventListener('install',event=>{
