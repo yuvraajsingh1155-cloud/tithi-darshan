@@ -458,7 +458,28 @@ def main():
     write('/vidhi/',env.get_template('method.html').render(**shared('पंचांग की गणना पद्धति और स्रोत | तिथि दर्शन','जानें तिथि, नक्षत्र, राहुकाल और अभिजीत मुहूर्त की गणना किस तरह की जाती है।','/vidhi/','method'),guide_links=guide_links))
     not_found=env.get_template('not-found.html').render(**shared('पेज नहीं मिला | तिथि दर्शन','यह पता उपलब्ध नहीं है।','/404/','not-found'))
     (DIST/'404.html').write_text(not_found,encoding='utf-8')
-    (DIST/'_headers').write_text('/assets/*\\n  Cache-Control: public, max-age=604800\\n\\n/sw.js\\n  Cache-Control: no-cache\\n\\n/manifest.webmanifest\\n  Cache-Control: public, max-age=3600\\n\\n/*\\n  X-Content-Type-Options: nosniff\\n  Referrer-Policy: strict-origin-when-cross-origin\\n  X-Frame-Options: DENY\\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\\n',encoding='utf-8')
+    headers = (
+        '/assets/*\\n'
+        '  Cache-Control: public, max-age=3600, must-revalidate\\n\\n'
+        '/sw.js\\n'
+        '  Cache-Control: no-cache, max-age=0, must-revalidate\\n\\n'
+        '/build-info.json\\n'
+        '  Cache-Control: no-store, max-age=0\\n\\n'
+        '/\\n'
+        '  Cache-Control: no-store, max-age=0, must-revalidate\\n\\n'
+        '/shehar/*\\n'
+        '  Cache-Control: no-store, max-age=0, must-revalidate\\n\\n'
+        '/panchang/*\\n'
+        '  Cache-Control: no-store, max-age=0, must-revalidate\\n\\n'
+        '/calendar/*\\n'
+        '  Cache-Control: public, max-age=300, must-revalidate\\n\\n'
+        '/*\\n'
+        '  X-Content-Type-Options: nosniff\\n'
+        '  Referrer-Policy: strict-origin-when-cross-origin\\n'
+        '  X-Frame-Options: DENY\\n'
+        '  Permissions-Policy: camera=(), microphone=(), geolocation=()\\n'
+    )
+    (DIST/'_headers').write_text(headers,encoding='utf-8')
     # Avoid publishing a misleading placeholder sitemap if live site URL unknown.
     if site_url:
         # Include archived pages retained from earlier daily deployments.
