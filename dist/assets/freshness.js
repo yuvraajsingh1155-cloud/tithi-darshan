@@ -39,8 +39,31 @@
       hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(timestamp));}
     catch{return 'समय उपलब्ध नहीं';}
   };
+  function markCurrentChoghadiya(isToday){
+    const status=document.getElementById('current-choghadiya');
+    if(!status)return;
+    const all=[...document.querySelectorAll('.choghadiya-slot[data-slot-start][data-slot-end]')];
+    all.forEach(card=>card.classList.remove('active-choghadiya'));
+    if(!isToday){
+      status.textContent='यह चुनी हुई तारीख का चौघड़िया है, वर्तमान का नहीं।';
+      return;
+    }
+    const now=Date.now();
+    const active=all.find(card=>now>=Date.parse(card.dataset.slotStart)&&now<Date.parse(card.dataset.slotEnd));
+    if(!active){
+      status.textContent='अभी का चौघड़िया इस दिन के खंडों में नहीं है। सूर्योदय से पहले पिछले दिन की रात्रि-सूची देखें।';
+      return;
+    }
+    active.classList.add('active-choghadiya');
+    const name=active.querySelector('b')?.textContent||'';
+    const category=active.querySelector('span:nth-child(3)')?.textContent||'';
+    const till=new Intl.DateTimeFormat('hi-IN',{timeZone:'Asia/Kolkata',hour:'numeric',minute:'2-digit',hour12:true})
+      .format(new Date(active.dataset.slotEnd));
+    status.textContent='अभी का चौघड़िया: '+name+' ('+category+') · अगला बदलाव लगभग '+till+' IST';
+  }
   function renderNow(){
     const today=indianDate();
+    markCurrentChoghadiya(pageDate===today);
     if(pageDate!==today){
       if(body.dataset.page==='date'){
         const title=document.querySelector('.hero-main h1');
