@@ -241,3 +241,28 @@ html[data-theme="dark"] .current-tithi-card{background:var(--ui-surface);color:v
 .build-timestamp{padding:8px 0 11px;font-size:11px;color:var(--ui-muted);line-height:1.55}
 .build-timestamp time{font-variant-numeric:tabular-nums}
 @media(max-width:720px){.current-tithi-card{padding:13px;margin:12px 0}.freshness-banner{margin:12px 0}}
+
+/* Universal searchable knowledge directory — source-backed, no dummy results. */
+.search-hub{max-width:1040px}
+.global-search-form{display:grid;gap:10px;padding:24px;border-radius:22px;background:var(--ui-surface);border:1px solid var(--ui-stroke);box-shadow:var(--ui-shadow)}
+.global-search-form label{font-weight:700;color:var(--ui-ink)}
+.global-search-row{display:flex;gap:9px}
+.global-search-row input{flex:1;min-width:0;width:100%;min-height:51px;border:1px solid var(--ui-stroke);border-radius:12px;background:var(--ui-surface);color:var(--ui-ink);padding:12px 15px}
+.global-search-row button{min-height:51px}
+.global-search-form small{color:var(--ui-muted)}
+.search-popular{display:flex;flex-wrap:wrap;gap:9px;margin:17px 0 24px}
+.search-popular a{display:inline-block;border:1px solid var(--ui-stroke);background:var(--ui-surface);padding:8px 13px;border-radius:22px;color:var(--ui-ink);font-size:13px}
+.search-popular a:hover{border-color:var(--ui-accent)}
+.search-heading{font-size:25px}
+.search-results-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.search-result-card{display:flex;flex-direction:column;gap:5px;min-width:0;border:1px solid var(--ui-stroke);padding:18px;background:var(--ui-surface);border-radius:16px;transition:transform .15s,border-color .15s}
+.search-result-card:hover{transform:translateY(-2px);border-color:var(--ui-accent)}
+.search-result-card strong{font-size:19px;line-height:1.4;color:var(--ui-ink)}
+.search-result-card>span{font-size:13px;color:var(--ui-muted);line-height:1.65}
+.search-result-card .kicker{color:var(--ui-accent)}
+html[data-theme="dark"] :is(.global-search-form,.search-result-card,.search-popular a){background:var(--ui-surface);border-color:var(--ui-stroke)}
+@media(max-width:700px){.search-results-grid{grid-template-columns:1fr}.global-search-form{padding:16px}.search-result-card{padding:15px}.global-search-row button{padding:10px 12px}}
+/* At narrow widths the bottom account/settings links replace their large
+   header counterparts; keep search and navigation keyboard/touch usable. */
+@media(max-width:720px){.header-actions .nav-cta{display:none}}
+@media(max-width:390px){.header-actions #theme-toggle{display:none}.header .nav{gap:6px}.header-actions{gap:4px}}
