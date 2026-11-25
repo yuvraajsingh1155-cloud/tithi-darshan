@@ -15,6 +15,7 @@
       const city = document.getElementById('citySelect').value;
       const date = document.getElementById('dateSelect').value;
       if (!/^[a-z-]+$/.test(city) || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+      window.TithiPrefs?.set({preferred_city:city});
       location.assign(`/panchang/${city}/${date}/`);
     });
   }
