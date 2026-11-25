@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="heritage-head"><div class="shell">
+  <span class="eyebrow">ॐ एकादशी • गणना आधारित सूची</span>
+  <h1>{{city.name}} की आगामी एकादशी तिथियाँ</h1>
+  <p>{{start_label}} से {{end_label}} के भीतर स्थानीय सूर्योदय पर चल रही एकादशी तिथियों की सूची। व्रत/पारण के निर्णय से पहले क्षेत्रीय पंचांग और एकादशी-निर्णय नियम देखें।</p>
+</div></section>
+<section class="shell heritage-section">
+<div class="astro-panel">
+  <form class="ekadashi-select" id="ekadashi-select">
+    <label for="ekadashi-city">शहर चुनें</label>
+    <select id="ekadashi-city" name="city">{% for c in cities %}<option value="{{c.slug}}" {% if c.slug==city.slug %}selected{% endif %}>{{c.name}}</option>{% endfor %}</select>
+    <button type="submit" class="heritage-button">शहर का कैलेंडर देखें</button>
+  </form>
+  <p class="astro-small">मान्यताएँ: लाहिड़ी अयनांश, शहर के सूर्योदय पर तिथि, समय IST। एकादशी पर सूर्योदय हमेशा व्रत का अंतिम निर्णय नहीं होता; दशमी-वेध, द्वादशी, स्मार्त/वैष्णव नियम और पारण अलग से जाँचना जरूरी है।</p>
+</div>
+{% if records %}
+<div class="ekadashi-grid">
+  {% for item in records %}
+  <article class="ekadashi-card">
+    <div class="ekadashi-number">{{loop.index}}</div>
+    <div><span class="kicker">{{item.paksha}}</span><h2>{{item.date_hi}}</h2><p>एकादशी सूर्योदय पर · तिथि समाप्ति: {{item.end_time}}</p></div>
+    <a href="/panchang/{{city.slug}}/{{item.iso}}/" class="outline-button">उस दिन का पंचांग ↗</a>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="astro-state">इस प्रकाशित समय-अवधि में सूर्योदय के समय एकादशी दर्ज नहीं है। यह कोई वार्षिक व्रत सूची नहीं है; आगे के दिनों की गणना दैनिक रूप से प्रकाशित होगी।</div>
+{% endif %}
+<div class="calendar-links"><a href="/jankari/ekadashi-kab-hai/" class="outline-button">एकादशी व्रत और पारण नियम ↗</a><a href="/calendar/" class="outline-button">मासिक कैलेंडर ↗</a><a href="/vidhi/" class="outline-button">गणना पद्धति ↗</a></div>
+</section>
+<script src="/assets/ekadashi.js?v=1" defer></script>
+{% endblock %}
