@@ -190,3 +190,16 @@ html:not([data-theme="dark"]) .factcard.first span,html:not([data-theme="dark"])
 .deity-grid{gap:20px}
 .deity-grid .deity-card:focus-visible{position:relative;z-index:2}
 @media(max-width:720px){.deity-grid{gap:18px}.deity-grid .deity-card{min-height:185px}}
+
+/* Source-backed Ekadashi sunrise calendar */
+.ekadashi-select{display:flex;align-items:end;flex-wrap:wrap;gap:13px}
+.ekadashi-select label{font-weight:700}
+.ekadashi-select select{min-width:180px;min-height:46px;padding:8px 11px;border:1px solid var(--ui-stroke);border-radius:12px;background:var(--ui-surface);color:var(--ui-ink)}
+.ekadashi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0}
+.ekadashi-card{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:22px;border:1px solid var(--ui-stroke);border-radius:18px;background:var(--ui-surface);color:var(--ui-ink);box-shadow:var(--ui-shadow)}
+.ekadashi-card .ekadashi-number{border-radius:50%;background:#f4dfc9;color:#7a3521;display:grid;place-items:center;align-self:start;width:34px;height:34px;font-weight:700}
+.ekadashi-card h2{font-size:23px;color:var(--ui-ink);margin:4px 0}
+.ekadashi-card p{font-size:13px;color:var(--ui-muted)}
+.ekadashi-card a{grid-column:2;justify-self:start}
+html[data-theme="dark"] .ekadashi-card{background:var(--ui-surface)}
+@media(max-width:680px){.ekadashi-grid{grid-template-columns:1fr}.ekadashi-select{align-items:stretch}.ekadashi-select label{width:100%}}
