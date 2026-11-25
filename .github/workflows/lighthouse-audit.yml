@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - '.github/workflows/lighthouse-audit.yml'
+      - 'assets/premium.css'
+      - 'assets/preferences.js'
+      - 'templates/base.html'
 permissions:
   contents: read
 jobs:
