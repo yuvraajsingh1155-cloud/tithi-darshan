@@ -40,9 +40,12 @@
     });
     document.querySelectorAll('[data-preferred-panchang]').forEach(link=>{
       if(link.tagName==='A'){
-        const date=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-        const match=/\d{4}-\d{2}-\d{2}/.exec(date);
-        link.href=match?'/panchang/'+prefs.preferred_city+'/'+match[0]+'/':'/';
+        const dateParts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',
+          year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+        const pick=k=>dateParts.find(p=>p.type===k)?.value;
+        const date=pick('year')+'-'+pick('month')+'-'+pick('day');
+        link.href=/^\d{4}-\d{2}-\d{2}$/.test(date)
+          ?'/panchang/'+prefs.preferred_city+'/'+date+'/':'/';
       }
     });
     document.querySelectorAll('[data-clock]').forEach(node=>{
