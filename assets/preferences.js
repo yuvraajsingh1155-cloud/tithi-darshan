@@ -50,11 +50,20 @@
     });
     document.querySelectorAll('[data-clock]').forEach(node=>{
       const raw=node.getAttribute('data-clock')||'';
-      const match=/^(\d{1,2}):(\d{2})$/.exec(raw);
-      if(!match){node.textContent=raw;return;}
-      const hour=Number(match[1]);
-      if(prefs.time_format==='12h')node.textContent=String(hour%12||12).padStart(2,'0')+':'+match[2]+' '+(hour<12?'AM':'PM');
-      else node.textContent=String(hour).padStart(2,'0')+':'+match[2];
+      const clock=/^(\d{1,2}):(\d{2})$/.exec(raw);
+      let hour,minute;
+      if(clock){
+        hour=Number(clock[1]);minute=clock[2];
+      }else if(raw.includes('T')){
+        const date=new Date(raw);
+        if(!Number.isFinite(date.getTime()))return;
+        const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(date);
+        hour=Number(parts.find(x=>x.type==='hour')?.value);
+        minute=parts.find(x=>x.type==='minute')?.value;
+      }else return;
+      if(!Number.isInteger(hour)||hour<0||hour>23||!/^(\d{2})$/.test(minute))return;
+      if(prefs.time_format==='12h')node.textContent=String(hour%12||12).padStart(2,'0')+':'+minute+' '+(hour<12?'AM':'PM');
+      else node.textContent=String(hour).padStart(2,'0')+':'+minute;
     });
     const toggle=document.getElementById('theme-toggle');
     if(toggle){toggle.textContent=mode==='dark'?'☾':'☀';toggle.setAttribute('aria-label','थीम बदलें: '+prefs.theme);toggle.title='Theme: '+prefs.theme;}
