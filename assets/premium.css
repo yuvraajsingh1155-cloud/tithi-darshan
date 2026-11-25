@@ -136,3 +136,25 @@ html[data-theme="dark"] .calendar-festival{background:#593729;color:#fff2cb}
 .article-save-controls [aria-pressed="true"]{background:#f8dfad;border-color:#d29d44;color:#733b21}
 html[data-theme="dark"] .article-save-controls [aria-pressed="true"]{background:#5d3d29;color:#fff1ca}
 @media(max-width:390px){.dashboard-quicklinks{grid-template-columns:1fr 1fr}.dashboard-quicklink{min-height:85px}}
+
+/* Premium homepage: concise quick actions, all twelve zodiac signs and verified upcoming festivals */
+.premium-home-shortcuts{padding-top:27px;padding-bottom:20px}
+.home-shortcuts-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.home-shortcuts-grid a{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;padding:19px 7px;border:1px solid var(--ui-stroke);border-radius:16px;background:var(--ui-surface);color:var(--ui-ink);box-shadow:var(--ui-shadow);transition:transform .15s,border-color .15s}
+.home-shortcuts-grid a:hover{transform:translateY(-3px);border-color:var(--ui-gold)}
+.home-shortcuts-grid a>span{font-size:29px;color:var(--ui-accent)}
+.home-shortcuts-grid a b{font-size:13px;line-height:1.3}
+.home-shortcuts-grid a small{font-size:11px;color:var(--ui-muted)}
+.premium-zodiac,.premium-festivals{padding-top:30px;padding-bottom:24px}
+.premium-zodiac-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px}
+.premium-zodiac-grid a{min-width:0;padding:12px 4px;display:grid;justify-items:center;gap:2px;background:var(--ui-surface);border:1px solid var(--ui-stroke);border-radius:14px;color:var(--ui-ink)}
+.premium-zodiac-grid a:hover{border-color:var(--ui-gold);background:#fff4e7}
+.premium-zodiac-grid a span{font-size:27px;color:var(--ui-accent)}
+.premium-zodiac-grid a b{font-size:12px}
+.premium-festival-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.premium-festival-card{display:grid;gap:4px;padding:20px;border-radius:16px;background:var(--ui-surface);border:1px solid var(--ui-stroke)}
+.premium-festival-card strong{font-size:18px}.premium-festival-card span{color:var(--ui-accent);font-weight:700}.premium-festival-card small{color:var(--ui-muted)}
+html[data-theme="dark"] :is(.home-shortcuts-grid a,.premium-zodiac-grid a,.premium-festival-card){background:var(--ui-surface);color:var(--ui-ink)}
+html[data-theme="dark"] :is(.home-shortcuts-grid a:hover,.premium-zodiac-grid a:hover){background:#4b2b29}
+@media(max-width:1140px){.premium-zodiac-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.home-shortcuts-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.home-shortcuts-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.home-shortcuts-grid a{padding:12px 3px;min-height:93px}.home-shortcuts-grid a>span{font-size:25px}.home-shortcuts-grid a b{font-size:11px}.home-shortcuts-grid a small{font-size:10px}.premium-zodiac-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.premium-zodiac-grid a{padding:9px 2px}.premium-festival-grid{grid-template-columns:1fr}}
