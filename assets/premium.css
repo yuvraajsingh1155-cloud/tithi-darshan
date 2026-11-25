@@ -97,3 +97,30 @@ html[data-theme="dark"][data-contrast="high"]{--ui-ink:#fff;--ui-muted:#fff0d5;-
   h1{font-size:26pt}
   @page{margin:13mm}
 }
+
+/* Sunrise-based monthly Panchang calendars */
+.calendar-toolbar{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;padding:18px;border-radius:20px;border:1px solid var(--ui-stroke);background:var(--ui-surface)}
+#month-calendar-form{display:flex;align-items:end;gap:14px;flex-wrap:wrap}
+#month-calendar-form .setting-field{margin:0;min-width:180px}
+#month-calendar-form .heritage-button{min-height:47px}
+.calendar-explainer{display:flex;gap:10px 20px;flex-wrap:wrap;margin:22px 0;font-size:13px;color:var(--ui-muted)}
+.month-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;border:1px solid var(--ui-stroke);border-radius:22px;padding:14px;background:var(--ui-surface);box-shadow:var(--ui-shadow)}
+.calendar-dayname{text-align:center;font-weight:700;color:var(--ui-muted);font-size:14px;padding:9px}
+.calendar-day{min-height:132px;min-width:0;display:flex;flex-direction:column;gap:7px;align-items:flex-start;padding:13px 11px;border:1px solid var(--ui-stroke);border-radius:14px;background:var(--ui-bg);text-decoration:none;transition:border-color .15s,transform .15s}
+a.calendar-day:hover{border-color:var(--ui-gold);transform:translateY(-2px);box-shadow:var(--ui-shadow)}
+.calendar-day.today{border:2px solid var(--ui-accent);background:#fff0db}
+.calendar-date{display:grid;place-items:center;width:29px;height:29px;line-height:1;border-radius:50%;background:#f5e8d6;color:#803d29}
+.calendar-tithi{font-weight:700;font-size:15px;color:var(--ui-ink);line-height:1.35}
+.calendar-paksha{font-size:12px;color:var(--ui-muted)}
+.calendar-festival{display:block;padding:3px 7px;border-radius:7px;color:#7b3725;background:#ffe9bd;font-size:11px;line-height:1.4}
+.calendar-blank{min-height:24px}
+.calendar-day-disabled{opacity:.66;cursor:default}
+.calendar-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+html[data-theme="dark"] .calendar-toolbar,html[data-theme="dark"] .month-calendar,html[data-theme="dark"] .calendar-day{background:var(--ui-surface);border-color:var(--ui-stroke)}
+html[data-theme="dark"] .calendar-day.today{background:#53332b;border-color:var(--ui-gold)}
+html[data-theme="dark"] .calendar-date{background:#613c32;color:#fff0da}
+html[data-theme="dark"] .calendar-festival{background:#593729;color:#fff2cb}
+@media(max-width:850px){.calendar-day{min-height:113px;padding:9px}.calendar-tithi{font-size:13px}.calendar-paksha{font-size:11px}}
+@media(max-width:600px){.month-calendar{gap:3px;padding:7px;border-radius:12px}.calendar-day{min-height:102px;padding:7px 3px;gap:4px;border-radius:8px}.calendar-dayname{font-size:11px;padding:8px 1px}.calendar-date{height:24px;width:24px;font-size:12px}.calendar-tithi{font-size:11px}.calendar-paksha{font-size:10px}.calendar-festival{font-size:9px;padding:2px}.calendar-explainer{font-size:12px}#month-calendar-form{width:100%}#month-calendar-form .setting-field{flex:1;min-width:130px}.calendar-toolbar>button{width:100%}}
+@media(max-width:350px){.month-calendar{gap:2px;padding:4px}.calendar-day{min-height:96px}.calendar-tithi{font-size:10px}}
+@media print{.calendar-day{break-inside:avoid;border:1px solid #999}.calendar-day.today{border:2px solid #333}.month-calendar{gap:3px}}
