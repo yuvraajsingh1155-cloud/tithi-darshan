@@ -7,7 +7,8 @@ Uses the website's already-calculated Swiss Ephemeris city sunrise/sunset.
 No nighttime, Muhurta election, Vaar Vela, Kaal Vela or Kaal Ratri claims.
 """
 from __future__ import annotations
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 import re
 
 CYCLE=('उद्वेग','चर','लाभ','अमृत','काल','शुभ','रोग')
@@ -15,9 +16,16 @@ CYCLE=('उद्वेग','चर','लाभ','अमृत','काल','श
 START_BY_WEEKDAY=(3,6,2,5,1,4,0)
 BENEFICIAL=frozenset(('अमृत','शुभ','लाभ','चर'))
 
-def _minutes(clock: str) -> int:
+def _minutes(clock: str) -> float:
+    # Astronomy source gives timezone-aware ISO timestamps, not a rendered Hindi
+    # twelve-hour clock. Preserve sub-minute precision until display rounding.
+    if 'T' in clock:
+        dt=datetime.fromisoformat(clock)
+        if dt.tzinfo is None:raise ValueError('Sunrise/sunset ISO clock requires timezone')
+        local=dt.astimezone(ZoneInfo('Asia/Kolkata'))
+        return local.hour*60+local.minute+local.second/60+local.microsecond/60000000
     m=re.fullmatch(r'(\d{1,2}):(\d{2})',clock.strip())
-    if not m:raise ValueError('Sunrise and sunset must be HH:MM')
+    if not m:raise ValueError('Sunrise and sunset must be HH:MM or timezone-aware ISO')
     h,minute=map(int,m.groups())
     if not 0<=h<=23 or not 0<=minute<=59:raise ValueError('Invalid clock')
     return h*60+minute
