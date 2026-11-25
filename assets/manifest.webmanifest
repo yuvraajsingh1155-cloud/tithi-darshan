@@ -1,0 +1,22 @@
+{
+  "id": "/",
+  "name": "तिथि दर्शन — Hindu Panchang",
+  "short_name": "तिथि दर्शन",
+  "description": "12 भारतीय शहरों का गणना-आधारित हिंदी पंचांग, तिथि और राहुकाल",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "hi-IN",
+  "dir": "ltr",
+  "background_color": "#fdfbf7",
+  "theme_color": "#8f3528",
+  "categories": ["lifestyle", "education"],
+  "icons": [
+    {"src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+  ],
+  "shortcuts": [
+    {"name": "आज का पंचांग", "url": "/", "description": "आज की तिथि और दैनिक पंचांग"},
+    {"name": "मासिक कैलेंडर", "url": "/calendar/", "description": "मासिक हिंदू पंचांग"},
+    {"name": "कुंडली मिलान", "url": "/kundli-milan/", "description": "सुरक्षित 36 गुण मिलान"}
+  ]
+}
