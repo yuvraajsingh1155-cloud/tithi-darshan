@@ -17,7 +17,7 @@ def test_dedicated_deity_pages_and_original_artwork():
         assert f.is_file(),route
         soup=BeautifulSoup(f.read_text(encoding='utf-8'),'html.parser')
         image=soup.select_one('.deity-detail-art img')
-        assert image and image['src'].startswith('/assets/deity-')
+        assert image and image['src'].startswith('/assets/devotional/')
         assert (DIST/image['src'].lstrip('/')).is_file()
         assert soup.select_one('.deity-symbol-grid')
         assert len(soup.select('.deity-symbol-grid article'))==3
