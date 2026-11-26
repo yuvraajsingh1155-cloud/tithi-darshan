@@ -102,7 +102,7 @@
     if(!hasStoredSession){showUser(null);return;}
     try{
       const supabase=await getLibrary();
-      if(!client)client=supabase.createClient(URL,PUBLIC_KEY);
+      if(!client)client=window.TithiSupabaseClient||supabase.createClient(URL,PUBLIC_KEY);
       const {data,error}=await client.auth.getUser();
       if(error||!data?.user){showUser(null);return;}
       showUser(data.user);
