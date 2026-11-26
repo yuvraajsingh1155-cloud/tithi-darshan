@@ -404,3 +404,18 @@ html[data-theme="dark"] .td-auth-art{background-image:linear-gradient(180deg,rgb
  .discovery-search{min-width:0}
  .discovery-input button{min-width:68px}
 }
+
+/* Lighthouse-verified contrast and LCP corrections (real 26 Nov lab audit).
+   The Next Day banner is deep maroon and needs pale foreground text. */
+html:not([data-theme="dark"]) .nextbar h2{color:#fff7ec!important}
+html:not([data-theme="dark"]) .nextbar :is(p,.kicker,.nextbar-label){color:#fff2de!important}
+html:not([data-theme="dark"]) .td-footer-stamp{color:#75522b}
+html[data-theme="dark"] .td-footer-stamp{color:#f0cf9c}
+html[data-theme="dark"] .nextbar h2{color:#fff7ec!important}
+@media(max-width:940px){
+  /* The mobile login keeps its premium maroon identity panel, but removes the
+     decorative background request entirely, improving real 4G lab LCP. */
+  .td-auth-art,html[data-theme="dark"] .td-auth-art{
+    background-image:none;background-color:#4d2834;
+  }
+}
