@@ -391,3 +391,16 @@ html[data-theme="dark"] .td-auth-art{background-image:linear-gradient(180deg,rgb
 /* Portrait artworks: contain entire body, never stretch sacred objects */
 .deity-grid .deity-card img{object-fit:contain;background:var(--td-ivory-deep);image-rendering:auto}
 .deity-detail-art img{aspect-ratio:1;object-fit:contain}
+
+/* Real 320px QA fix: legacy .discovery-band had width:100% PLUS 18px
+   side margins, pushing its right edge 18px beyond the viewport. */
+@media(max-width:680px){
+ .shell.discovery-band{display:block;width:calc(100% - 36px);max-width:calc(100% - 36px);
+   margin:25px 18px 13px;padding:21px;border:1px solid var(--td-stroke);
+   border-radius:17px;background:var(--td-surface);box-shadow:var(--td-shadow-sm)}
+ .discovery-band h2{font-size:22px}
+ .discovery-band p{font-size:13px;color:var(--td-muted)}
+ .discovery-input{min-width:0}
+ .discovery-search{min-width:0}
+ .discovery-input button{min-width:68px}
+}
