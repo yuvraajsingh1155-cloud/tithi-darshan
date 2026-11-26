@@ -90,6 +90,11 @@
   $('td-search-close')?.addEventListener('click',closeSearch);
   searchDialog?.addEventListener('click',event=>{if(event.target===searchDialog)closeSearch();});
   searchDialog?.addEventListener('close',()=>dialogOpener?.focus?.({preventScroll:true}));
+  searchDialog?.addEventListener('keydown',event=>{
+    // On search inputs Escape may clear text instead of dismissing the dialog;
+    // explicitly close to give consistent keyboard navigation.
+    if(event.key==='Escape'){event.preventDefault();closeSearch();}
+  });
   searchInput?.addEventListener('input',paintSearch);
   searchInput?.addEventListener('keydown',event=>{
     if(event.key==='ArrowDown'){
