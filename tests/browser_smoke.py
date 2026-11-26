@@ -64,7 +64,9 @@ with sync_playwright() as p:
         assert page.locator("#pref-city").input_value()=="hardoi"
         assert page.locator("html").get_attribute("data-theme")=="dark"
         assert page.locator("html").get_attribute("data-contrast")=="high"
-        assert page.locator("[data-preferred-panchang]").get_attribute("href").startswith("/panchang/hardoi/")
+        pref_links=page.locator("[data-preferred-panchang]").evaluate_all(
+            "(nodes)=>nodes.map(a=>a.getAttribute('href'))")
+        assert pref_links and all(url and url.startswith("/panchang/hardoi/") for url in pref_links),pref_links
         page.once("dialog",lambda d:d.accept())
         page.locator("#reset-prefs").click()
         assert page.locator("#pref-theme").input_value()=="system"
