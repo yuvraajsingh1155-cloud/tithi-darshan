@@ -10,6 +10,18 @@ on:
       - 'assets/freshness.js'
       - 'assets/global-search.js'
       - 'assets/premium.css'
+      - 'assets/visual-v3.css'
+      - 'assets/shell.js'
+      - 'assets/dashboard.js'
+      - 'assets/td-icons.svg'
+      - 'assets/brand-mark.svg'
+      - 'templates/base.html'
+      - 'templates/account.html'
+      - 'templates/settings.html'
+      - 'templates/deities.html'
+      - 'templates/deity-detail.html'
+      - 'tests/visual_qa_v3.py'
+      - 'data/deity_details.json'
 permissions:
   contents: read
 jobs:
@@ -33,11 +45,20 @@ jobs:
         run: |
           python -m http.server 8765 --bind 127.0.0.1 --directory dist > /tmp/tithi-http.log 2>&1 &
           python tests/browser_smoke.py
+          python tests/visual_qa_v3.py
       - name: Preserve public-page screenshots for visual QA
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tithi-2-visual-qa
           path: artifacts/tithi-2-visual-qa/*.png
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Preserve Premium Visual V3 screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tithi-premium-v3-screenshots
+          path: artifacts/visual-v3/*.png
           if-no-files-found: ignore
           retention-days: 30
