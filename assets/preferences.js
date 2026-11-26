@@ -66,7 +66,13 @@
       else node.textContent=String(hour).padStart(2,'0')+':'+minute;
     });
     const toggle=document.getElementById('theme-toggle');
-    if(toggle){toggle.textContent=mode==='dark'?'☾':'☀';toggle.setAttribute('aria-label','थीम बदलें: '+prefs.theme);toggle.title='Theme: '+prefs.theme;}
+    if(toggle){
+      const visual=toggle.querySelector('use');
+      if(visual)visual.setAttribute('href','/assets/td-icons.svg#'+(mode==='dark'?'moon':'sun'));
+      else toggle.textContent=mode==='dark'?'☾':'☀';
+      toggle.setAttribute('aria-label','थीम बदलें: '+prefs.theme);
+      toggle.title='थीम: '+prefs.theme;
+    }
     const form=document.getElementById('website-settings');
     if(form){
       for(const key of Object.keys(defaults)){
