@@ -253,8 +253,15 @@ def main():
     articles=published_articles()
     # Keep original illustrated artwork, but give every listed deity a
     # dedicated information page rather than a broad category fallback.
-    deities=[{**item,'slug':slug,'href':f'/dev-darshan/{slug}/'}
+    art_names={'ganesh':'ganesha','shiva':'shiva','vishnu':'vishnu',
+               'lakshmi':'lakshmi','saraswati':'saraswati'}
+    deities=[{**item,'slug':slug,'href':f'/dev-darshan/{slug}/',
+             'art':f"devotional/{art_names[slug]}.webp",
+             'art_alt':item['name']+' का मौलिक, पारंपरिक शैली का भक्तिमय चित्र'}
         for item,slug in zip(DEITIES,('ganesh','shiva','vishnu','lakshmi','saraswati'))]
+    for deity in deities:
+        if not (ROOT/'assets'/deity['art']).is_file():
+            raise ValueError('Missing reviewed devotional artwork: '+deity['art'])
     if set(DEITY_DETAILS)!={item['slug'] for item in deities}:
         raise ValueError('Missing content for illustrated deity profile')
     topic_counts={t['slug']:sum(a['category']==t['slug'] for a in articles) for t in TOPICS}
