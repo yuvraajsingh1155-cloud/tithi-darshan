@@ -19,7 +19,8 @@ permissions:
   contents: write
 concurrency:
   group: daily-panchang
-  cancel-in-progress: false
+  # Prevent dozens of obsolete builds competing with the latest source.
+  cancel-in-progress: true
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -37,6 +38,8 @@ jobs:
       - name: Validate public JavaScript syntax
         run: |
           node --check assets/site.js
+          node --check assets/shell.js
+          node --check assets/dashboard.js
           node --check assets/freshness.js
           node --check assets/global-search.js
           node --check assets/preferences.js
