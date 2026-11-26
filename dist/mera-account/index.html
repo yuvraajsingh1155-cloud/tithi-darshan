@@ -106,40 +106,130 @@
     <a href="/mera-account/" data-nav-key="account"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#account"></use></svg><small>अकाउंट</small></a>
   </nav>
   <main id="main-content">
-<section class="heritage-head"><div class="shell"><span class="eyebrow">ॐ तिथि दर्शन • सुरक्षित अकाउंट</span><h1>मेरा अकाउंट</h1><p>Google से लॉगिन करें, अपनी पसंदीदा राशि सेव करें और कुंडली मिलान रिपोर्ट निजी अकाउंट में रखें।</p></div></section>
-<section class="shell heritage-section"><div class="astro-layout">
-<div class="astro-panel" id="auth-panel"><span class="kicker">सुरक्षित Supabase Authentication</span><h2 id="auth-title">ईमेल से लॉगिन</h2>
-<p>अपने Google अकाउंट से सुरक्षित लॉगिन करें। ईमेल/पासवर्ड विकल्प भी उपलब्ध है।</p>
-<button type="button" id="google-signin" class="google-signin-button"><span class="google-g" aria-hidden="true">G</span><span>Google से लॉगिन करें</span></button>
-<p id="google-provider-status" class="astro-small" role="status" aria-live="polite">Google Login की स्थिति जाँची जा रही है…</p>
-<p class="astro-small">लॉगिन के बाद आपका निजी डैशबोर्ड खुलेगा।</p>
-<div class="astro-state" role="note"><strong>ईमेल/पासवर्ड का Signup अभी परीक्षण चरण में है:</strong> Supabase का डिफ़ॉल्ट Email Provider Confirmation / Password Reset ईमेल केवल प्रोजेक्ट टीम तक पहुँचा सकता है। सामान्य लोगों के लिए ऊपर Google Login इस्तेमाल करें; सार्वजनिक ईमेल Signup के लिए अलग SMTP सेटअप चाहिए।</div>
-<div class="auth-switch"><button type="button" class="auth-switch-button active" data-auth-mode="signin">लॉगिन</button><button type="button" class="auth-switch-button" data-auth-mode="signup">नया अकाउंट</button></div>
-<form id="auth-form" class="auth-fields">
-<label for="auth-email">ईमेल</label><input required id="auth-email" type="email" autocomplete="email" maxlength="254" placeholder="name@example.com">
-<label for="auth-password">पासवर्ड (कम से कम 8 अक्षर)</label><input required id="auth-password" type="password" autocomplete="current-password" minlength="8" maxlength="128" placeholder="अपना पासवर्ड"><button type="button" class="password-visibility-toggle" id="toggle-auth-password" aria-controls="auth-password" aria-pressed="false">पासवर्ड दिखाएँ</button>
-<button class="heritage-button" type="submit" id="auth-submit">लॉगिन करें</button></form>
-<button id="forgot-password" class="auth-link" type="button">पासवर्ड भूल गए?</button>
-<form id="reset-password-form" class="auth-fields" hidden><label for="reset-new-password">नया पासवर्ड (कम से कम 8 अक्षर)</label><input type="password" id="reset-new-password" minlength="8" maxlength="128" autocomplete="new-password"><button type="button" class="password-visibility-toggle" id="toggle-reset-password" aria-controls="reset-new-password" aria-pressed="false">पासवर्ड दिखाएँ</button><button type="submit" class="heritage-button">नया पासवर्ड सेव करें</button></form>
-<div id="auth-message" class="astro-state" role="status" aria-live="polite">ईमेल की पुष्टि आवश्यक हो सकती है। कृपया अपना इनबॉक्स भी चेक करें।</div>
-</div>
-<div class="astro-panel" id="profile-panel" hidden><span class="kicker">आपका निजी डैशबोर्ड</span><div class="user-profile-heading"><div class="user-profile-avatar" id="account-avatar" aria-label="आपकी प्रोफाइल तस्वीर"><span id="account-initial">ॐ</span></div><div><h2>नमस्ते! <span id="account-name"></span></h2><p id="account-email"></p></div></div>
-<form id="profile-form" class="auth-fields"><label for="profile-name">आपका नाम (वैकल्पिक)</label><input id="profile-name" maxlength="80" autocomplete="name" placeholder="आपका नाम"><label for="profile-rashi">पसंदीदा राशि (वैकल्पिक)</label><select id="profile-rashi"><option value="">राशि चुनें</option><option value="mesh">मेष</option><option value="vrishabh">वृषभ</option><option value="mithun">मिथुन</option><option value="kark">कर्क</option><option value="singh">सिंह</option><option value="kanya">कन्या</option><option value="tula">तुला</option><option value="vrishchik">वृश्चिक</option><option value="dhanu">धनु</option><option value="makar">मकर</option><option value="kumbh">कुंभ</option><option value="meen">मीन</option></select><button class="heritage-button" type="submit" id="profile-submit">प्रोफाइल सेव करें</button></form>
-<div id="profile-message" class="astro-state" role="status" aria-live="polite">आपके विवरण सिर्फ आपके अकाउंट में सुरक्षित रहेंगे।</div>
-<div class="dashboard-quicklinks"><a class="dashboard-quicklink" href="/settings/"><span aria-hidden="true">⚙</span><b>मेरी सेटिंग्स</b><small>थीम, शहर और भाषा</small></a><a class="dashboard-quicklink" data-preferred-panchang href="/"><span aria-hidden="true">☀</span><b>मेरा पंचांग</b><small>पसंदीदा शहर</small></a><a class="dashboard-quicklink" href="/calendar/"><span aria-hidden="true">▦</span><b>मेरा कैलेंडर</b><small>मासिक पंचांग</small></a></div>
-<section class="astro-saved-report"><h3>मेरे सेव किए लेख</h3><div id="bookmarks-list" role="region" aria-live="polite">बुकमार्क लोड हो रहे हैं…</div><a href="/lekh/" class="outline-button">और लेख पढ़ें ↗</a></section>
-<section class="astro-saved-report"><h3>मेरी सेव की गई मिलान रिपोर्ट</h3><div id="reports-list" role="region" aria-live="polite">अभी कोई रिपोर्ट नहीं है।</div><a href="/kundli-milan/" class="outline-button">नई मिलान रिपोर्ट बनाएँ ↗</a></section>
-<div class="account-data-tools"><h3>मेरा निजी डेटा</h3>
-<p class="astro-small">आप अपना प्रोफाइल, सेटिंग्स, बुकमार्क और सेव की गई मिलान रिपोर्ट JSON फाइल में डाउनलोड कर सकते हैं। अकाउंट स्थायी रूप से हटाने पर उसका निजी डेटा भी हट जाएगा।</p>
-<button type="button" id="account-export" class="outline-button">मेरा डेटा डाउनलोड करें</button>
-<button type="button" id="account-delete" class="outline-button account-delete-button">अकाउंट स्थायी रूप से हटाएँ</button>
-<p id="account-data-status" class="astro-small" role="status" aria-live="polite"></p></div>
-<button type="button" id="auth-signout" class="outline-button">लॉगआउट</button>
-</div>
-<div class="astro-panel"><h2>अकाउंट से क्या कर सकते हैं?</h2><ul><li>सुरक्षित Google Login और निजी प्रोफाइल</li><li>चंद्र राशि और नक्षत्र से 36 गुणों का पारंपरिक मिलान</li><li>मिलान रिपोर्ट निजी रूप से सेव और डाउनलोड</li><li>निजी डेटा डाउनलोड या अकाउंट स्थायी रूप से हटाएँ</li></ul><p class="astro-small">जन्मतिथि, समय और जन्मस्थान से पूरी कुंडली या मांगलिक विश्लेषण अभी उपलब्ध नहीं है। अपने पासवर्ड या निजी जन्म विवरण को सार्वजनिक रूप से साझा न करें।</p><a class="outline-button" href="/kundli-milan/">36 गुण मिलाएँ ↗</a></div>
-</div></section>
+<section class="shell heritage-section td-account-page">
+  <nav class="td-breadcrumb" aria-label="पृष्ठ क्रम"><a href="/">मुखपृष्ठ</a><span> / </span><span>मेरा अकाउंट</span></nav>
+  <div id="auth-stage" class="td-auth-stage">
+    <aside class="td-auth-art" aria-label="तिथि दर्शन स्वागत">
+      <div>
+        <img src="/assets/brand-mark.svg" width="80" height="80" alt="">
+        <span class="eyebrow">आपकी परंपरा · आपका अनुभव</span>
+        <h2>हर शुभ दिन की शुरुआत, आपके अपने पंचांग के साथ।</h2>
+        <p>एक शांत, निजी जगह जहाँ आपके पसंदीदा शहर, राशि, लेख और 36 गुण मिलान रिपोर्ट सुरक्षित रहें।</p>
+      </div>
+      <div class="td-art-caption"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#shield"></use></svg> आपकी जानकारी सिर्फ आपके अकाउंट में सुरक्षित</div>
+    </aside>
+    <div class="td-auth-form-shell">
+      <section class="astro-panel" id="auth-panel" aria-label="अकाउंट लॉगिन">
+        <span class="kicker">स्वागत है</span>
+        <h1 id="auth-title" class="td-auth-title">ईमेल से लॉगिन</h1>
+        <p class="td-auth-intro">अपना अकाउंट खोलें या Google से आसानी से जारी रखें।</p>
+        <button type="button" id="google-signin" class="google-signin-button"><span class="google-g" aria-hidden="true">G</span><span>Google से जारी रखें</span></button>
+        <p id="google-provider-status" class="astro-small" role="status" aria-live="polite">Google Login की स्थिति जाँची जा रही है…</p>
+        <div class="td-auth-divider"><span>या ईमेल से जारी रखें</span></div>
+        <div class="auth-switch" aria-label="अकाउंट प्रकार"><button type="button" class="auth-switch-button active" data-auth-mode="signin" aria-pressed="true">लॉगिन</button><button type="button" class="auth-switch-button" data-auth-mode="signup" aria-pressed="false">नया अकाउंट</button></div>
+        <form id="auth-form" class="auth-fields">
+          <label for="auth-email">ईमेल एड्रेस</label>
+          <input required id="auth-email" type="email" autocomplete="email" maxlength="254" placeholder="name@example.com">
+          <label for="auth-password">पासवर्ड (कम से कम 8 अक्षर)</label>
+          <input required id="auth-password" type="password" autocomplete="current-password" minlength="8" maxlength="128" placeholder="अपना पासवर्ड">
+          <button type="button" class="password-visibility-toggle" id="toggle-auth-password" aria-controls="auth-password" aria-pressed="false"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#eye"></use></svg> पासवर्ड दिखाएँ</button>
+          <button class="heritage-button" type="submit" id="auth-submit">लॉगिन करें</button>
+        </form>
+        <button id="forgot-password" class="auth-link" type="button">पासवर्ड भूल गए?</button>
+        <form id="reset-password-form" class="auth-fields" hidden>
+          <label for="reset-new-password">नया पासवर्ड (कम से कम 8 अक्षर)</label>
+          <input type="password" id="reset-new-password" minlength="8" maxlength="128" autocomplete="new-password">
+          <button type="button" class="password-visibility-toggle" id="toggle-reset-password" aria-controls="reset-new-password" aria-pressed="false"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#eye"></use></svg> पासवर्ड दिखाएँ</button>
+          <button type="submit" class="heritage-button">नया पासवर्ड सेव करें</button>
+        </form>
+        <div id="auth-message" class="astro-state" role="status" aria-live="polite">Google Login या अपने ईमेल से लॉगिन करें।</div>
+        <details class="td-auth-provider-note"><summary>ईमेल से नया अकाउंट बनाने की सीमा</summary><p>सार्वजनिक ईमेल Signup के लिए अलग SMTP सेवा चाहिए। मौजूदा Default Email Provider पर Confirmation और Password Reset की डिलीवरी सभी अकाउंट्स तक उपलब्ध नहीं है। Google Login को प्राथमिकता दें।</p></details>
+        <p class="td-auth-terms">जारी रखने पर आप हमारी <a href="/jankari/gopniyata-neeti/">गोपनीयता नीति</a> और <a href="/jankari/seva-ki-sharten/">उपयोग की शर्तें</a> पढ़ सकते हैं।</p>
+      </section>
+    </div>
+  </div>
+
+  <div id="dashboard-stage" class="td-dashboard-shell" hidden>
+    <aside class="td-dashboard-sidebar" aria-label="निजी डैशबोर्ड नेविगेशन">
+      <h2>मेरा स्पेस</h2>
+      <button type="button" id="dashboard-sidebar-toggle" class="td-sidebar-collapse"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#menu"></use></svg><span>मेन्यू छोटा करें</span></button>
+      <a href="#overview"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#grid"></use></svg><span>ओवरव्यू</span></a>
+      <a href="#profile-area"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#account"></use></svg><span>मेरी प्रोफाइल</span></a>
+      <a data-preferred-panchang href="/"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#sun"></use></svg><span>मेरा पंचांग</span></a>
+      <a href="/kundli-milan/"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#heart"></use></svg><span>36 गुण मिलान</span></a>
+      <a href="#matching-area"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#book"></use></svg><span>मिलान रिपोर्ट</span></a>
+      <a href="#bookmark-area"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#bookmark"></use></svg><span>सेव किए लेख</span></a>
+      <a href="/calendar/"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#calendar"></use></svg><span>मेरा कैलेंडर</span></a>
+      <a href="/settings/"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#settings"></use></svg><span>सेटिंग्स</span></a>
+      <a href="#privacy-panel"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#shield"></use></svg><span>गोपनीयता और डेटा</span></a>
+      <button type="button" id="dashboard-sidebar-logout"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#logout"></use></svg><span>लॉगआउट</span></button>
+    </aside>
+    <div class="td-dashboard-main">
+      <section class="td-dashboard-welcome" id="overview">
+        <div>
+          <span class="td-dashboard-date"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#calendar"></use></svg><span id="dashboard-day">आपकी आज की तारीख</span></span>
+          <h2>नमस्ते, <span id="dashboard-welcome-name">आपका स्वागत है</span></h2>
+          <p>आपका निजी पंचांग, पसंदीदा लेख और मिलान रिपोर्ट—एक ही जगह।</p>
+        </div>
+        <span class="td-avatar-large" aria-hidden="true"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#sparkle"></use></svg></span>
+      </section>
+      <div class="td-dashboard-metrics" aria-label="आपके अकाउंट की वास्तविक स्थिति">
+        <div class="td-dashboard-metric"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#map-pin"></use></svg><b id="dashboard-city">आपका शहर</b><small>पसंदीदा पंचांग स्थान</small></div>
+        <div class="td-dashboard-metric"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#moon"></use></svg><b id="dashboard-rashi">राशि नहीं चुनी</b><small>आपकी पसंदीदा राशि</small></div>
+        <div class="td-dashboard-metric"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#bookmark"></use></svg><b id="dashboard-bookmark-count">लोड हो रहा है…</b><small>सेव किए लेख</small></div>
+      </div>
+      <section class="astro-panel td-dashboard-tools" aria-label="उपयोगी शॉर्टकट">
+        <div class="td-dashboard-section-heading"><h3>आपके लिए</h3><a href="/settings/">पसंद बदलें <svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#chevron-right"></use></svg></a></div>
+        <div class="dashboard-quicklinks">
+          <a class="dashboard-quicklink" data-preferred-panchang href="/"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#sun"></use></svg><b>आज का पंचांग</b><small>आपके शहर के अनुसार</small></a>
+          <a class="dashboard-quicklink" href="/kundli-milan/"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#heart"></use></svg><b>36 गुण मिलान</b><small>सुरक्षित मिलान बनाएँ</small></a>
+          <a class="dashboard-quicklink" href="/calendar/"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#calendar"></use></svg><b>मासिक कैलेंडर</b><small>तिथि और पर्व देखें</small></a>
+        </div>
+      </section>
+
+      <section class="astro-panel" id="profile-area">
+        <div class="td-dashboard-section-heading"><h3>मेरी प्रोफाइल</h3><span class="kicker">निजी जानकारी</span></div>
+        <div id="profile-panel" hidden>
+          <div class="user-profile-heading">
+            <div class="user-profile-avatar" id="account-avatar" aria-label="प्रोफाइल तस्वीर"><span id="account-initial">ॐ</span></div>
+            <div><h2><span id="account-name"></span></h2><p id="account-email"></p></div>
+          </div>
+          <form id="profile-form" class="auth-fields">
+            <label for="profile-name">आपका नाम (वैकल्पिक)</label><input id="profile-name" maxlength="80" autocomplete="name" placeholder="आपका नाम">
+            <label for="profile-rashi">पसंदीदा राशि (वैकल्पिक)</label><select id="profile-rashi">
+              <option value="">राशि चुनें</option><option value="mesh">मेष</option><option value="vrishabh">वृषभ</option><option value="mithun">मिथुन</option><option value="kark">कर्क</option><option value="singh">सिंह</option><option value="kanya">कन्या</option><option value="tula">तुला</option><option value="vrishchik">वृश्चिक</option><option value="dhanu">धनु</option><option value="makar">मकर</option><option value="kumbh">कुंभ</option><option value="meen">मीन</option>
+            </select>
+            <button class="heritage-button" type="submit" id="profile-submit">बदलाव सुरक्षित करें</button>
+          </form>
+          <p id="profile-message" class="astro-state" role="status" aria-live="polite">आपकी प्रोफाइल केवल आपके अकाउंट में सुरक्षित रहेगी।</p>
+        </div>
+      </section>
+
+      <section class="astro-panel" id="bookmark-area">
+        <div class="td-dashboard-section-heading"><h3>सेव किए लेख</h3><a href="/lekh/">और पढ़ें <svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#chevron-right"></use></svg></a></div>
+        <div id="bookmarks-list" role="region" aria-live="polite">बुकमार्क लोड हो रहे हैं…</div>
+      </section>
+      <section class="astro-panel" id="matching-area">
+        <div class="td-dashboard-section-heading"><h3>मेरी मिलान रिपोर्ट</h3><a href="/kundli-milan/">नई रिपोर्ट <svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#chevron-right"></use></svg></a></div>
+        <div id="reports-list" role="region" aria-live="polite">रिपोर्ट लोड हो रही हैं…</div>
+      </section>
+      <section class="astro-panel" id="privacy-panel">
+        <div class="td-dashboard-section-heading"><h3>गोपनीयता और डेटा</h3><span class="kicker">आपके नियंत्रण में</span></div>
+        <p class="astro-small">अपनी प्रोफाइल, सेटिंग्स, बुकमार्क और मिलान रिपोर्ट डाउनलोड करें। अकाउंट मिटाने की कार्रवाई ईमेल पुष्टि के बाद स्थायी होती है।</p>
+        <div class="account-data-tools">
+          <button type="button" id="account-export" class="outline-button"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#download"></use></svg> मेरा डेटा डाउनलोड करें</button>
+          <button type="button" id="account-delete" class="outline-button account-delete-button"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#trash"></use></svg> अकाउंट स्थायी रूप से हटाएँ</button>
+          <p id="account-data-status" class="astro-small" role="status" aria-live="polite"></p>
+        </div>
+        <a href="/jankari/gopniyata-neeti/" class="td-privacy-link">हमारी गोपनीयता नीति <svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#arrow-up-right"></use></svg></a>
+      </section>
+      <div class="td-dashboard-signout"><button type="button" id="auth-signout" class="outline-button"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#logout"></use></svg> सुरक्षित लॉगआउट</button></div>
+    </div>
+  </div>
+</section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.87.3/dist/umd/supabase.min.js" defer></script>
-<script src="/assets/auth.js?v=tithi2-auth" defer></script>
+<script src="/assets/auth.js?v=visual3" defer></script>
+<script src="/assets/dashboard.js?v=1" defer></script>
 </main>
   <footer class="footer td-footer"><div class="shell">
     <div class="td-footer-grid">
@@ -151,7 +241,7 @@
       <div><h3>अनुभव</h3><a href="/devi-devta/">देव दर्शन</a><a href="/kundli-milan/">कुंडली मिलान</a><a href="/rashifal/">राशिफल</a><a href="/lekh/">लेख पढ़ें</a></div>
       <div><h3>हमारे बारे में</h3><a href="/jankari/hamare-bare-mein/">परिचय</a><a href="/vidhi/">गणना पद्धति</a><a href="/jankari/gopniyata-neeti/">गोपनीयता</a><a href="/jankari/seva-ki-sharten/">उपयोग की शर्तें</a><a href="/jankari/sampark/">संपर्क</a></div>
     </div>
-    <div class="td-footer-bottom"><span>© 2026 तिथि दर्शन · सांस्कृतिक सूचना, वैज्ञानिक भविष्यवाणी नहीं</span><a href="/settings/">सेटिंग्स</a><span>अंतिम खगोलीय गणना: <time datetime="2026-11-26T04:40:25+00:00">2026-11-26T04:40:25+00:00</time> UTC</span></div>
+    <div class="td-footer-bottom"><span>© 2026 तिथि दर्शन · सांस्कृतिक सूचना, वैज्ञानिक भविष्यवाणी नहीं</span><a href="/settings/">सेटिंग्स</a><span>अंतिम खगोलीय गणना: <time datetime="2026-11-26T04:42:09+00:00">2026-11-26T04:42:09+00:00</time> UTC</span></div>
   </div></footer>
   <div id="td-toast" class="td-toast" role="status" aria-live="polite" hidden></div>
 </body>

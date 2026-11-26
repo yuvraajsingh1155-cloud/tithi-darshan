@@ -17,6 +17,7 @@
   client = window.supabase.createClient(url, publishableKey, {
     auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
   });
+  window.TithiSupabaseClient=client;
   // Password reveal controls are explicit, keyboard-accessible and never log values.
   for(const [passwordId,buttonId] of [
     ['auth-password','toggle-auth-password'],
@@ -75,7 +76,7 @@
     if(seq!==userLoadVersion||currentUser?.id!==user.id)return;
     box.replaceChildren();
     if(error){box.textContent='रिपोर्ट अभी लोड नहीं हुई: '+error.message;return;}
-    if(!data?.length){box.textContent='अभी कोई रिपोर्ट नहीं है।';return;}
+    if(!data?.length){box.classList.add('td-dashboard-empty');box.textContent='अभी कोई मिलान रिपोर्ट सेव नहीं है। ऊपर 36 गुण मिलान से नई रिपोर्ट बना सकते हैं।';return;}
     for(const report of data){
       const item=document.createElement('div');item.className='saved-report-item';
       const txt=document.createElement('span');
@@ -99,7 +100,9 @@
     if(seq!==userLoadVersion||currentUser?.id!==user.id)return;
     box.replaceChildren();
     if(error){box.textContent='बुकमार्क नहीं लोड हुए: '+error.message;return;}
-    if(!data?.length){box.textContent='अभी कोई लेख बुकमार्क नहीं है।';return;}
+    const total=$('dashboard-bookmark-count');
+    if(total)total.textContent=String(data?.length||0)+' लेख';
+    if(!data?.length){box.classList.add('td-dashboard-empty');box.textContent='अभी कोई लेख सेव नहीं है। पसंदीदा लेख खोलकर बुकमार्क करें।';return;}
     for(const entry of data){
       if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.article_slug))continue;
       const item=document.createElement('div');item.className='saved-report-item';
@@ -119,13 +122,19 @@
   const showUser = async user => {
     const seq = ++userLoadVersion;
     currentUser = user;
+    const loginStage=$('auth-stage'),dashboardStage=$('dashboard-stage');
     if (!user) {
-      profilePanel.hidden = true;
-      authPanel.hidden = false;
+      profilePanel.hidden=true;
+      if(dashboardStage)dashboardStage.hidden=true;
+      if(loginStage)loginStage.hidden=false;
+      authPanel.hidden=false;
+      document.dispatchEvent(new Event('tithi:auth-changed'));
       return;
     }
-    authPanel.hidden = true;
-    profilePanel.hidden = false;
+    authPanel.hidden=true;
+    if(loginStage)loginStage.hidden=true;
+    if(dashboardStage)dashboardStage.hidden=false;
+    profilePanel.hidden=false;
     $('account-email').textContent = user.email || '';
     $('account-name').textContent = '';
     const initial=$('account-initial');
@@ -159,7 +168,16 @@
     $('profile-name').value = data?.display_name || '';
     $('profile-rashi').value = data?.preferred_rashi || '';
     $('account-name').textContent = data?.display_name || '';
+    const welcome=$('dashboard-welcome-name');
+    if(welcome)welcome.textContent=data?.display_name||
+      user.user_metadata?.full_name||user.email?.split('@')[0]||'मित्र';
+    const fav=$('dashboard-rashi');
+    const rashiNames={mesh:'मेष',vrishabh:'वृषभ',mithun:'मिथुन',kark:'कर्क',
+      singh:'सिंह',kanya:'कन्या',tula:'तुला',vrishchik:'वृश्चिक',
+      dhanu:'धनु',makar:'मकर',kumbh:'कुंभ',meen:'मीन'};
+    if(fav)fav.textContent=rashiNames[data?.preferred_rashi]||'राशि नहीं चुनी';
     await Promise.all([loadReports(user,seq),loadBookmarks(user,seq)]);
+    document.dispatchEvent(new Event('tithi:auth-changed'));
   };
   const setMode = next => {
     mode = next;
@@ -210,7 +228,14 @@
     },{onConflict:'user_id'});
     button.disabled=false;
     if(error)msg(profileMessage,'प्रोफाइल सेव नहीं हुई: '+error.message);
-    else {$('account-name').textContent=name;msg(profileMessage,'प्रोफाइल सुरक्षित रूप से सेव हो गई।');}
+    else {
+      $('account-name').textContent=name;
+      const welcome=$('dashboard-welcome-name');
+      if(welcome)welcome.textContent=name||currentUser?.user_metadata?.full_name||currentUser?.email?.split('@')[0]||'मित्र';
+      const fav=$('dashboard-rashi');
+      if(fav)fav.textContent=rashi?$('profile-rashi').selectedOptions[0]?.textContent:'राशि नहीं चुनी';
+      msg(profileMessage,'प्रोफाइल सुरक्षित रूप से सेव हो गई।');
+    }
   });
   $('forgot-password').addEventListener('click',async()=>{
     const email=$('auth-email').value.trim();
@@ -317,6 +342,8 @@
       $('reset-password-form').hidden=false;
       authPanel.hidden=false;
       profilePanel.hidden=true;
+      if($('auth-stage'))$('auth-stage').hidden=false;
+      if($('dashboard-stage'))$('dashboard-stage').hidden=true;
       msg(authMessage,'अपना नया पासवर्ड भरकर सेव करें।');
       return;
     }
