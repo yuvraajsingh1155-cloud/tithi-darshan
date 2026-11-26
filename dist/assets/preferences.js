@@ -2,9 +2,9 @@
 (() => {
   'use strict';
   const KEY='tithi-darshan:preferences:v1';
-  const defaults=Object.freeze({theme:'system',font_scale:1,high_contrast:false,reduced_motion:false,preferred_city:'delhi',time_format:'24h',nav_language:'hi'});
+  const defaults=Object.freeze({theme:'system',density:'comfortable',font_scale:1,high_contrast:false,reduced_motion:false,preferred_city:'delhi',time_format:'24h',nav_language:'hi'});
   const cities=new Set(['delhi','lucknow','varanasi','mumbai','kolkata','jaipur','bengaluru','patna','hardoi','prayagraj','kanpur','bhopal']);
-  const allowed={theme:new Set(['light','dark','system']),time_format:new Set(['12h','24h']),nav_language:new Set(['hi','en'])};
+  const allowed={theme:new Set(['light','dark','system']),density:new Set(['comfortable','compact']),time_format:new Set(['12h','24h']),nav_language:new Set(['hi','en'])};
   const storage=()=>{
     try{const raw=localStorage.getItem(KEY);return raw?JSON.parse(raw):{};}catch{return {};}
   };
@@ -30,6 +30,7 @@
     const root=document.documentElement;
     root.dataset.theme=mode;
     root.dataset.themeMode=prefs.theme;
+    root.dataset.density=prefs.density;
     root.dataset.contrast=prefs.high_contrast?'high':'normal';
     root.dataset.motion=prefs.reduced_motion?'reduce':'normal';
     root.style.setProperty('--ui-font-scale',String(prefs.font_scale));

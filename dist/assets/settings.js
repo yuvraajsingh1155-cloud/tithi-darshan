@@ -10,7 +10,8 @@
   const key='sb_publishable_y1vGfmJdnj9V9vc7KSWvqw_agNwvhW-';
   let client=null;
   if(window.supabase?.createClient){
-    client=window.supabase.createClient(project,key);
+    client=window.TithiSupabaseClient||window.supabase.createClient(project,key);
+    window.TithiSupabaseClient=client;
   }
   for(const element of form.querySelectorAll('input[name],select[name]')){
     element.addEventListener('change',()=>{
@@ -20,6 +21,26 @@
       setMessage('सेटिंग्स इस डिवाइस पर सुरक्षित हैं। अकाउंट सिंक के लिए नीचे बटन दबाएँ।');
     });
   }
+  const themeChoices=[...document.querySelectorAll('[data-theme-choice]')];
+  const selectedTheme=()=>{
+    const active=prefs.get().theme;
+    for(const button of themeChoices){
+      const isActive=button.dataset.themeChoice===active;
+      button.setAttribute('aria-pressed',String(isActive));
+      button.classList.toggle('active',isActive);
+    }
+  };
+  for(const button of themeChoices){
+    button.addEventListener('click',()=>{
+      const select=document.getElementById('pref-theme');
+      if(!select)return;
+      select.value=button.dataset.themeChoice;
+      select.dispatchEvent(new Event('change',{bubbles:true}));
+      selectedTheme();
+    });
+  }
+  document.addEventListener('tithi:preferences-changed',selectedTheme);
+  selectedTheme();
   document.getElementById('reset-prefs')?.addEventListener('click',()=>{
     if(!confirm('इस डिवाइस की सभी वेबसाइट सेटिंग्स रीसेट करनी हैं?'))return;
     prefs.reset();
@@ -37,8 +58,9 @@
     try{
       const user=await getAuthedUser();
       if(!user){setMessage('अकाउंट में सेव करने के लिए पहले Google Login करें।');return;}
+      const {density,...syncedPreferences}=prefs.get();
       const {error}=await client.from('user_preferences').upsert({
-        user_id:user.id,...prefs.get(),updated_at:new Date().toISOString()
+        user_id:user.id,...syncedPreferences,updated_at:new Date().toISOString()
       },{onConflict:'user_id'});
       if(error)throw error;
       setMessage('✓ सेटिंग्स आपके निजी अकाउंट में सुरक्षित हो गईं।');

@@ -125,10 +125,19 @@
         <span class="kicker">Appearance</span><h2>रूप-रंग</h2>
         <div class="setting-field"><label for="pref-theme">वेबसाइट की थीम</label>
         <select id="pref-theme" name="theme"><option value="light">Light — उजली थीम</option><option value="dark">Dark — गहरी थीम</option><option value="system">System — डिवाइस के अनुसार</option></select></div>
-        <p class="astro-small">System का मतलब आपके फोन/कंप्यूटर के Light या Dark मोड के अनुसार अपने आप बदलना है।</p>
+        <div class="td-theme-choices" role="group" aria-label="थीम जल्दी चुनें">
+          <button type="button" data-theme-choice="light" aria-pressed="false"><span class="td-theme-swatch td-swatch-light"></span><strong>Light</strong><small>शांत, उजला अनुभव</small></button>
+          <button type="button" data-theme-choice="dark" aria-pressed="false"><span class="td-theme-swatch td-swatch-dark"></span><strong>Dark</strong><small>आरामदायक गहरा रंग</small></button>
+          <button type="button" data-theme-choice="system" aria-pressed="false"><span class="td-theme-swatch td-swatch-system"></span><strong>System</strong><small>डिवाइस के अनुसार</small></button>
+        </div>
+        <p class="astro-small">थीम बदलते ही पूरी वेबसाइट पर नया रंग लागू होता है। System विकल्प डिवाइस का Light/Dark Mode मानता है।</p>
       </section>
       <section class="astro-panel settings-section" id="accessibility">
         <span class="kicker">Accessibility</span><h2>आराम से पढ़ें</h2>
+        <div class="setting-field"><label for="pref-density">लेआउट की जगह</label>
+          <select id="pref-density" name="density"><option value="comfortable">आरामदायक (Comfortable)</option><option value="compact">कॉम्पैक्ट (Compact)</option></select>
+          <small>यह विकल्प फिलहाल इसी Browser पर सेव होता है।</small>
+        </div>
         <div class="setting-field"><label for="pref-font-scale">टेक्स्ट का आकार</label>
           <select id="pref-font-scale" name="font_scale"><option value="0.90">थोड़ा छोटा — 90%</option><option value="1">सामान्य — 100%</option><option value="1.1">बड़ा — 110%</option><option value="1.2">और बड़ा — 120%</option><option value="1.3">सबसे बड़ा — 130%</option></select>
         </div>
@@ -174,7 +183,7 @@
       <div><h3>अनुभव</h3><a href="/devi-devta/">देव दर्शन</a><a href="/kundli-milan/">कुंडली मिलान</a><a href="/rashifal/">राशिफल</a><a href="/lekh/">लेख पढ़ें</a></div>
       <div><h3>हमारे बारे में</h3><a href="/jankari/hamare-bare-mein/">परिचय</a><a href="/vidhi/">गणना पद्धति</a><a href="/jankari/gopniyata-neeti/">गोपनीयता</a><a href="/jankari/seva-ki-sharten/">उपयोग की शर्तें</a><a href="/jankari/sampark/">संपर्क</a></div>
     </div>
-    <div class="td-footer-bottom"><span>© 2026 तिथि दर्शन · सांस्कृतिक सूचना, वैज्ञानिक भविष्यवाणी नहीं</span><a href="/settings/">सेटिंग्स</a><span>अंतिम खगोलीय गणना: <time datetime="2026-11-26T04:52:04+00:00">2026-11-26T04:52:04+00:00</time> UTC</span></div>
+    <div class="td-footer-bottom"><span>© 2026 तिथि दर्शन · सांस्कृतिक सूचना, वैज्ञानिक भविष्यवाणी नहीं</span><a href="/settings/">सेटिंग्स</a><span>अंतिम खगोलीय गणना: <time datetime="2026-11-26T04:54:55+00:00">2026-11-26T04:54:55+00:00</time> UTC</span></div>
   </div></footer>
   <dialog id="td-search-dialog" class="td-search-dialog" aria-labelledby="td-search-heading">
     <div class="td-command-head"><div><span class="kicker">तिथि दर्शन • Quick Search</span><h2 id="td-search-heading">क्या जानना चाहते हैं?</h2></div>
