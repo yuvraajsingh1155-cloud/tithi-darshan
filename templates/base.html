@@ -118,6 +118,21 @@
     </div>
     <div class="td-footer-bottom"><span>© {{ build_year }} तिथि दर्शन · सांस्कृतिक सूचना, वैज्ञानिक भविष्यवाणी नहीं</span><a href="/settings/">सेटिंग्स</a><span>अंतिम खगोलीय गणना: <time datetime="{{built_at_utc}}">{{built_at_utc}}</time> UTC</span></div>
   </div></footer>
+  <dialog id="td-search-dialog" class="td-search-dialog" aria-labelledby="td-search-heading">
+    <div class="td-command-head"><div><span class="kicker">तिथि दर्शन • Quick Search</span><h2 id="td-search-heading">क्या जानना चाहते हैं?</h2></div>
+      <button type="button" id="td-search-close" class="td-command-close" aria-label="खोज बंद करें"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#close"></use></svg></button>
+    </div>
+    <form action="/khoj/" method="get" role="search" id="td-command-form">
+      <label class="td-search-field" for="td-command-input"><svg class="td-icon" aria-hidden="true"><use href="/assets/td-icons.svg#search"></use></svg>
+        <input id="td-command-input" type="search" name="q" maxlength="120" placeholder="तिथि, शहर, एकादशी या लेख खोजें" autocomplete="off">
+        <span class="td-keycap">↵</span>
+      </label>
+    </form>
+    <div class="td-command-results" id="td-command-results" aria-live="polite">
+      <p class="td-command-hint">उदाहरण: आज की तिथि, हरदोई, एकादशी</p>
+    </div>
+    <div class="td-command-footer"><span>↑ ↓ परिणाम चुनें · Esc बंद करें</span><a href="/khoj/">संपूर्ण खोज पेज ↗</a></div>
+  </dialog>
   <div id="td-toast" class="td-toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>
