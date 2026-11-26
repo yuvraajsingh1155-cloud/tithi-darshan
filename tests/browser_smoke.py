@@ -25,7 +25,14 @@ def check_page(page,path,width):
     assert response is not None and response.status==200,(path,width,response.status if response else "none")
     page.wait_for_timeout(100)
     sizes=page.evaluate("({scroll:document.documentElement.scrollWidth,width:window.innerWidth})")
-    assert sizes["scroll"]<=sizes["width"]+2,("horizontal overflow",path,width,sizes)
+    if sizes["scroll"]>sizes["width"]+2:
+        offenders=page.evaluate("""() => [...document.querySelectorAll('body *')]
+        .map(el => ({tag:el.tagName.toLowerCase(),cls:String(el.className||'').slice(0,70),
+          id:el.id||'',left:Math.round(el.getBoundingClientRect().left),
+          right:Math.round(el.getBoundingClientRect().right)}))
+        .filter(x=>x.right>innerWidth+3||x.left<-3)
+        .slice(0,18)""")
+        raise AssertionError(("horizontal overflow",path,width,sizes,offenders))
     assert page.locator("main").count()==1
     assert len(errors)==0,("page Javascript exception",path,width,errors)
     results.append({"route":path,"width":width,"result":"PASS"})
