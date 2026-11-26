@@ -24,7 +24,7 @@
   const searchResults=$('td-command-results');
   let publicIndex=null,dialogOpener=null;
   const simplify=text=>String(text||'').toLocaleLowerCase('en-IN').normalize('NFKC')
-    .replace(/[^\\p{L}\\p{N}]+/gu,' ').trim();
+    .replace(/[^\p{L}\p{N}]+/gu,' ').trim();
   const synonyms={ekadashi:'एकादशी',tithi:'तिथि',panchang:'पंचांग',
     today:'आज',aaj:'आज',kundli:'कुंडली',rashi:'राशि',shiv:'शिव',
     hanuman:'हनुमान',rahukal:'राहुकाल',hardoi:'हरदोई',lucknow:'लखनऊ'};
