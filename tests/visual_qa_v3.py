@@ -94,8 +94,9 @@ with sync_playwright() as p:
         # Gallery genuinely contains source-controlled WebP portraits.
         page.goto(BASE+"/devi-devta/",wait_until="domcontentloaded")
         assert page.locator(".deity-card img[src$='.webp']").count()==5
-        assert page.evaluate("""() => [...document.querySelectorAll('.deity-card img')].every(
-          image=>image.complete&&image.naturalWidth>100)""")
+        page.eval_on_selector_all(".deity-card img", "(images)=>images.forEach(img=>img.loading='eager')")
+        page.wait_for_function("""() => [...document.querySelectorAll('.deity-card img')].every(
+          image=>image.complete&&image.naturalWidth>100)""",timeout=12000)
         if width in (390,1440):
             page.screenshot(path=str(OUT/f"dev-darshan-{width}.png"),full_page=True,animations="disabled")
             page.goto(BASE+"/",wait_until="domcontentloaded")
@@ -119,8 +120,8 @@ with sync_playwright() as p:
     # UI preview using explicit fake fixture — no real Supabase credentials/user.
     for width in (390,1440):
         ctx=browser.new_context(viewport={"width":width,"height":900})
-        ctx.add_init_script("""() => localStorage.setItem(
-          'sb-ipqejplvpmznhhtcmozz-auth-token','local-visual-fixture-only')""")
+        ctx.add_init_script("""localStorage.setItem(
+          'sb-ipqejplvpmznhhtcmozz-auth-token','local-visual-fixture-only');""")
         ctx.route("**/supabase.min.js",lambda route:route.fulfill(
           status=200,content_type="text/javascript; charset=utf-8",body=MOCK_JS))
         page=ctx.new_page()
