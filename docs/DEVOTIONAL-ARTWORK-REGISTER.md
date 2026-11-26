@@ -13,6 +13,8 @@ All five public deity images are original AI-generated oil-painting-style illust
 | Saraswati | `/assets/devotional/saraswati.webp` | Veena, books, swan | 512×512 WebP |
 | Temple atmosphere | `/assets/devotional/temple.webp` | Ornate empty courtyard used only as non-personal background | 512×512 WebP |
 
+All five devotional portraits now also have matching 320×320 WebP thumbnails in `/assets/devotional/<deity>-320.webp`; source templates include responsive `srcset` and `sizes`. Larger 512px images remain available for portrait/detail needs. Images are never stretched by CSS.
+
 The older simple vector symbols in `assets/deity-*.svg` are retained in source control for safe fallback and comparison, but published Dev Darshan gallery and individual deity pages now reference the original WebP art. CSS uses `object-fit:contain` so important objects and hands are not cropped.
 
 ## Still to source or produce and review
