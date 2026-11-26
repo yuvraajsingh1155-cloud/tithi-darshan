@@ -72,3 +72,8 @@ All artwork was newly generated, visually inspected and encoded as optimized Web
 - Google Login / Personal Dashboard: https://hindu-tithi-darshan.pages.dev/mera-account/
 - Settings: https://hindu-tithi-darshan.pages.dev/settings/
 - Search: https://hindu-tithi-darshan.pages.dev/khoj/
+
+## Final independently verified live deployment — 26 Nov 2026
+- The Cloudflare URL `https://hindu-tithi-darshan.pages.dev/build-info.json` and the generated GitHub `dist/build-info.json` independently reported the same `generated_at_utc`: **`2026-11-26T05:06:11+00:00`**.
+- The live `https://hindu-tithi-darshan.pages.dev/devi-devta/` gallery exposed original source-controlled **320px and 512px WebP** URLs (including `ganesha-320.webp`, `shiva-320.webp`), and the production `/mera-account/` rendered the new Login screen's copy. This confirms rollout of the updated static assets, not a real authenticated account session.
+- The latest successful source-generated Pages build was action `45759301196`. Content and origin may still be subject to visitors' browser caches until revalidation.
