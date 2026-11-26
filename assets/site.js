@@ -53,15 +53,33 @@
   const menuToggle=document.getElementById('menu-toggle');
   const header=document.querySelector('.header');
   const primaryNav=document.getElementById('primary-nav');
+  const backdrop=document.getElementById('nav-backdrop');
+  const setMenuIcon=opened=>{
+    const use=menuToggle?.querySelector('use');
+    if(use)use.setAttribute('href','/assets/td-icons.svg#'+(opened?'close':'menu'));
+  };
   const closeMenu=()=>{
     header?.classList.remove('menu-open');
     menuToggle?.setAttribute('aria-expanded','false');
     menuToggle?.setAttribute('aria-label','नेविगेशन मेन्यू खोलें');
+    if(backdrop)backdrop.hidden=true;
+    document.body.classList.remove('td-drawer-open');
+    setMenuIcon(false);
   };
   menuToggle?.addEventListener('click',()=>{
     const opened=header?.classList.toggle('menu-open');
     menuToggle.setAttribute('aria-expanded',String(Boolean(opened)));
     menuToggle.setAttribute('aria-label',opened?'नेविगेशन मेन्यू बंद करें':'नेविगेशन मेन्यू खोलें');
+    if(backdrop)backdrop.hidden=!opened;
+    document.body.classList.toggle('td-drawer-open',Boolean(opened));
+    setMenuIcon(Boolean(opened));
+  });
+  backdrop?.addEventListener('click',closeMenu);
+  primaryNav?.querySelectorAll('details').forEach(group=>{
+    group.addEventListener('toggle',()=>{
+      if(!group.open)return;
+      for(const other of primaryNav.querySelectorAll('details'))if(other!==group)other.open=false;
+    });
   });
   primaryNav?.addEventListener('click',ev=>{
     if(ev.target.closest('a'))closeMenu();
@@ -82,7 +100,8 @@
   const active=here.startsWith('/calendar/')?'calendar':
     here.startsWith('/rashifal/')?'rashi':
     here.startsWith('/mera-account/')?'account':
-    here.startsWith('/settings/')?'settings':
+    here.startsWith('/kundli-milan/')?'kundli':
+    here.startsWith('/settings/')?null:
     (here==='/'||here.startsWith('/panchang/')||here.startsWith('/shehar/'))?'home':null;
   document.querySelectorAll('.mobile-bottom-nav [data-nav-key]').forEach(link=>{
     if(link.dataset.navKey===active)link.setAttribute('aria-current','page');
