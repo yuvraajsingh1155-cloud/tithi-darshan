@@ -17,6 +17,7 @@
   client = window.supabase.createClient(url, publishableKey, {
     auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
   });
+  window.TithiSupabaseClient=client;
   // Password reveal controls are explicit, keyboard-accessible and never log values.
   for(const [passwordId,buttonId] of [
     ['auth-password','toggle-auth-password'],
