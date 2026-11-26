@@ -45,6 +45,8 @@
       event.preventDefault();
       if(location.pathname==='/khoj/'){
         document.getElementById('global-search-input')?.focus();
+      }else if(window.TithiUI?.openSearch){
+        void window.TithiUI.openSearch();
       }else location.assign('/khoj/');
     }
   });
@@ -88,7 +90,13 @@
     if(ev.key==='Escape'){closeMenu();}
   });
   document.addEventListener('click',ev=>{
-    if(header&&!header.contains(ev.target))closeMenu();
+    if(header&&!header.contains(ev.target)){
+      closeMenu();
+      primaryNav?.querySelectorAll('details[open]').forEach(d=>d.open=false);
+    }
+  });
+  document.addEventListener('keydown',ev=>{
+    if(ev.key==='Escape')primaryNav?.querySelectorAll('details[open]').forEach(d=>d.open=false);
   });
   document.getElementById('theme-toggle')?.addEventListener('click',()=>{
     const p=window.TithiPrefs;
