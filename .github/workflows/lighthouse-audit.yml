@@ -7,6 +7,11 @@ on:
       - 'assets/premium.css'
       - 'assets/preferences.js'
       - 'templates/base.html'
+      - 'templates/account.html'
+      - 'templates/deities.html'
+      - 'templates/deity-detail.html'
+      - 'assets/visual-v3.css'
+      - 'assets/shell.js'
 permissions:
   contents: read
 jobs:
