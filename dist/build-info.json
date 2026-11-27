@@ -1,11 +1,11 @@
 {
-  "indian_date": "2026-11-27",
+  "indian_date": "2026-11-28",
   "range": {
-    "start": "2026-11-20",
-    "end": "2027-01-26"
+    "start": "2026-11-21",
+    "end": "2027-01-27"
   },
   "cities": 12,
   "date_pages": 816,
   "sitemap": true,
-  "generated_at_utc": "2026-11-27T03:17:59+00:00"
+  "generated_at_utc": "2026-11-27T19:41:48+00:00"
 }
